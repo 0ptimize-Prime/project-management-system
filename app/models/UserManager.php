@@ -31,14 +31,10 @@ class UserManager extends AbstractManager
         }
     }
 
-    public function checkCredentials($username, $password)
+    public function checkCredentials($username, $password): bool
     {
         $user = $this->getUser($username);
-        if ($user && password_verify($password, $user['password'])) {
-            return $user['username'];
-        } else {
-            return false;
-        }
+        return $user && password_verify($password, $user['password']);
     }
 
     private function getUser($username)
