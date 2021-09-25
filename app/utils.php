@@ -7,3 +7,9 @@ function includeWithVariables($filePath, $variables = [])
         include $filePath;
     }
 }
+
+function convertDateToTimestamp(string $date): int
+{
+    $dateObj = DateTime::createFromFormat("Y-m-d", $date);
+    return $dateObj->getTimestamp();
+}
