@@ -89,3 +89,12 @@ ALTER TABLE `milestone`
     ADD FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `comment`
     ADD FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+CREATE FUNCTION `GetNextIndex`(`proj_id` VARCHAR(20)) RETURNS INT(11) NOT DETERMINISTIC
+BEGIN
+    DECLARE max_task_ind INT(11);
+    DECLARE max_milestone_ind INT(11);
+    SELECT MAX(ind) into max_task_ind FROM task WHERE project_id = proj_id;
+    SELECT MAX(ind) into max_milestone_ind FROM milestone WHERE project_id = proj_id;
+    RETURN GREATEST(COALESCE(max_task_ind, 0), COALESCE(max_milestone_ind, 0)) + 1;
+END
