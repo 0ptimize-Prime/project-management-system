@@ -48,4 +48,17 @@ class ProjectManager extends AbstractManager
         $stmt = $this->db->prepare("DELETE FROM project WHERE id = ?;");
         return $stmt->execute([$id]);
     }
+
+    public function reorder(array $items)
+    {
+        $taskStmt = $this->db->prepare("UPDATE task SET ind=? WHERE id=?;");
+        $milestoneStmt = $this->db->prepare("UPDATE milestone SET ind=? WHERE id=?;");
+        foreach ($items as $item) {
+            if ($item['type'] == 'task') {
+                $taskStmt->execute([$item['ind'], $item['id']]);
+            } else {
+                $milestoneStmt->execute([$item['ind'], $item['id']]);
+            }
+        }
+    }
 }
