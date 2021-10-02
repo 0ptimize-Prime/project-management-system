@@ -31,5 +31,8 @@ class Auth extends Controller
 
     public function logout()
     {
+        session_start();
+        session_destroy();
+        header("Location: " . BASE_URL . "auth/login");
     }
 }

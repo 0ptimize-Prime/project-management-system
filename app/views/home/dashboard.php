@@ -2,7 +2,9 @@
 
 <html>
 
-<?php includeWithVariables(__DIR__ . "/../templates/header.php", array('title' => 'Dashboard')) ?>
+<?php includeWithVariables(__DIR__ . "/../templates/header.php",
+        array('title' => 'Dashboard',
+            'isLoggedIn' => $_SESSION["username"])) ?>
 
 </body>
 
