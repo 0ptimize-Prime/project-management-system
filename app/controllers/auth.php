@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__."/../utils.php";
 
 class Auth extends Controller
 {
@@ -14,17 +15,33 @@ class Auth extends Controller
             die;
         }
         else if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            if (isset($_POST["username"], $_POST["password"])
-                && strlen($_POST["username"]) > 0
-                && strlen($_POST["password"]) > 0
-                && $this->userManager->checkCredentials($_POST["username"], $_POST["password"])
-            ) {
-                $_SESSION["username"] = $_POST["username"];
-                $_SESSION["last_activity"] = time();
-                header("Location: " . BASE_URL . "home/dashboard");
+            if (isset($_POST["username"], $_POST["password"])) {
+                if (strlen($_POST["username"]) < 1 || strlen($_POST["password"]) < 1) {
+                    create_flash_message(
+                        "login",
+                        "Both username and password required.",
+                        FLASH_ERROR
+                    );
+                } else if (!$this->userManager->checkCredentials($_POST["username"], $_POST["password"])) {
+                    create_flash_message(
+                        "login",
+                        "Invalid username or password.",
+                        FLASH_ERROR
+                    );
+                } else {
+                    $_SESSION["username"] = $_POST["username"];
+                    $_SESSION["last_activity"] = time();
+                    header("Location: " . BASE_URL . "home/dashboard");
+                    die;
+                }
             } else {
-                header("Location: " . BASE_URL . "auth/login");
+                create_flash_message(
+                    "login",
+                    "Login error occurred.",
+                    FLASH_ERROR
+                );
             }
+            header("Location: " . BASE_URL . "auth/login");
             die;
         }
     }
