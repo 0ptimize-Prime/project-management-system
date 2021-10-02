@@ -48,8 +48,6 @@ class UserManager extends AbstractManager
                 'name' => $result['name'],
                 'password' => $result['password'],
             ];
-        } else {
-            die();
         }
     }
 }
