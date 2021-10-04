@@ -5,7 +5,7 @@ require_once __DIR__ . "/../utils.php";
 
 class TaskManager extends AbstractManager
 {
-    public function addTask(string $projectId, string $title, string $description, string $username, string $deadline, int $effort): string
+    public function addTask(string $projectId, string $title, string $description, string $username, string $deadline, int $effort): string|false
     {
         $id = bin2hex(random_bytes(10));
         $deadlineTimestamp = convertDateToTimestamp($deadline);
@@ -19,7 +19,7 @@ class TaskManager extends AbstractManager
         if ($result) {
             return $id;
         } else {
-            die();
+            return false;
         }
     }
 

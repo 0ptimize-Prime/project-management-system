@@ -5,7 +5,7 @@ require_once __DIR__ . "/../utils.php";
 
 class ProjectManager extends AbstractManager
 {
-    public function createProject(string $manager, string $title, string $description, string $deadline): string
+    public function createProject(string $manager, string $title, string $description, string $deadline): string|false
     {
         $id = bin2hex(random_bytes(10));
         $stmt = $this->db->prepare(
@@ -17,7 +17,7 @@ class ProjectManager extends AbstractManager
         if ($result) {
             return $id;
         } else {
-            die();
+            return false;
         }
     }
 

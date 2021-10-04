@@ -2,7 +2,7 @@
 
 class MilestoneManager extends AbstractManager
 {
-    public function addMilestone(string $projectId, string $title): string
+    public function addMilestone(string $projectId, string $title): string|false
     {
         $id = bin2hex(random_bytes(10));
         $ind = $this->getNextIndex($projectId);
@@ -14,7 +14,7 @@ class MilestoneManager extends AbstractManager
         if ($result) {
             return $id;
         } else {
-            die();
+            return false;
         }
     }
 
