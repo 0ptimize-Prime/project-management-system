@@ -9,6 +9,7 @@ includeWithVariables(
 $data = $data ?? [];
 ?>
 <h5 class="card-title text-align-center">Login</h5>
+<?php display_flash_message("login"); ?>
 <form action="login" method="POST">
     <label for="username" class="form-label">Username</label>
     <input
