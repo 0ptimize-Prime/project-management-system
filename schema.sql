@@ -75,7 +75,8 @@ CREATE TABLE `notification`
         'TASK_ASSIGNMENT',
         'TASK_PENDING_APPROVAL',
         'TASK_COMPLETED'
-        )                                NOT NULL
+        )                                NOT NULL,
+    `is_read`    tinyint(1)              NULL     DEFAULT NULL
 );
 
 
@@ -89,6 +90,8 @@ ALTER TABLE `milestone`
     ADD FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `comment`
     ADD FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE NO ACTION ON UPDATE CASCADE;
+ALTER TABLE `notification`
+    ADD FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 CREATE FUNCTION `GetNextIndex`(`proj_id` VARCHAR(20)) RETURNS INT(11) NOT DETERMINISTIC
 BEGIN
