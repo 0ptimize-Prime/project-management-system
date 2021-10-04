@@ -8,6 +8,13 @@ function includeWithVariables($filePath, $variables = [])
     }
 }
 
+
+function convertDateToTimestamp(string $date): int
+{
+    $dateObj = DateTime::createFromFormat("Y-m-d", $date);
+    return $dateObj->getTimestamp();
+}
+
 const FLASH = "FLASH";
 const FLASH_SUCCESS = "success";
 const FLASH_ERROR = "danger";
