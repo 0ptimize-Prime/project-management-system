@@ -4,15 +4,15 @@ require_once __DIR__ . '/AbstractManager.php';
 
 class UserManager extends AbstractManager
 {
-    public function registerUser($username, $name, $password): bool
+    public function registerUser($username, $name, $password, $type): bool
     {
         $password = password_hash($password, PASSWORD_DEFAULT);
         if (!$password) {
             return false;
         }
 
-        $stmt = $this->db->prepare("INSERT INTO user(username, name, password) VALUES(?, ?, ?);");
-        return $stmt->execute([$username, $name, $password]);
+        $stmt = $this->db->prepare("INSERT INTO user(username, name, password, user_type) VALUES(?, ?, ?, ?);");
+        return $stmt->execute([$username, $name, $password, $type]);
     }
 
     public function getUserDetails($username): array|false
