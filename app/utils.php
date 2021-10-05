@@ -38,5 +38,5 @@ function display_flash_message(string $name) : void {
     $message_arr = $_SESSION[FLASH][$name];
     unset($_SESSION[FLASH][$name]);
     $output = "<div class=\"alert alert-%s\" role=\"alert\">%s</div>";
-    echo sprintf($output, $message_arr["type"], $message_arr["message"]);
+    echo sprintf($output, $message_arr["type"], htmlspecialchars($message_arr["message"]));
 }
