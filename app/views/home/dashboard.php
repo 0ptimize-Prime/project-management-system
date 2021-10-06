@@ -4,7 +4,7 @@
 
 <?php includeWithVariables(__DIR__ . "/../templates/header.php",
         array('title' => 'Dashboard',
-            'isLoggedIn' => $_SESSION["username"])) ?>
+            'isLoggedIn' => $_SESSION["user"])) ?>
 
 </body>
 

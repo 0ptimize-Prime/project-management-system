@@ -7,7 +7,7 @@ class Auth extends Controller
     {
         session_start();
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
-            if (isset($_SESSION["username"]) && isset($_SESSION["last_activity"])) {
+            if (isset($_SESSION["user"]) && isset($_SESSION["last_activity"])) {
                 header("Location: " . BASE_URL . "home/dashboard");
             } else {
                 $this->view("auth/login");
@@ -29,7 +29,7 @@ class Auth extends Controller
                         FLASH_ERROR
                     );
                 } else {
-                    $_SESSION["username"] = $_POST["username"];
+                    $_SESSION["user"] = $this->userManager->getUserDetails($_POST["username"]);
                     $_SESSION["last_activity"] = time();
                     header("Location: " . BASE_URL . "home/dashboard");
                     die;
