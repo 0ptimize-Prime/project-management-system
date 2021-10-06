@@ -25,9 +25,10 @@ abstract class Controller
         session_start();
         if (isset($_SESSION['last_activity']) && time() - $_SESSION['last_activity'] < 3600) {
             $_SESSION['last_activity'] = time();
-
-            $data = call_user_func_array($cb, $args);
-            $this->view($view, $data);
+            if ($_SERVER["REQUEST_METHOD"] == "GET") {
+                $data = call_user_func_array($cb, $args);
+                $this->view($view, $data);
+            }
         } else {
             header("Location: " . BASE_URL . "auth/logout");
         }
