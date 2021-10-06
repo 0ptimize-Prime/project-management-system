@@ -22,7 +22,9 @@ abstract class Controller
 
     public function checkAuth(string $view, callable $cb, array $args = [])
     {
-        session_start();
+        if (!isset($_SESSION)) {
+            session_start();
+        }
         if (isset($_SESSION['last_activity']) && time() - $_SESSION['last_activity'] < 3600) {
             $_SESSION['last_activity'] = time();
             if ($_SERVER["REQUEST_METHOD"] == "GET") {
