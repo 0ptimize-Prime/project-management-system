@@ -1,0 +1,50 @@
+html,
+body {
+    height: 100%;
+    background-color: #222d32 !important;
+    font-family: "Calisto MT", sans-serif;
+}
+.global-container{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: aqua;
+}
+form{
+    padding-top: 10px;
+    font-size: 14px;
+    margin-top: 20px;
+}
+.login-form{
+    width: 350px;
+    height: 400px;
+    margin: 20px;
+    background: #1a2226 !important;
+    border-radius: 10px !important;
+}
+input[type="text"],
+input[type="Password"]{
+    background: #1a2226;
+    border: 2px solid aqua;
+    border-radius: 10px;
+    margin-bottom: 25px;
+}
+input[type="text"]:focus,
+input[type="Password"]:focus{
+    outline: none;
+    border: none;
+    background: white;
+    margin: 0;
+}
+.card-title{
+    font-weight: 600;
+    padding-top: 20px;
+    align-items: center;
+}
+.btn{
+    background: aqua !important;
+    font-size: 14px;
+    transform: translateY(10px);
+    border-radius: 15px !important;
+}
