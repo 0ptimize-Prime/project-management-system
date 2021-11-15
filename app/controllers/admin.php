@@ -49,7 +49,13 @@ class admin extends Controller
 
     public function edit()
     {
+        if ($_SERVER["REQUEST_METHOD"] == "GET") {
+            $this->checkAuth("admin/edit", function () {
+                return array();
+            });
+        } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+        }
     }
 
     private function validate_create_user_data(string $username, string $name, string $user_type, string $password): bool
@@ -73,6 +79,7 @@ class admin extends Controller
         } // check if the user_type is valid
         else if (!$this->is_valid_user_type($user_type)) {
             create_flash_message("create-user", "User type is not valid.", FLASH_ERROR);
+            return false;
         } else return true;
     }
 
