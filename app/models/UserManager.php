@@ -31,6 +31,25 @@ class UserManager extends AbstractManager
         return $user && password_verify($password, $user['password']);
     }
 
+    public function getUsersBy($username = '', $name = '', $type = ''): array|false
+    {
+        $query = "SELECT * FROM user WHERE username LIKE ? AND name LIKE ? ";
+        $params = ['%' . $username . '%', '%' . $name . '%'];
+        if (!empty($type)) {
+            $query .= "AND user_type = ?";
+            $params[] = $type;
+        }
+        $query .= ";";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute($params);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if (gettype($result) === "array") {
+            return $result;
+        } else {
+            return false;
+        }
+    }
+
     private function getUser($username): array|false
     {
         $stmt = $this->db->prepare("SELECT * FROM user WHERE username=?;");
