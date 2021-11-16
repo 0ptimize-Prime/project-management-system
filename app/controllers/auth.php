@@ -1,11 +1,13 @@
 <?php
 require_once __DIR__."/../utils.php";
+require_once __DIR__."/../models/UserManager.php";
 
 class Auth extends Controller
 {
     public function login()
     {
         session_start();
+        $userManager = UserManager::getInstance();
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             if (isset($_SESSION["user"]) && isset($_SESSION["last_activity"])) {
                 header("Location: " . BASE_URL . "home/dashboard");
@@ -22,14 +24,14 @@ class Auth extends Controller
                         "Both username and password required.",
                         FLASH_ERROR
                     );
-                } else if (!$this->userManager->checkCredentials($_POST["username"], $_POST["password"])) {
+                } else if (!$userManager->checkCredentials($_POST["username"], $_POST["password"])) {
                     create_flash_message(
                         "login",
                         "Invalid username or password.",
                         FLASH_ERROR
                     );
                 } else {
-                    $_SESSION["user"] = $this->userManager->getUserDetails($_POST["username"]);
+                    $_SESSION["user"] = $userManager->getUserDetails($_POST["username"]);
                     $_SESSION["last_activity"] = time();
                     header("Location: " . BASE_URL . "home/dashboard");
                     die;

@@ -29,12 +29,10 @@ class App
                 'database' => $_ENV["DB_DATABASE"],
             ]
         );
-        $db = DbConnectionManager::getConnection();
-        $userManager = new UserManager($db);
 
         include_once __DIR__ . '/../controllers/' . $controllerName . '.php';
 
-        $this->controller = new $controllerName($userManager);
+        $this->controller = new $controllerName();
 
         if (isset($url[1])) {
             if (method_exists($this->controller, $url[1])) {

@@ -1,11 +1,13 @@
 <?php
 require_once __DIR__ . "/../utils.php";
+require_once __DIR__."/../models/UserManager.php";
 
 class admin extends Controller
 {
     public function create()
     {
         session_start();
+        $userManager = UserManager::getInstance();
         if ($_SESSION["user"]["userType"] != "ADMIN") {
             header("Location: " . BASE_URL . "home/dashboard");
             die;
@@ -34,7 +36,7 @@ class admin extends Controller
                     $_POST["password"]
                 )
             ) {
-                $this->userManager->registerUser(
+                $userManager->registerUser(
                     $_POST["username"],
                     $_POST["name"],
                     $_POST["password"],
@@ -95,6 +97,7 @@ class admin extends Controller
 
     private function is_username_available(string $username): bool
     {
-        return !(bool)$this->userManager->getUserDetails($username);
+        $userManager = UserManager::getInstance();
+        return !(bool)$userManager->getUserDetails($username);
     }
 }
