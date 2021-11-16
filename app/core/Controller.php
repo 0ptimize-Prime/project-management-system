@@ -2,13 +2,6 @@
 
 abstract class Controller
 {
-    protected UserManager $userManager;
-
-    public function __construct(UserManager $userManager)
-    {
-        $this->userManager = $userManager;
-    }
-
     public function model(string $model)
     {
         require_once __DIR__ . '/../models/' . $model . '.php';
