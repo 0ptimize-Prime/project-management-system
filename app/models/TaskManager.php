@@ -64,6 +64,15 @@ class TaskManager extends AbstractManager
         return $stmt->execute([$id]);
     }
 
+    public function isEmployeeInProject(string $username, string $projectId): bool
+    {
+        $stmt = $this->db->prepare("SELECT 1 FROM task WHERE project_id=? AND username=? LIMIT 1;");
+        $stmt->execute([$projectId, $username]);
+        $result = $stmt->fetchColumn();
+
+        return (bool)$result;
+    }
+
     public function getNextIndex(string $projectId): int
     {
         $stmt = $this->db->prepare("SELECT GetNextIndex(?);");
