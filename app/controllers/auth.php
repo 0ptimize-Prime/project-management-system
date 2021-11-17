@@ -12,7 +12,7 @@ class Auth extends Controller
             if (isset($_SESSION["user"]) && isset($_SESSION["last_activity"])) {
                 header("Location: " . BASE_URL . "home/dashboard");
             } else {
-                $this->view("auth/login");
+                $this->showView("auth/login");
             }
             die;
         }
