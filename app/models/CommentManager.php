@@ -38,7 +38,7 @@ class CommentManager extends AbstractManager
         $stmt->execute([$taskId]);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($result) {
+        if (gettype($result) == "array") {
             return $result;
         } else {
             return false;

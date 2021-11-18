@@ -25,7 +25,7 @@ class FileManager extends AbstractManager
         $stmt->execute([$itemId]);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($result) {
+        if (gettype($result) == "array") {
             return $result;
         } else {
             return false;
