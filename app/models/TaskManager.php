@@ -9,6 +9,7 @@ class TaskManager extends AbstractManager
     {
         $id = bin2hex(random_bytes(10));
         $deadlineTimestamp = convertDateToTimestamp($deadline);
+        $username = strlen($username) < 1? null: $username;
         $status = $username ? "ASSIGNED" : "CREATED";
         $ind = $this->getNextIndex($projectId);
         $stmt = $this->db->prepare(
