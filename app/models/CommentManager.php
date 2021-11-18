@@ -21,7 +21,10 @@ class CommentManager extends AbstractManager
 
     public function getComment(string $id): array|false
     {
-        $stmt = $this->db->prepare("SELECT * FROM comment WHERE id=?;");
+        $stmt = $this->db->prepare(
+            "SELECT comment.*, user.name, user.profile_picture FROM comment
+            LEFT JOIN user on comment.username = user.username
+            WHERE id=?;");
         $stmt->execute([$id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -34,7 +37,10 @@ class CommentManager extends AbstractManager
 
     public function getComments(string $taskId): array|false
     {
-        $stmt = $this->db->prepare("SELECT * FROM comment WHERE task_id=?;");
+        $stmt = $this->db->prepare(
+            "SELECT comment.*, user.name, user.profile_picture FROM comment
+            LEFT JOIN user on comment.username = user.username
+            WHERE task_id=?;");
         $stmt->execute([$taskId]);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
