@@ -26,6 +26,7 @@ abstract class Controller
             }
         } else {
             header("Location: " . BASE_URL . "auth/logout");
+            die;
         }
     }
 }

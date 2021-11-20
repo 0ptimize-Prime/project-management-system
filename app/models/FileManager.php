@@ -23,9 +23,9 @@ class FileManager extends AbstractManager
     {
         $stmt = $this->db->prepare("SELECT * FROM file WHERE item_id=?;");
         $stmt->execute([$itemId]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($result) {
+        if (gettype($result) == "array") {
             return $result;
         } else {
             return false;

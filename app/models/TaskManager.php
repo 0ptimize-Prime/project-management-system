@@ -25,7 +25,10 @@ class TaskManager extends AbstractManager
 
     public function getTask(string $id): array|false
     {
-        $stmt = $this->db->prepare("SELECT * FROM task WHERE id=?;");
+        $stmt = $this->db->prepare(
+            "SELECT task.*, user.name, user.profile_picture FROM task
+            LEFT JOIN user on task.username = user.username
+            WHERE id=?;");
         $stmt->execute([$id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -38,11 +41,14 @@ class TaskManager extends AbstractManager
 
     public function getTasks(string $projectId): array|false
     {
-        $stmt = $this->db->prepare("SELECT * FROM task WHERE project_id=?;");
+        $stmt = $this->db->prepare(
+            "SELECT task.*, user.name, user.profile_picture FROM task
+            LEFT JOIN user on task.username = user.username
+            WHERE project_id=?;");
         $stmt->execute([$projectId]);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($result) {
+        if (gettype($result) == "array") {
             return $result;
         } else {
             return false;
@@ -62,6 +68,15 @@ class TaskManager extends AbstractManager
     {
         $stmt = $this->db->prepare("DELETE FROM task WHERE id = ?;");
         return $stmt->execute([$id]);
+    }
+
+    public function isEmployeeInProject(string $username, string $projectId): bool
+    {
+        $stmt = $this->db->prepare("SELECT 1 FROM task WHERE project_id=? AND username=? LIMIT 1;");
+        $stmt->execute([$projectId, $username]);
+        $result = $stmt->fetchColumn();
+
+        return (bool)$result;
     }
 
     public function getNextIndex(string $projectId): int
