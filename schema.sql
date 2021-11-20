@@ -93,6 +93,7 @@ ALTER TABLE `comment`
 ALTER TABLE `notification`
     ADD FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+DELIMITER $$
 CREATE FUNCTION `GetNextIndex`(`proj_id` VARCHAR(20)) RETURNS INT(11) NOT DETERMINISTIC
 BEGIN
     DECLARE max_task_ind INT(11);
@@ -100,4 +101,5 @@ BEGIN
     SELECT MAX(ind) into max_task_ind FROM task WHERE project_id = proj_id;
     SELECT MAX(ind) into max_milestone_ind FROM milestone WHERE project_id = proj_id;
     RETURN GREATEST(COALESCE(max_task_ind, 0), COALESCE(max_milestone_ind, 0)) + 1;
-END
+END$$
+DELIMITER ;
