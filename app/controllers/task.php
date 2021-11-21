@@ -31,7 +31,6 @@ class Task extends Controller
                     $_POST["deadline"],
                     $_POST["effort"],
                 );
-                $result=true;
                 if ($result) {
                     create_flash_message("create-task", "Task `" . $_POST["title"] . "` created successfully.", FLASH_SUCCESS);
                 } else {

@@ -8,7 +8,7 @@ class TaskManager extends AbstractManager
     public function addTask(string $projectId, string $title, string $description, string $username, string $deadline, int $effort): string|false
     {
         $id = bin2hex(random_bytes(10));
-        $deadlineTimestamp = convertDateToTimestamp($deadline);
+        $deadlineTimestamp = strlen($deadline) < 1? null: date("Y-m-d", strtotime($deadline));
         $username = strlen($username) < 1? null: $username;
         $status = $username ? "ASSIGNED" : "CREATED";
         $ind = $this->getNextIndex($projectId);
