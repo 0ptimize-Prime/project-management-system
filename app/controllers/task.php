@@ -6,22 +6,28 @@ require_once __DIR__."/../models/ProjectManager.php";
 
 class Task extends Controller
 {
-    public function create() {
+    public function create(string $projectId) {
         session_start();
-        if ($_SESSION["user"]["userType"] == "EMPLOYEE") {
+        $project = $this->check_project($projectId);
+        if (!$project || $_SESSION["user"]["username"] != $project["manager"]) {
             header("Location: " . BASE_URL . "home/dashboard");
             die;
         }
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
-            $this->checkAuth("task/create", function () {
-                return ["name" => $_SESSION["user"]["username"]];
-            });
+            $this->checkAuth("task/create", function (string $projectId, string $projectTitle) {
+                return [
+                    "name" => $_SESSION["user"]["username"], 
+                    "projectId" => $projectId,
+                    "projectTitle" => $projectTitle
+                ];
+            }, [$projectId, $project["title"]]);
         } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
-            $this->checkAuth("task/create", function () {
-            });
+            $this->checkAuth("task/create", function (string $projectId) {
+                return ["name" => $_SESSION["user"]["username"], "projectId" => $projectId];
+            }, [$projectId]);
+            
             $check_user=$this->check_user($_POST["username"]);
-            $check_project=$this->check_project($_POST["projectId"]);
-            if ($check_user && $check_project) {
+            if ($check_user) {
                 $taskManager = TaskManager::getInstance();
                 $result=$taskManager->addTask(
                     $_POST["projectId"],
@@ -39,7 +45,7 @@ class Task extends Controller
             } else {
                 create_flash_message("create-task", "Invalid request to create task.", FLASH_ERROR);
             }
-            header("Location: " . BASE_URL . "task/create");
+            header("Location: " . BASE_URL . "task/create/$projectId");
             die;
         }
     }
@@ -53,9 +59,9 @@ class Task extends Controller
         return (bool)$userManager->getUserDetails($username);
     }
 
-    private function check_project(string $projectId):bool 
+    private function check_project(string $projectId): array|false
     {
         $projectManager = ProjectManager::getInstance();
-        return (bool)$projectManager->getProject($projectId);
+        return $projectManager->getProject($projectId);
     }
 }

@@ -6,20 +6,16 @@
     array('title' => 'Create Task',
         'isLoggedIn' => $_SESSION["user"])) ?>
 <h1>Create Task</h1>
+<h2><?php echo htmlspecialchars($data["projectTitle"]);?></h2>
 <?php display_flash_message("create-task") ?>
-<form action="create" method="post">
-    <div class="form-group row">
-        <label for="projectId" class="col-sm-2 col-form-label">Project ID</label>
-        <div class="col-sm-10">
-            <input
-                    class="form-control"
-                    id="projectId"
-                    name="projectId"
-                    placeholder="enigma"
-                    required
-            >
-        </div>
-    </div>
+<form action="../create/<?php echo htmlspecialchars($data["projectId"]); ?>" method="post">
+    <input 
+        id="projectId" 
+        name="projectId"
+        value="<?php echo htmlspecialchars($data["projectId"]); ?>"
+        hidden
+    >
+    
     <div class="form-group row">
         <label for="title" class="col-sm-2 col-form-label">Title</label>
         <div class="col-sm-10">
