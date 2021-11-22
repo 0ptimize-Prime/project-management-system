@@ -2,7 +2,7 @@
 <html>
 
 <?php includeWithVariables(__DIR__ . "/../templates/header.php",
-    array('title' => 'Create User',
+    array('title' => 'Create Project',
         'isLoggedIn' => $_SESSION["user"])) ?>
 <h1>Create Project</h1>
 <?php display_flash_message("create-project") ?>
@@ -11,12 +11,8 @@
 
         <div class='col-md-6' >
 
-            <form  action='create_project' method="post"  enctype="multipart/form-data">
+            <form  action='create' method="post"  enctype="multipart/form-data">
 
-                <div class="form-group">
-                    <label for="manager">Project Manager:</label>
-                    <input type="text" class="form-control" name="manager" id="manager" required="required">
-                </div>
                 <div class="form-group">
                     <label for="title">Project Title:</label>
                     <input type="text" class="form-control" name="title" id="title" required="required">
@@ -33,10 +29,10 @@
                 </div>
                 <div class="form-group">
                     <label for="deadline">Deadline:</label>
-                    <input type="date" class="form-control" name="deadline" id="deadline">
+                    <input type="date" class="form-control" name="deadline" id="deadline" required="required">
                 </div>
 
-                <button type="submit" name="Submit" class="btn btn-default">Submit</button>
+                <button type="submit" name="submit" class="btn btn-default">Submit</button>
                 <button type="reset"  name="Reset" class="btn btn-default">Clear</button>
             </form>
         </div>
