@@ -45,7 +45,8 @@ class TaskManager extends AbstractManager
         $stmt = $this->db->prepare(
             "SELECT task.*, user.name, user.profile_picture FROM task
             LEFT JOIN user on task.username = user.username
-            WHERE project_id=?;");
+            WHERE project_id=?
+            ORDER BY task.ind;");
         $stmt->execute([$projectId]);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
