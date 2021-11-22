@@ -12,7 +12,7 @@ class ProjectManager extends AbstractManager
             "INSERT INTO project(id, manager, title, description, deadline) VALUES(?, ?, ?, ?, ?);"
         );
         $deadlineTimestamp = convertDateToTimestamp($deadline);
-        $result = $stmt->execute([$id, $manager, $title, $description, $deadlineTimestamp]);
+        $result = $stmt->execute([$id, $manager, $title, $description, $deadline]);
 
         if ($result) {
             return $id;
