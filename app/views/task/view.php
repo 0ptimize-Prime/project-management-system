@@ -69,7 +69,7 @@
 
 <style>
     #comments {
-        height: 80%;
+        max-height: 80%;
     }
 
     .card-text {
