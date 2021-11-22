@@ -41,7 +41,11 @@
     <tbody>
     <?php foreach ($data['tasks'] as $task) { ?>
         <tr>
-            <td><?php echo htmlspecialchars($task['title']) ?></td>
+            <td>
+                <a href="<?php echo htmlspecialchars(BASE_URL . 'task/view/' . $task['id']) ?>">
+                    <?php echo htmlspecialchars($task['title']) ?>
+                </a>
+            </td>
             <td><?php echo htmlspecialchars($task['deadline']) ?></td>
             <td><?php echo htmlspecialchars($task['status']) ?></td>
         </tr>
