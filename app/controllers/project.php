@@ -2,8 +2,10 @@
 
 require_once __DIR__ . "/../utils.php";
 require_once __DIR__ . "/../models/UserManager.php";
-require_once __DIR__ . "/../models/FileManager.php";
 require_once __DIR__ . "/../models/ProjectManager.php";
+require_once __DIR__ . "/../models/TaskManager.php";
+require_once __DIR__ . "/../models/MilestoneManager.php";
+require_once __DIR__ . "/../models/FileManager.php";
 
 class project extends Controller
 {
@@ -44,6 +46,35 @@ class project extends Controller
 
                 header('Location: ' . BASE_URL . "project/view/$projectID");
             }
+        }
+    }
+
+    public function view(string $projectId)
+    {
+        session_start();
+        if ($_SERVER["REQUEST_METHOD"] == "GET") {
+            $this->checkAuth("project/view", function (string $projectId) {
+                $user = $_SESSION["user"];
+
+                $projectManager = ProjectManager::getInstance();
+                $taskManager = TaskManager::getInstance();
+
+                $project = $projectManager->getProject($projectId);
+                if ($user["username"] != $project["manager"]
+                    && !$taskManager->isEmployeeInProject($user["username"], $project["id"])) {
+                    header("Location: " . BASE_URL . "home/dashboard");
+                    die;
+                }
+
+                $fileManager = FileManager::getInstance();
+                $files = $fileManager->getFiles($projectId);
+
+                $tasks = $taskManager->getTasks($projectId);
+                $milestoneManager = MilestoneManager::getInstance();
+                $milestones = $milestoneManager->getMilestones($projectId);
+
+                return ["project" => $project, "tasks" => $tasks, "milestones" => $milestones, "files" => $files];
+            }, [$projectId]);
         }
     }
 
