@@ -8,7 +8,7 @@ abstract class Controller
         return new $model();
     }
 
-    public function view(string $view, array $data = [])
+    public function showView(string $view, array $data = [])
     {
         require_once __DIR__ . '/../views/' . $view . '.php';
     }
@@ -22,10 +22,11 @@ abstract class Controller
             $_SESSION['last_activity'] = time();
             if ($_SERVER["REQUEST_METHOD"] == "GET") {
                 $data = call_user_func_array($cb, $args);
-                $this->view($view, $data);
+                $this->showView($view, $data);
             }
         } else {
             header("Location: " . BASE_URL . "auth/logout");
+            die;
         }
     }
 }

@@ -37,7 +37,7 @@ class MilestoneManager extends AbstractManager
         $stmt->execute([$projectId]);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($result) {
+        if (gettype($result) == "array") {
             return $result;
         } else {
             return false;
