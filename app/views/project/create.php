@@ -29,7 +29,7 @@
                 </div>
                 <div class="form-group">
                     <label for="deadline">Deadline:</label>
-                    <input type="date" class="form-control" name="deadline" id="deadline" required="required">
+                    <input type="date" class="form-control" name="deadline" id="deadline">
                 </div>
 
                 <button type="submit" name="submit" class="btn btn-default">Submit</button>
