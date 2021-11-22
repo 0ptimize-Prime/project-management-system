@@ -31,7 +31,7 @@ class project extends Controller
                 $deadline = $_POST['deadline'];
                 //if ($this->validate_create_project($_POST['deadline'], $_POST['title'])) {
                 $projectID = $ProjectManager->createProject($manager, $title, $description, $deadline);
-                create_flash_message("create-project", "Project title " . $_POST['title'] . "` created successfully at " . $_POST['deadline'], FLASH_SUCCESS);
+                create_flash_message("create-project", "Project title " . $_POST['title'] . "` created successfully ", FLASH_SUCCESS);
                 $file = $_FILES['file']['name'];
                 $file_loc = $_FILES['file']['tmp_name'];
                 $folder = __DIR__ . '/../../public/uploads/';
