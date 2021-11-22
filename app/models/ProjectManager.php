@@ -11,7 +11,8 @@ class ProjectManager extends AbstractManager
         $stmt = $this->db->prepare(
             "INSERT INTO project(id, manager, title, description, deadline) VALUES(?, ?, ?, ?, ?);"
         );
-        $deadlineTimestamp = convertDateToTimestamp($deadline);
+//        $deadlineTimestamp = convertDateToTimestamp($deadline);
+        $deadline = !empty($deadline) ? $deadline : null;
         $result = $stmt->execute([$id, $manager, $title, $description, $deadline]);
 
         if ($result) {
