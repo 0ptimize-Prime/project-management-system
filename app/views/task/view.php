@@ -1,12 +1,19 @@
 <?php require_once __DIR__ . "/../../utils.php" ?>
 
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
-<?php includeWithVariables(__DIR__ . "/../templates/header.php",
-    array('title' => 'Task',
-        'isLoggedIn' => $_SESSION["user"])) ?>
+<head>
+    <title>Task</title>
+    <?php include __DIR__ . "/../templates/head.php" ?>
+    <meta name="taskId" content="<?php echo htmlspecialchars($data['task']['id']) ?>">
+</head>
 
-<meta name="taskId" content="<?php echo htmlspecialchars($data['task']['id']) ?>">
+<body>
+
+<?php
+includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" => true));
+?>
 
 <h1 class="text-center">Task view</h1>
 

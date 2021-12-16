@@ -1,10 +1,19 @@
 <?php require_once __DIR__ . "/../../utils.php" ?>
 
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
-<?php includeWithVariables(__DIR__ . "/../templates/header.php",
-    array('title' => 'Create Task',
-        'isLoggedIn' => $_SESSION["user"])) ?>
+<head>
+    <title>Create Task</title>
+    <?php include __DIR__ . "/../templates/head.php" ?>
+</head>
+
+<body>
+
+<?php
+includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" => true));
+?>
+
 <h1>Create Task</h1>
 <h2><?php echo htmlspecialchars($data["projectTitle"]);?></h2>
 <?php display_flash_message("create-task") ?>

@@ -1,9 +1,18 @@
 <?php require_once __DIR__ . "/../../utils.php" ?>
-<html>
 
-<?php includeWithVariables(__DIR__ . "/../templates/header.php",
-    array('title' => 'Create Project',
-        'isLoggedIn' => $_SESSION["user"])) ?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Create Project</title>
+    <?php include __DIR__ . "/../templates/head.php" ?>
+</head>
+
+<body>
+
+<?php
+includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" => true));
+?>
 
 <h1>Create Project</h1>
 
@@ -35,5 +44,7 @@
         </div>
     </div>
 </div>
+
 </body>
+
 </html>

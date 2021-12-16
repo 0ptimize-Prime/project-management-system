@@ -1,11 +1,18 @@
 <?php require_once __DIR__ . "/../../utils.php" ?>
 
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
-<?php includeWithVariables(__DIR__ . "/../templates/header.php",
-        array('title' => 'Dashboard',
-            'isLoggedIn' => $_SESSION["user"])) ?>
+<head>
+    <title>Dashboard</title>
+    <?php include __DIR__ . "/../templates/head.php" ?>
+</head>
 
+<body>
+
+<?php
+includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" => true));
+?>
 </body>
 
 </html>

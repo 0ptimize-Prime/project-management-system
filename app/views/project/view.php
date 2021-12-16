@@ -1,10 +1,28 @@
 <?php require_once __DIR__ . "/../../utils.php" ?>
 
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
-<?php includeWithVariables(__DIR__ . "/../templates/header.php",
-    array('title' => 'Project',
-        'isLoggedIn' => $_SESSION["user"])) ?>
+<head>
+    <title>Project</title>
+    <?php include __DIR__ . "/../templates/head.php" ?>
+    <style>
+        .card-text {
+            white-space: pre-wrap;
+        }
+
+        .table {
+            margin: auto;
+            width: 50%;
+        }
+    </style>
+</head>
+
+<body>
+
+<?php
+includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" => true));
+?>
 
 <h1 class="text-center">Project view</h1>
 
@@ -52,17 +70,6 @@
     <?php } ?>
     </tbody>
 </table>
-
-<style>
-    .card-text {
-        white-space: pre-wrap;
-    }
-
-    .table {
-        margin: auto;
-        width: 50%;
-    }
-</style>
 
 </body>
 

@@ -1,10 +1,19 @@
 <?php require_once __DIR__ . "/../../utils.php" ?>
 
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
-<?php includeWithVariables(__DIR__ . "/../templates/header.php",
-    array('title' => 'Create User',
-        'isLoggedIn' => $_SESSION["user"])) ?>
+<head>
+    <title>Create User</title>
+    <?php include __DIR__ . "/../templates/head.php" ?>
+</head>
+
+<body>
+
+<?php
+includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" => true));
+?>
+
 <h1>Create User</h1>
 <?php display_flash_message("create-user") ?>
 <form action="create" method="post">
