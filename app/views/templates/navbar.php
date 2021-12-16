@@ -26,8 +26,11 @@ $isLoggedIn = $isLoggedIn ?? false;
                 <?php if ($isLoggedIn) { ?>
                     <li class="nav-item dropdown">
                         <span class="text-white dropdown-toggle ps-4" id="navbarDropdown" role="button"
-                              data-bs-toggle="dropdown" aria-expanded="false"><?php echo htmlspecialchars($user["name"]) ?></span>
-                        <img src="https://i.pravatar.cc/40" alt="avatar" class="img-fluid img-circle m-1">
+                              data-bs-toggle="dropdown" aria-expanded="false">
+                            <?php echo htmlspecialchars($user["name"]) ?>
+                        </span>
+                        <img src="<?php echo htmlspecialchars($user['profile_picture'] ?? 'https://via.placeholder.com/40x40.png') ?>"
+                             alt="avatar" class="img-fluid img-circle m-1">
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="#">Profile</a></li>
                             <li>
@@ -40,7 +43,9 @@ $isLoggedIn = $isLoggedIn ?? false;
                     </li>
                 <?php } else { ?>
                     <li class="nav-item">
-                        <a class="nav-link active" href="<?php echo htmlspecialchars(BASE_URL . 'auth/login') ?>">Login</a>
+                        <a class="nav-link active" href="<?php echo htmlspecialchars(BASE_URL . 'auth/login') ?>">
+                            Login
+                        </a>
                     </li>
                 <?php } ?>
             </ul>
