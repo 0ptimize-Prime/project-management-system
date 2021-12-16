@@ -10,7 +10,7 @@ class Home extends Controller
             $userManager = UserManager::getInstance();
             $user = $userManager->getUserDetails($_SESSION['user']['username']);
 
-            return ['name' => $user['name']];
+            return ['user' => $user, 'tasks' => []];
         });
     }
 }
