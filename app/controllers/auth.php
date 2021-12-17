@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__."/../utils.php";
-require_once __DIR__."/../models/UserManager.php";
+require_once __DIR__ . "/../utils.php";
+require_once __DIR__ . "/../models/UserManager.php";
 
 class Auth extends Controller
 {
@@ -15,8 +15,7 @@ class Auth extends Controller
                 $this->showView("auth/login");
             }
             die;
-        }
-        else if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (isset($_POST["username"], $_POST["password"])) {
                 if (strlen($_POST["username"]) < 1 || strlen($_POST["password"]) < 1) {
                     FlashMessage::create_flash_message(

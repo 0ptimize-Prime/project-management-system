@@ -9,7 +9,8 @@ require_once __DIR__ . "/../models/CommentManager.php";
 
 class Task extends Controller
 {
-    public function create(string $projectId) {
+    public function create(string $projectId)
+    {
         session_start();
         $project = $this->check_project($projectId);
         if (!$project || $_SESSION["user"]["username"] != $project["manager"]) {
@@ -27,7 +28,7 @@ class Task extends Controller
             $check_user = $this->check_user($_POST["username"]);
             if ($check_user) {
                 $taskManager = TaskManager::getInstance();
-                $result=$taskManager->addTask(
+                $result = $taskManager->addTask(
                     $_POST["projectId"],
                     $_POST["title"],
                     $_POST["description"],
@@ -59,7 +60,7 @@ class Task extends Controller
             die;
         }
     }
-  
+
     public function view(string $taskId)
     {
         session_start();
@@ -88,10 +89,10 @@ class Task extends Controller
             }, [$taskId]);
         }
     }
-      
-    private function check_user(string $username):bool 
+
+    private function check_user(string $username): bool
     {
-        if(strlen($username) < 1) {
+        if (strlen($username) < 1) {
             return true;
         }
         $userManager = UserManager::getInstance();

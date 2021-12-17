@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__."/../models/UserManager.php";
+require_once __DIR__ . "/../models/UserManager.php";
 
 class Home extends Controller
 {
