@@ -16,7 +16,7 @@ includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" =>
 
 <h1>Create Task</h1>
 <h2><?php echo htmlspecialchars($data["projectTitle"]);?></h2>
-<?php display_flash_message("create-task") ?>
+<?php FlashMessage::display_flash_message("create-task") ?>
 <form action="../create/<?php echo htmlspecialchars($data["projectId"]); ?>" method="post">
     <input 
         id="projectId" 

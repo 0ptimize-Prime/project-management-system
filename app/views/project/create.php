@@ -16,7 +16,7 @@ includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" =>
 
 <h1>Create Project</h1>
 
-<?php display_flash_message("create-project") ?>
+<?php FlashMessage::display_flash_message("create-project") ?>
 
 <div class='container'>
     <div class='row'>
