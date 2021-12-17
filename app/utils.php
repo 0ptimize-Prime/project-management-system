@@ -16,8 +16,6 @@ function convertDateToTimestamp(string $date): int
 }
 
 const FLASH = "FLASH";
-const FLASH_SUCCESS = "success";
-const FLASH_ERROR = "danger";
 
 class FlashMessage
 {
