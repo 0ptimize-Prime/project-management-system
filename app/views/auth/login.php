@@ -15,7 +15,7 @@
 includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" => false));
 ?>
 
-<?php display_flash_message("login") ?>
+<?php FlashMessage::display_flash_message("login") ?>
 <div class="login-form">
     <form action="login" method="post">
         <h2 class="text-center">Login</h2>

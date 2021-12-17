@@ -41,12 +41,24 @@ class Task extends Controller
                     $_POST["effort"],
                 );
                 if ($result) {
-                    create_flash_message("create-task", "Task `" . $_POST["title"] . "` created successfully.", FLASH_SUCCESS);
+                    FlashMessage::create_flash_message(
+                        "create-task",
+                        "Task `" . $_POST["title"] . "` created successfully.",
+                        new SuccessFlashMessage()
+                    );
                 } else {
-                    create_flash_message("create-task", "Something went wrong, couldn't create task.", FLASH_ERROR);
+                    FlashMessage::create_flash_message(
+                        "create-task",
+                        "Something went wrong, couldn't create task.",
+                        new ErrorFlashMessage()
+                    );
                 }
             } else {
-                create_flash_message("create-task", "Invalid request to create task.", FLASH_ERROR);
+                FlashMessage::create_flash_message(
+                    "create-task",
+                    "Invalid request to create task.",
+                    new ErrorFlashMessage()
+                );
             }
             header("Location: " . BASE_URL . "task/create/$projectId");
             die;

@@ -19,16 +19,16 @@ class Auth extends Controller
         else if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (isset($_POST["username"], $_POST["password"])) {
                 if (strlen($_POST["username"]) < 1 || strlen($_POST["password"]) < 1) {
-                    create_flash_message(
+                    FlashMessage::create_flash_message(
                         "login",
                         "Both username and password required.",
-                        FLASH_ERROR
+                        new ErrorFlashMessage()
                     );
                 } else if (!$userManager->checkCredentials($_POST["username"], $_POST["password"])) {
-                    create_flash_message(
+                    FlashMessage::create_flash_message(
                         "login",
                         "Invalid username or password.",
-                        FLASH_ERROR
+                        new ErrorFlashMessage()
                     );
                 } else {
                     $_SESSION["user"] = $userManager->getUserDetails($_POST["username"]);
@@ -37,10 +37,10 @@ class Auth extends Controller
                     die;
                 }
             } else {
-                create_flash_message(
+                FlashMessage::create_flash_message(
                     "login",
                     "Login error occurred.",
-                    FLASH_ERROR
+                    new ErrorFlashMessage()
                 );
             }
             header("Location: " . BASE_URL . "auth/login");

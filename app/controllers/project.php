@@ -84,7 +84,11 @@ class project extends Controller
         if ($args) {
             foreach ($args as $arg) {
                 if (strlen($arg) < 1) {
-                    create_flash_message("create-project", "All the fields are required.", FLASH_ERROR);
+                    FlashMessage::create_flash_message(
+                        "create-project",
+                        "All the fields are required.",
+                        new ErrorFlashMessage()
+                    );
                     return false;
                 }
             }
