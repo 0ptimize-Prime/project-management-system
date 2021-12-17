@@ -20,7 +20,7 @@ class project extends Controller
         }
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $this->checkAuth("project/create", function () {
-                return ["name" => $_SESSION["user"]["username"]];
+                return ["user" => $_SESSION["user"]];
             });
         } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
             $this->checkAuth("project/create", function () {
@@ -73,7 +73,7 @@ class project extends Controller
                 $milestoneManager = MilestoneManager::getInstance();
                 $milestones = $milestoneManager->getMilestones($projectId);
 
-                return ["project" => $project, "tasks" => $tasks, "milestones" => $milestones, "files" => $files];
+                return ["user" => $user, "project" => $project, "tasks" => $tasks, "milestones" => $milestones, "files" => $files];
             }, [$projectId]);
         }
     }

@@ -7,10 +7,7 @@ class Home extends Controller
     public function dashboard()
     {
         $this->checkAuth("home/dashboard", function () {
-            $userManager = UserManager::getInstance();
-            $user = $userManager->getUserDetails($_SESSION['user']['username']);
-
-            return ['user' => $user, 'tasks' => []];
+            return ['user' => $_SESSION["user"], 'tasks' => []];
         });
     }
 }

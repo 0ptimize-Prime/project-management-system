@@ -11,7 +11,7 @@
 <body>
 
 <?php
-includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" => true));
+includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" => true, "user" => $data["user"]));
 ?>
 
 <h1>Create Task</h1>

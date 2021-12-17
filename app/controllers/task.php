@@ -18,18 +18,13 @@ class Task extends Controller
         }
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $this->checkAuth("task/create", function (string $projectId, string $projectTitle) {
-                return [
-                    "name" => $_SESSION["user"]["username"], 
-                    "projectId" => $projectId,
-                    "projectTitle" => $projectTitle
-                ];
+                return ["user" => $_SESSION["user"], "projectId" => $projectId, "projectTitle" => $projectTitle];
             }, [$projectId, $project["title"]]);
         } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
-            $this->checkAuth("task/create", function (string $projectId) {
-                return ["name" => $_SESSION["user"]["username"], "projectId" => $projectId];
-            }, [$projectId]);
-            
-            $check_user=$this->check_user($_POST["username"]);
+            $this->checkAuth("task/create", function () {
+            });
+
+            $check_user = $this->check_user($_POST["username"]);
             if ($check_user) {
                 $taskManager = TaskManager::getInstance();
                 $result=$taskManager->addTask(
@@ -89,7 +84,7 @@ class Task extends Controller
                 $commentManager = CommentManager::getInstance();
                 $comments = $commentManager->getComments($taskId);
 
-                return ["task" => $task, "project" => $project, "files" => $files, "comments" => $comments];
+                return ["user" => $user, "task" => $task, "project" => $project, "files" => $files, "comments" => $comments];
             }, [$taskId]);
         }
     }

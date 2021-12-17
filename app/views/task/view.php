@@ -12,7 +12,7 @@
 <body>
 
 <?php
-includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" => true));
+includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" => true, "user" => $data["user"]));
 ?>
 
 <h1 class="text-center">Task view</h1>
