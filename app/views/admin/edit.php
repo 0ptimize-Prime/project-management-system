@@ -6,6 +6,17 @@
 <head>
     <title>Search/Update User</title>
     <?php include __DIR__ . "/../templates/head.php" ?>
+    <style>
+        #preview {
+            object-fit: cover;
+            width: 300px;
+            height: 300px;
+        }
+
+        #user-table tbody {
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
