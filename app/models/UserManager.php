@@ -21,6 +21,12 @@ class UserManager extends AbstractManager
         return $stmt->execute([$name, $type, $username]);
     }
 
+    public function removeUser($username): bool
+    {
+        $stmt = $this->db->prepare("DELETE FROM user WHERE username = ?");
+        return $stmt->execute([$username]);
+    }
+
     public function getUserDetails($username): array|false
     {
         $user = $this->getUser($username);
