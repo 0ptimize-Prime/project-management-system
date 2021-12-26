@@ -82,16 +82,12 @@ class admin extends Controller
                 $_GET["username"],
                 $_GET["name"],
                 $_GET["userType"],
-                $_GET["filter"],
-                $_GET["order"]
             ))
             {
                 $result = $userManager->getUsersBy(
                     $_GET["username"],
                     $_GET["name"],
-                    $_GET["userType"],
-                    $_GET["filter"],
-                    $_GET["order"]
+                    $_GET["userType"]
                 );
                 if ($result)
                     echo json_encode($result);
