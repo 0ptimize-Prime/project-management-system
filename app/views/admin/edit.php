@@ -16,7 +16,7 @@ includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" =>
 
 <h1>Search/Update User</h1>
 <?php FlashMessage::display_flash_message("create-user") ?>
-<form action="create" method="post">
+<form action="<?php echo htmlspecialchars(BASE_URL . 'admin/edit') ?>" method="get">
     <div class="form-group row">
         <label for="username" class="col-sm-2 col-form-label">Username</label>
         <div class="col-sm-10">
@@ -59,7 +59,6 @@ includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" =>
                 type="submit"
                 class="btn btn-primary"
                 name="search"
-                value="search"
             >
                 Search
             </button>
