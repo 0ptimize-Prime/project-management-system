@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . "/../utils.php";
-require_once __DIR__."/../models/UserManager.php";
+require_once __DIR__ . "/../models/UserManager.php";
 
 class admin extends Controller
 {
@@ -59,13 +59,11 @@ class admin extends Controller
 
     public function edit()
     {
-        if ($_SERVER["REQUEST_METHOD"] == "GET")
-        {
+        if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $this->checkAuth("admin/edit", function () {
                 return ["user" => $_SESSION["user"]];
             });
-        } else if ($_SERVER["REQUEST_METHOD"] == "POST")
-        {
+        } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         }
     }
@@ -73,17 +71,15 @@ class admin extends Controller
     public function search()
     {
         $userManager = UserManager::getInstance();
-        if ($_SERVER["REQUEST_METHOD"] == "GET")
-        {
-            $this->checkAuth("admin/search", function() {
+        if ($_SERVER["REQUEST_METHOD"] == "GET") {
+            $this->checkAuth("admin/search", function () {
                 return false;
             });
             if (isset(
                 $_GET["username"],
                 $_GET["name"],
                 $_GET["userType"],
-            ))
-            {
+            )) {
                 $result = $userManager->getUsersBy(
                     $_GET["username"],
                     $_GET["name"],
