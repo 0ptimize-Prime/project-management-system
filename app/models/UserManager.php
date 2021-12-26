@@ -15,6 +15,12 @@ class UserManager extends AbstractManager
         return $stmt->execute([$username, $name, $password, $type]);
     }
 
+    public function updateUser($username, $name, $type): bool
+    {
+        $stmt = $this->db->prepare("UPDATE user SET name = ?, user_type = ? WHERE username = ?");
+        return $stmt->execute([$name, $type, $username]);
+    }
+
     public function getUserDetails($username): array|false
     {
         $user = $this->getUser($username);
