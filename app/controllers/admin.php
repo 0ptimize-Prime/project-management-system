@@ -59,12 +59,36 @@ class admin extends Controller
 
     public function edit()
     {
+        session_start();
+        $userManager = UserManager::getInstance();
+        if ($_SESSION["user"]["userType"] != "ADMIN") {
+            header("Location: " . BASE_URL . "home/dashboard");
+            die;
+        }
+
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $this->checkAuth("admin/edit", function () {
                 return ["user" => $_SESSION["user"]];
             });
         } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $this->checkAuth("admin/edit", function () {}) ;
 
+            if (isset($_POST["update"])) {
+                if (isset(
+                    $_POST["username"],
+                    $_POST["name"],
+                    $_POST["userType"]
+                )) {
+                    if ($this->validate_update_user_data($_POST["username"], $_POST["name"], $_POST["userType"])) {
+                        $userManager->updateUser($_POST["username"], $_POST["name"], $_POST["userType"]);
+                    }
+                }
+                header("Location: " . BASE_URL . "admin/edit");
+                die;
+            }
+            else if (isset($_POST["remove"])) {
+                // TODO: handle remove user
+            }
         }
     }
 
@@ -125,6 +149,42 @@ class admin extends Controller
         else if (!$this->is_valid_user_type($user_type)) {
             FlashMessage::create_flash_message(
                 "create-user",
+                "User type is not valid.",
+                new ErrorFlashMessage()
+            );
+            return false;
+        } else return true;
+    }
+
+    private function validate_update_user_data(string $username, string $name, string $user_type): bool
+    {
+        // check if all the inputs are non-empty
+        $args = func_get_args();
+        foreach ($args as $arg) {
+            if (strlen($arg) < 1) {
+                FlashMessage::create_flash_message(
+                    "create-user",
+                    "All the fields are required.",
+                    new ErrorFlashMessage()
+                );
+                return false;
+            }
+        }
+        // check if the username exists
+        if ($this->is_username_available($username)) {
+            return false;
+        } // check if the name is alphabetic
+        else if (!ctype_alpha(str_replace(" ", "", $name))) {
+            FlashMessage::create_flash_message(
+                "update-user",
+                "The name should be alphabetic.",
+                new ErrorFlashMessage()
+            );
+            return false;
+        } // check if the user_type is valid
+        else if (!$this->is_valid_user_type($user_type)) {
+            FlashMessage::create_flash_message(
+                "update-user",
                 "User type is not valid.",
                 new ErrorFlashMessage()
             );
