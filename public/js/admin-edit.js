@@ -15,6 +15,12 @@ const imgInput = document.getElementById("profile_picture");
 const preview = document.getElementById("preview");
 const removeDpButton = document.getElementById("remove-dp-button");
 
+const placeholderImage = "https://via.placeholder.com/300x300.png";
+const resetUpdateForm = () => {
+    updateForm.reset();
+    preview.src = placeholderImage;
+}
+
 searchForm.addEventListener("submit", e => {
     e.preventDefault();
 
@@ -51,4 +57,47 @@ searchForm.addEventListener("submit", e => {
     }
     xhttp.open("GET", BASE_URL + "admin/search" + query, true);
     xhttp.send();
+});
+
+updateForm.addEventListener("submit", e => {
+    e.preventDefault();
+
+    const xhttp = new XMLHttpRequest();
+    xhttp.withCredentials = true;
+    xhttp.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            resetUpdateForm();
+        }
+    };
+    xhttp.open("POST", BASE_URL + "admin/edit", true);
+    xhttp.send(new FormData(updateForm));
+});
+
+cancelButton.addEventListener("click", () => {
+    resetUpdateForm();
+});
+
+removeButton.addEventListener("click", () => {
+    const xhttp = new XMLHttpRequest();
+    xhttp.withCredentials = true;
+    xhttp.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            resetUpdateForm();
+            // TODO: Remove user from table
+        }
+    };
+    xhttp.open("DELETE", BASE_URL + "admin/edit", true);
+    xhttp.send(new FormData(updateForm))
+});
+
+imgInput.addEventListener("change", () => {
+    const [file] = imgInput.files;
+    if (file) {
+        preview.src = URL.createObjectURL(file);
+    }
+});
+
+removeDpButton.addEventListener("click", () => {
+    imgInput.value = "";
+    preview.src = placeholderImage;
 });
