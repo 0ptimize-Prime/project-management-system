@@ -81,6 +81,11 @@ class admin extends Controller
                 )) {
                     if ($this->validate_update_user_data($_POST["username"], $_POST["name"], $_POST["userType"])) {
                         $userManager->updateUser($_POST["username"], $_POST["name"], $_POST["userType"]);
+                        FlashMessage::create_flash_message(
+                            "update-user",
+                            "User `" . $_POST["username"] . "` updated successfully.",
+                            new SuccessFlashMessage()
+                        );
                     }
                 }
                 header("Location: " . BASE_URL . "admin/edit");
