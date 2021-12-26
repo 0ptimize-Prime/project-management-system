@@ -59,12 +59,43 @@ class admin extends Controller
 
     public function edit()
     {
-        if ($_SERVER["REQUEST_METHOD"] == "GET") {
+        if ($_SERVER["REQUEST_METHOD"] == "GET")
+        {
             $this->checkAuth("admin/edit", function () {
                 return ["user" => $_SESSION["user"]];
             });
-        } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        } else if ($_SERVER["REQUEST_METHOD"] == "POST")
+        {
 
+        }
+    }
+
+    public function search()
+    {
+        $userManager = UserManager::getInstance();
+        if ($_SERVER["REQUEST_METHOD"] == "GET")
+        {
+            $this->checkAuth("admin/search", function() {
+                return false;
+            });
+            if (isset(
+                $_GET["username"],
+                $_GET["name"],
+                $_GET["userType"],
+                $_GET["filter"],
+                $_GET["order"]
+            ))
+            {
+                $result = $userManager->getUsersBy(
+                    $_GET["username"],
+                    $_GET["name"],
+                    $_GET["userType"],
+                    $_GET["filter"],
+                    $_GET["order"]
+                );
+                if ($result)
+                    echo json_encode($result);
+            }
         }
     }
 
