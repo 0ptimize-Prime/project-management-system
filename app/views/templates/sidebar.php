@@ -13,7 +13,7 @@ $isAdmin = $isAdmin ?? false;
                    class="list-group-item list-group-item-action py-2 ripple">
                     <i class="fas fa-user-plus fa-fw me-3"></i><span>Create User</span>
                 </a>
-                <a href="#" class="list-group-item list-group-item-action py-2 mb-5 ripple">
+                <a href="<?php echo htmlspecialchars(BASE_URL . 'admin/edit') ?>" class="list-group-item list-group-item-action py-2 mb-5 ripple">
                     <i class="fas fa-search fa-fw me-3"></i><span>Search/Update User</span>
                 </a>
             <?php } ?>
