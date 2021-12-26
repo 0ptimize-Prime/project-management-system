@@ -32,8 +32,6 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
 <main style="margin-top: 80px;">
     <h1 class="text-center">Search/Update User</h1>
 
-    <?php FlashMessage::display_flash_message("create-user") ?>
-
     <div class="d-flex justify-content-center mt-4">
         <div class="container">
             <form class="row mb-4 gx-1" id="search-form">
