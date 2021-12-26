@@ -59,6 +59,42 @@ searchForm.addEventListener("submit", e => {
     xhttp.send();
 });
 
+const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
+
+const comparer = (idx, asc) => (a, b) => {
+    const v1 = getCellValue(asc ? a : b, idx);
+    const v2 = getCellValue(asc ? b : a, idx);
+    return (v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2)) ? v1 - v2 : v1.toString().localeCompare(v2);
+};
+
+document.querySelectorAll('th').forEach(th => th.addEventListener('click', e => {
+    // Set icons
+    const span = e.currentTarget.querySelector("span");
+    const icon = "sort-" + (sortOrder ? "up" : "down");
+    span.innerHTML = `<i class="fas fa-solid fa-${icon}"></i>`;
+    table.querySelectorAll("th").forEach(x => {
+        if (x.cellIndex !== th.cellIndex) { // Remove other icons
+            x.querySelector("span").innerHTML = "<i class='fas fa-solid fa-sort'></i>";
+        }
+    });
+
+    // Sort table
+    sortOrder = !sortOrder;
+    const tbody = table.querySelector("tbody");
+    Array.from(tbody.querySelectorAll('tr'))
+        .sort(comparer(th.cellIndex, sortOrder))
+        .forEach(tr => tbody.appendChild(tr));
+}));
+
+table.querySelector("tbody").addEventListener("click", e => {
+    const row = e.target.parentElement;
+    const [{textContent: profilePicture}, {textContent: username}, {textContent: name}, {textContent: userType}] = row.children;
+    updateFormFields[0].value = username;
+    updateFormFields[1].value = name;
+    updateFormFields[2].value = userType;
+    preview.src = profilePicture ? BASE_URL + "uploads/" + profilePicture : placeholderImage;
+});
+
 updateForm.addEventListener("submit", e => {
     e.preventDefault();
 
