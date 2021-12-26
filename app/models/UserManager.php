@@ -31,19 +31,13 @@ class UserManager extends AbstractManager
         return $user && password_verify($password, $user['password']);
     }
 
-    public function getUsersBy($username = '', $name = '', $type = '', $filter = 'username', $order = 'ASC'): array|false
+    public function getUsersBy($username = '', $name = '', $type = ''): array|false
     {
         $query = "SELECT username, name, user_type, profile_picture FROM user WHERE username LIKE ? AND name LIKE ? ";
         $params = ['%' . $username . '%', '%' . $name . '%'];
         if (!empty($type)) {
             $query .= "AND user_type = ? ";
             $params[] = $type;
-        }
-        if (!empty($filter) && !empty($order))
-        {
-            $query .= "ORDER BY ? ?";
-            $params[] = $filter;
-            $params[] = $order;
         }
         $query .= ";";
         $stmt = $this->db->prepare($query);
