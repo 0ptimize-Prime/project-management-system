@@ -88,12 +88,25 @@ class admin extends Controller
                         );
                     }
                 }
-                header("Location: " . BASE_URL . "admin/edit");
-                die;
             }
             else if (isset($_POST["remove"])) {
-                // TODO: handle remove user
+                if (isset(
+                    $_POST["username"],
+                    $_POST["name"],
+                    $_POST["userType"]
+                )) {
+                    if (!$this->is_username_available($_POST["username"])) {
+                        $userManager->removeUser($_POST["username"]);
+                        FlashMessage::create_flash_message(
+                            "remove-user",
+                            "User `" . $_POST["username"] . "` removed successfully.",
+                            new SuccessFlashMessage()
+                        );
+                    }
+                }
             }
+            header("Location: " . BASE_URL . "admin/edit");
+            die;
         }
     }
 
