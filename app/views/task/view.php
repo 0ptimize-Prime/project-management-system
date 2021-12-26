@@ -1,12 +1,19 @@
 <?php require_once __DIR__ . "/../../utils.php" ?>
 
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
-<?php includeWithVariables(__DIR__ . "/../templates/header.php",
-    array('title' => 'Task',
-        'isLoggedIn' => $_SESSION["user"])) ?>
+<head>
+    <title>Task</title>
+    <?php include __DIR__ . "/../templates/head.php" ?>
+    <meta name="taskId" content="<?php echo htmlspecialchars($data['task']['id']) ?>">
+</head>
 
-<meta name="taskId" content="<?php echo htmlspecialchars($data['task']['id']) ?>">
+<body>
+
+<?php
+includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" => true, "user" => $data["user"]));
+?>
 
 <h1 class="text-center">Task view</h1>
 
@@ -69,7 +76,7 @@
 
 <style>
     #comments {
-        height: 80%;
+        max-height: 80%;
     }
 
     .card-text {
@@ -101,16 +108,17 @@
         rowNode.classList.add("row", "g-0");
 
         const colNode1 = document.createElement("div");
-        colNode1.classList.add("col-md-2");
+        colNode1.classList.add("col-md-1");
         if (!newComment.profile_picture) newComment.profile_picture = "https://via.placeholder.com/100";
         const imgNode = document.createElement("img");
         imgNode.src = newComment.profile_picture;
         imgNode.alt = newComment.username;
+        imgNode.classList.add("img-fluid", "img-circle", "m-1")
         colNode1.appendChild(imgNode);
         rowNode.appendChild(colNode1);
 
         const colNode2 = document.createElement("div");
-        colNode2.classList.add("col-md-10");
+        colNode2.classList.add("col-md-11");
 
         const bodyNode = document.createElement("div");
         bodyNode.classList.add("card-body");

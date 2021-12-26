@@ -1,74 +1,65 @@
 <?php require_once __DIR__ . "/../../utils.php" ?>
 
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
-<?php includeWithVariables(__DIR__ . "/../templates/header.php",
-    array('title' => 'Create User',
-        'isLoggedIn' => $_SESSION["user"])) ?>
-<h1>Create User</h1>
-<?php display_flash_message("create-user") ?>
-<form action="create" method="post">
-    <div class="form-group row">
-        <label for="username" class="col-sm-2 col-form-label">Username</label>
-        <div class="col-sm-10">
-            <input
-                    class="form-control"
-                    id="username"
-                    name="username"
-                    placeholder="Username"
-            >
-        </div>
+<head>
+    <title>Create User</title>
+    <?php include __DIR__ . "/../templates/head.php" ?>
+</head>
+
+<body>
+
+<?php
+includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" => true, "user" => $data["user"]));
+?>
+
+<?php
+includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $data["user"]["userType"] == "ADMIN"));
+?>
+
+<main style="margin-top: 80px;">
+    <h1 class="text-center">Create User</h1>
+
+    <?php FlashMessage::display_flash_message("create-user") ?>
+
+    <div class="d-flex justify-content-center mt-5">
+        <form action="<?php echo htmlspecialchars(BASE_URL . 'admin/create') ?>" method="post">
+            <div class="form-group row mb-3">
+                <label for="username" class="col-sm-4 col-form-label">Username</label>
+                <div class="col-sm-8">
+                    <input class="form-control" id="username" name="username">
+                </div>
+            </div>
+            <div class="form-group row mb-3">
+                <label for="name" class="col-sm-4 col-form-label">Name</label>
+                <div class="col-sm-8">
+                    <input class="form-control" id="name" name="name">
+                </div>
+            </div>
+            <div class="form-group row mb-3">
+                <label for="userType" class="col-sm-4 col-form-label">User Type</label>
+                <div class="col-sm-8">
+                    <select class="form-select" id="userType" name="userType">
+                        <option value="ADMIN">Admin</option>
+                        <option value="MANAGER">Manager</option>
+                        <option value="EMPLOYEE" selected>Employee</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row mb-3">
+                <label for="password" class="col-sm-4 col-form-label">Password</label>
+                <div class="col-sm-8">
+                    <input type="password" class="form-control" id="password" name="password">
+                </div>
+            </div>
+            <div class="d-flex justify-content-between">
+                <button type="reset" name="reset" class="btn btn-secondary col-sm-3">Clear</button>
+                <button type="submit" name="submit" class="btn btn-primary col-sm-3">Submit</button>
+            </div>
+        </form>
     </div>
-    <div class="form-group row">
-        <label for="name" class="col-sm-2 col-form-label">Name</label>
-        <div class="col-sm-10">
-            <input
-                    class="form-control"
-                    id="name"
-                    name="name"
-                    placeholder="Name"
-            >
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="userType" class="col-sm-2 col-form-label">User Type</label>
-        <div class="col-sm-10">
-            <select
-                    class="form-control"
-                    id="userType"
-                    name="userType"
-            >
-                <option value="ADMIN">Admin</option>
-                <option value="MANAGER">Manager</option>
-                <option value="EMPLOYEE">Employee</option>
-            </select>
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="password" class="col-sm-2 col-form-label">Password</label>
-        <div class="col-sm-10">
-            <input
-                    type="password"
-                    class="form-control"
-                    id="password"
-                    name="password"
-                    placeholder="Password"
-            >
-        </div>
-    </div>
-    <div class="form-group row">
-        <div class="col-sm-10">
-            <button
-                    type="submit"
-                    class="btn btn-primary"
-                    name="submit"
-                    value="submit"
-            >
-                Submit
-            </button>
-        </div>
-    </div>
-</form>
+</main>
 
 </body>
 

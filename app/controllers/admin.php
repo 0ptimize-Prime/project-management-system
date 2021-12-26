@@ -14,7 +14,7 @@ class admin extends Controller
         }
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $this->checkAuth("admin/create", function () {
-                return ["name" => $_SESSION["user"]["username"]];
+                return ["user" => $_SESSION["user"]];
             });
         } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
             $this->checkAuth("admin/create", function () {
@@ -27,7 +27,11 @@ class admin extends Controller
                     $_POST["password"]
                 )
             ) {
-                create_flash_message("create-user", "Invalid request to create user.", FLASH_ERROR);
+                FlashMessage::create_flash_message(
+                    "create-user",
+                    "Invalid request to create user.",
+                    new ErrorFlashMessage()
+                );
             } else if (
                 $this->validate_create_user_data(
                     $_POST["username"],
@@ -42,7 +46,11 @@ class admin extends Controller
                     $_POST["password"],
                     $_POST["userType"]
                 );
-                create_flash_message("create-user", "User `" . $_POST["username"] . "` created successfully.", FLASH_SUCCESS);
+                FlashMessage::create_flash_message(
+                    "create-user",
+                    "User `" . $_POST["username"] . "` created successfully.",
+                    new SuccessFlashMessage()
+                );
             }
             header("Location: " . BASE_URL . "admin/create");
             die;
@@ -53,7 +61,7 @@ class admin extends Controller
     {
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $this->checkAuth("admin/edit", function () {
-                return array();
+                return ["user" => $_SESSION["user"]];
             });
         } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -66,21 +74,37 @@ class admin extends Controller
         $args = func_get_args();
         foreach ($args as $arg) {
             if (strlen($arg) < 1) {
-                create_flash_message("create-user", "All the fields are required.", FLASH_ERROR);
+                FlashMessage::create_flash_message(
+                    "create-user",
+                    "All the fields are required.",
+                    new ErrorFlashMessage()
+                );
                 return false;
             }
         }
         // check if the username available
         if (!$this->is_username_available($username)) {
-            create_flash_message("create-user", "Username `" . $username . "` is not available.", FLASH_ERROR);
+            FlashMessage::create_flash_message(
+                "create-user",
+                "Username `" . $username . "` is not available.",
+                new ErrorFlashMessage()
+            );
             return false;
         } // check if the name is alphabetic
         else if (!ctype_alpha(str_replace(" ", "", $name))) {
-            create_flash_message("create-user", "The name should be alphabetic.", FLASH_ERROR);
+            FlashMessage::create_flash_message(
+                "create-user",
+                "The name should be alphabetic.",
+                new ErrorFlashMessage()
+            );
             return false;
         } // check if the user_type is valid
         else if (!$this->is_valid_user_type($user_type)) {
-            create_flash_message("create-user", "User type is not valid.", FLASH_ERROR);
+            FlashMessage::create_flash_message(
+                "create-user",
+                "User type is not valid.",
+                new ErrorFlashMessage()
+            );
             return false;
         } else return true;
     }

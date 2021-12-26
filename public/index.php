@@ -2,8 +2,12 @@
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/..");
-$dotenv->load();
+try {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/..");
+    $dotenv->load();
+} catch (Dotenv\Exception\InvalidPathException $e) {
+    // Ignore missing .env
+}
 
 $_ENV["BASE_URL"] = $_ENV["BASE_URL"] . "public/";
 define("BASE_URL", $_ENV["BASE_URL"]);

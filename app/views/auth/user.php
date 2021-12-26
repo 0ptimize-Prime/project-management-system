@@ -1,8 +1,18 @@
 <?php require_once __DIR__ . '/../../utils.php' ?>
 
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
-<?php includeWithVariables(__DIR__ . "/../templates/header.php", array('title' => "User | " . $data['user']['name'])) ?>
+<head>
+    <title><?php echo htmlspecialchars("User | " . $data["user"]["name"]) ?></title>
+    <?php include __DIR__ . "/../templates/head.php" ?>
+</head>
+
+<body>
+
+<?php
+includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" => true, "user" => $data["user"]));
+?>
 
 <h5 class="card-title"><?php echo htmlspecialchars($data['user']['name']) ?></h5>
 

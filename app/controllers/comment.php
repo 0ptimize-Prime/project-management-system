@@ -29,9 +29,17 @@ class Comment extends Controller
             }
 
             if (!isset($_POST["body"])) {
-                create_flash_message("create-comment", "Invalid request", FLASH_ERROR);
+                FlashMessage::create_flash_message(
+                    "create-comment",
+                    "Invalid request",
+                    new ErrorFlashMessage()
+                );
             } else if (strlen($_POST["body"]) < 1) {
-                create_flash_message("create-comment", "Body cannot be empty.", FLASH_ERROR);
+                FlashMessage::create_flash_message(
+                    "create-comment",
+                    "Body cannot be empty.",
+                    new ErrorFlashMessage()
+                );
             } else {
                 $commentManager = CommentManager::getInstance();
                 $id = $commentManager->addComment($taskId, $user["username"], $_POST["body"]);

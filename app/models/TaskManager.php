@@ -8,7 +8,8 @@ class TaskManager extends AbstractManager
     public function addTask(string $projectId, string $title, string $description, string $username, string $deadline, int $effort): string|false
     {
         $id = bin2hex(random_bytes(10));
-        $deadlineTimestamp = convertDateToTimestamp($deadline);
+        $deadlineTimestamp = strlen($deadline) < 1? null: date("Y-m-d", strtotime($deadline));
+        $username = strlen($username) < 1? null: $username;
         $status = $username ? "ASSIGNED" : "CREATED";
         $ind = $this->getNextIndex($projectId);
         $stmt = $this->db->prepare(
@@ -44,7 +45,8 @@ class TaskManager extends AbstractManager
         $stmt = $this->db->prepare(
             "SELECT task.*, user.name, user.profile_picture FROM task
             LEFT JOIN user on task.username = user.username
-            WHERE project_id=?;");
+            WHERE project_id=?
+            ORDER BY task.ind;");
         $stmt->execute([$projectId]);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

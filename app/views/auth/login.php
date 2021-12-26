@@ -1,34 +1,39 @@
 <?php require_once __DIR__ . '/../../utils.php' ?>
 
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Login</title>
+    <?php include __DIR__ . "/../templates/head.php" ?>
+    <link rel="stylesheet" href="<?php echo BASE_URL ?>css/login.css "/>
+</head>
+
+<body>
 
 <?php
-includeWithVariables(
-    __DIR__ . "/../templates/header.php",
-    array('title' => 'Login', 'isLoggedIn' => false));
-$data = $data ?? [];
+includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" => false));
 ?>
-<h5 class="card-title text-align-center">Login</h5>
-<?php display_flash_message("login"); ?>
-<form action="login" method="POST">
-    <label for="username" class="form-label">Username</label>
-    <input
-            type="text"
-            name="username"
-            id="username"
-            class="form-control"
-            aria-describedby="usernameHelp"
-    />
-    <label for="password" class="form-label">Password</label>
-    <input
-            type="password"
-            name="password"
-            id="password"
-            class="form-control"
-            aria-describedby="passwordHelp"
-    />
-    <button type="submit" name="submit" class="btn btn-primary">Login</button>
-</form>
-</body>
 
+<?php FlashMessage::display_flash_message("login") ?>
+<div class="login-form">
+    <form action="login" method="post">
+        <h2 class="text-center">Login</h2>
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" name="username" id="username" placeholder="Username"
+                   required="required">
+            <label for="username">Username</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="password" class="form-control" name="password" id="password" placeholder="Password"
+                   required="required">
+            <label for="password">Password</label>
+        </div>
+        <div class="form-group d-grid m-2">
+            <button type="submit" class="btn btn-primary">Log in</button>
+        </div>
+    </form>
+</div>
+
+</body>
 </html>
