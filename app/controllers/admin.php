@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . "/../utils.php";
 require_once __DIR__ . "/../models/UserManager.php";
+require_once __DIR__ . "/../models/FileManager.php";
 
 class admin extends Controller
 {
@@ -8,6 +9,7 @@ class admin extends Controller
     {
         session_start();
         $userManager = UserManager::getInstance();
+        $fileManager = FileManager::getInstance();
         if ($_SESSION["user"]["userType"] != "ADMIN") {
             header("Location: " . BASE_URL . "home/dashboard");
             die;
@@ -40,12 +42,27 @@ class admin extends Controller
                     $_POST["password"]
                 )
             ) {
+                $profile_picture = null;
+                if (isset($_FILES["file"]))
+                {
+                    $file = $_FILES["file"]["name"];
+                    $file_loc = $_FILES["file"]["tmp_name"];
+                    $folder = __DIR__ . '/../../public/uploads/';
+                    $profile_picture = $fileManager->addFile($_POST["username"], $file);
+                    move_uploaded_file($file_loc, $folder . $profile_picture);
+                }
+
+
                 $userManager->registerUser(
                     $_POST["username"],
                     $_POST["name"],
                     $_POST["password"],
-                    $_POST["userType"]
+                    $_POST["userType"],
+                    $profile_picture
                 );
+
+
+
                 FlashMessage::create_flash_message(
                     "create-user",
                     "User `" . $_POST["username"] . "` created successfully.",

@@ -11,7 +11,7 @@ class UserManager extends AbstractManager
             return false;
         }
 
-        $stmt = $this->db->prepare("INSERT INTO user(username, name, password, user_type, profile_picture) VALUES(?, ?, ?, ?);");
+        $stmt = $this->db->prepare("INSERT INTO user(username, name, password, user_type, profile_picture) VALUES(?, ?, ?, ?, ?);");
         return $stmt->execute([$username, $name, $password, $type, $profile_picture]);
     }
 
