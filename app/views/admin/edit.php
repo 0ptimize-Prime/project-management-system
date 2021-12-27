@@ -95,7 +95,7 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                             <div class="form-group row mb-3">
                                 <label for="username" class="col-sm-4 col-form-label">Username</label>
                                 <div class="col-sm-8">
-                                    <input class="form-control" id="username" name="username">
+                                    <input class="form-control" id="username" name="username" readonly>
                                 </div>
                             </div>
                             <div class="form-group row mb-3">
