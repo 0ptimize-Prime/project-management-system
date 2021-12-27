@@ -6,6 +6,7 @@ const searchFormFields = searchForm.querySelectorAll("input,select");
 let sortOrder = null;
 const table = document.getElementById("user-table");
 
+let user = null;
 const updateForm = document.getElementById("update-form");
 const updateFormFields = updateForm.querySelectorAll("input,select");
 const cancelButton = document.getElementById("cancel-button");
@@ -14,6 +15,7 @@ const removeButton = document.getElementById("remove-button");
 const imgInput = document.getElementById("profile_picture");
 const preview = document.getElementById("preview");
 const removeDpButton = document.getElementById("remove-dp-button");
+const removeProfilePicture = document.getElementById("remove_profile_picture");
 
 const placeholderImage = "https://via.placeholder.com/300x300.png";
 const resetUpdateForm = () => {
@@ -87,25 +89,44 @@ document.querySelectorAll('th').forEach(th => th.addEventListener('click', e => 
 }));
 
 table.querySelector("tbody").addEventListener("click", e => {
+    resetUpdateForm();
     const row = e.target.parentElement;
     const [{textContent: profilePicture}, {textContent: username}, {textContent: name}, {textContent: userType}] = row.children;
     updateFormFields[0].value = username;
     updateFormFields[1].value = name;
     updateFormFields[2].value = userType;
     preview.src = profilePicture ? BASE_URL + "uploads/" + profilePicture : placeholderImage;
+    user = {username, name, userType, profilePicture};
 });
 
 updateForm.addEventListener("submit", e => {
     e.preventDefault();
 
+    const profilePictureChanged = (preview.src === BASE_URL + "uploads/" + user.profilePicture)
+        || (preview.src === placeholderImage && user.profilePicture === '');
+
+    if (user.name === updateFormFields[1].value
+        && user.userType === updateFormFields[2].value
+        && !profilePictureChanged) {
+        return;
+    }
+
     const xhttp = new XMLHttpRequest();
     xhttp.withCredentials = true;
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
+            const response = JSON.parse(this.response);
+            table.querySelectorAll("tbody tr").forEach(row => {
+                if (row.children[1].textContent === response.username) {
+                    row.children[0].textContent = response.profile_picture;
+                    row.children[2].textContent = response.name;
+                    row.children[3].textContent = response.userType;
+                }
+            });
             resetUpdateForm();
         }
     };
-    xhttp.open("POST", BASE_URL + "admin/edit", true);
+    xhttp.open("PUT", BASE_URL + "admin/edit", true);
     xhttp.send(new FormData(updateForm));
 });
 
@@ -118,8 +139,12 @@ removeButton.addEventListener("click", () => {
     xhttp.withCredentials = true;
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
+            table.querySelectorAll("tbody tr").forEach(row => {
+                if (row.children[1].textContent === updateFormFields[0].value) {
+                    table.querySelector("tbody").removeChild(row);
+                }
+            });
             resetUpdateForm();
-            // TODO: Remove user from table
         }
     };
     xhttp.open("DELETE", BASE_URL + "admin/edit", true);
@@ -130,10 +155,12 @@ imgInput.addEventListener("change", () => {
     const [file] = imgInput.files;
     if (file) {
         preview.src = URL.createObjectURL(file);
+        removeProfilePicture.value = "";
     }
 });
 
 removeDpButton.addEventListener("click", () => {
     imgInput.value = "";
     preview.src = placeholderImage;
+    removeProfilePicture.value = "remove";
 });
