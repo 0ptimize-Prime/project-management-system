@@ -53,6 +53,12 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                     <input type="password" class="form-control" id="password" name="password">
                 </div>
             </div>
+            <div class="form-group row mb-3">
+                <label class="col-sm-4" for="file">Profile Picture:</label>
+                <div class="col-sm-8">
+                    <input type="file" name="file">
+                </div>
+            </div>
             <div class="d-flex justify-content-between">
                 <button type="reset" name="reset" class="btn btn-secondary col-sm-3">Clear</button>
                 <button type="submit" name="submit" class="btn btn-primary col-sm-3">Submit</button>
