@@ -61,7 +61,16 @@ class UserManager extends AbstractManager
         $stmt->execute($params);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if (gettype($result) === "array") {
-            return $result;
+            $output = array();
+            foreach ($result as $row) {
+                array_push($output, [
+                    "username" => $row["username"],
+                    "name" => $row["name"],
+                    "userType" => $row["user_type"],
+                    "profile_picture" => $row["profile_picture"]
+                ]);
+            }
+            return $output;
         } else {
             return false;
         }
