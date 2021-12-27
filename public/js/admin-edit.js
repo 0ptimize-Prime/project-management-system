@@ -6,6 +6,7 @@ const searchFormFields = searchForm.querySelectorAll("input,select");
 let sortOrder = null;
 const table = document.getElementById("user-table");
 
+let user = null;
 const updateForm = document.getElementById("update-form");
 const updateFormFields = updateForm.querySelectorAll("input,select");
 const cancelButton = document.getElementById("cancel-button");
@@ -88,16 +89,27 @@ document.querySelectorAll('th').forEach(th => th.addEventListener('click', e => 
 }));
 
 table.querySelector("tbody").addEventListener("click", e => {
+    resetUpdateForm();
     const row = e.target.parentElement;
     const [{textContent: profilePicture}, {textContent: username}, {textContent: name}, {textContent: userType}] = row.children;
     updateFormFields[0].value = username;
     updateFormFields[1].value = name;
     updateFormFields[2].value = userType;
     preview.src = profilePicture ? BASE_URL + "uploads/" + profilePicture : placeholderImage;
+    user = {username, name, userType, profilePicture};
 });
 
 updateForm.addEventListener("submit", e => {
     e.preventDefault();
+
+    const profilePictureChanged = (preview.src === BASE_URL + "uploads/" + user.profilePicture)
+        || (preview.src === placeholderImage && user.profilePicture === '');
+
+    if (user.name === updateFormFields[1].value
+        && user.userType === updateFormFields[2].value
+        && !profilePictureChanged) {
+        return;
+    }
 
     const xhttp = new XMLHttpRequest();
     xhttp.withCredentials = true;
