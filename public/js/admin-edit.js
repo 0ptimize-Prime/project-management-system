@@ -115,10 +115,18 @@ updateForm.addEventListener("submit", e => {
     xhttp.withCredentials = true;
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
+            const response = JSON.parse(this.response);
+            table.querySelectorAll("tbody tr").forEach(row => {
+                if (row.children[1].textContent === response.username) {
+                    row.children[0].textContent = response.profile_picture;
+                    row.children[2].textContent = response.name;
+                    row.children[3].textContent = response.userType;
+                }
+            });
             resetUpdateForm();
         }
     };
-    xhttp.open("POST", BASE_URL + "admin/edit", true);
+    xhttp.open("PUT", BASE_URL + "admin/edit", true);
     xhttp.send(new FormData(updateForm));
 });
 
@@ -131,8 +139,12 @@ removeButton.addEventListener("click", () => {
     xhttp.withCredentials = true;
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
+            table.querySelectorAll("tbody tr").forEach(row => {
+                if (row.children[1].textContent === updateFormFields[0].value) {
+                    table.querySelector("tbody").removeChild(row);
+                }
+            });
             resetUpdateForm();
-            // TODO: Remove user from table
         }
     };
     xhttp.open("DELETE", BASE_URL + "admin/edit", true);
