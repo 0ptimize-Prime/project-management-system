@@ -43,7 +43,7 @@ class admin extends Controller
                 )
             ) {
                 $profile_picture = null;
-                if (isset($_FILES["file"]))
+                if ($_FILES["file"]["tmp_name"])
                 {
                     $file = $_FILES["file"]["name"];
                     $file_loc = $_FILES["file"]["tmp_name"];
