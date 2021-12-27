@@ -31,7 +31,12 @@ class UserManager extends AbstractManager
     {
         $user = $this->getUser($username);
         if ($user) {
-            return ['username' => $user['username'], 'name' => $user['name'], 'userType' => $user['userType']];
+            return [
+                'username' => $user['username'],
+                'name' => $user['name'],
+                'userType' => $user['userType'],
+                'profile_picture' => "/public/uploads/" . $user['profile_picture']
+            ];
         } else {
             return false;
         }
@@ -72,7 +77,8 @@ class UserManager extends AbstractManager
                 'username' => $result['username'],
                 'name' => $result['name'],
                 'password' => $result['password'],
-                'userType' => $result["user_type"]
+                'userType' => $result["user_type"],
+                'profile_picture' => $result["profile_picture"]
             ];
         } else {
             return false;
