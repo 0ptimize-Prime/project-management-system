@@ -103,7 +103,6 @@ class admin extends Controller
             }
             // TODO: handle profile picture updates
             $userManager->updateUser($_POST["username"], $_POST["name"], $_POST["userType"]);
-            http_response_code(204);
             $response = $userManager->getUser($_POST["username"]);
             echo json_encode($response);
             die;
@@ -121,7 +120,6 @@ class admin extends Controller
                 die;
             }
             $userManager->removeUser($_POST["username"]);
-            http_response_code(204);
             die;
         }
     }
