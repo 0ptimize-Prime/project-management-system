@@ -137,10 +137,14 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                         <div class="col-sm-8 offset-sm-3">
                             <div class="row">
                                 <div class="col-2">
-                                    <button id="cancel-button" name="submit" class="btn btn-secondary">Cancel</button>
+                                    <button type="button" id="cancel-button" name="cancel" class="btn btn-secondary">
+                                        Cancel
+                                    </button>
                                 </div>
                                 <div class="col-2">
-                                    <button id="remove-button" name="submit" class="btn btn-danger">Remove</button>
+                                    <button type="button" id="remove-button" name="remove" class="btn btn-danger">
+                                        Remove
+                                    </button>
                                 </div>
                                 <div class="col-2">
                                     <button type="submit" name="submit" class="btn btn-primary">Update</button>
