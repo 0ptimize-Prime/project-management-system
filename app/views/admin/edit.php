@@ -47,16 +47,16 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                         </div>
                         <div class="col-4">
                             <div class="row">
-                                <label for="name" class="col-4 col-form-label">By name</label>
-                                <div class="col-8">
+                                <label for="name" class="col-4 offset-1 col-form-label">By name</label>
+                                <div class="col-7">
                                     <input class="form-control" id="name" name="name">
                                 </div>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="row">
-                                <label for="userType" class="col-4 col-form-label">By type</label>
-                                <div class="col-6">
+                                <label for="userType" class="col-4 offset-1 col-form-label">By type</label>
+                                <div class="col-6" style="margin-left: -15px;">
                                     <select name="userType" id="userType" class="form-select">
                                         <option value="" selected>Any</option>
                                         <option value="ADMIN">Admin</option>
@@ -115,13 +115,14 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                                 </div>
                             </div>
                         </div>
-                        <div class="col-3 offset-2">
+                        <div class="col-3 offset-1">
                             <img src="https://via.placeholder.com/300x300.png" id="preview" alt="..."
                                  class="img-circle">
                         </div>
-                        <div class="col-3">
+                        <div class="col-3 offset-1">
                             <div class="row mb-3">
-                                <input accept="image/*" type="file" name="profile_picture" id="profile_picture">
+                                <input accept="image/*" type="file" name="profile_picture" id="profile_picture"
+                                       class="form-control">
                             </div>
                             <div class="row mb-3">
                                 <div class="col-10">
