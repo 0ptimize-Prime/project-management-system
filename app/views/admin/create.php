@@ -57,7 +57,7 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
             <div class="form-group row mb-3">
                 <label class="col-sm-4" for="file">Profile Picture:</label>
                 <div class="col-sm-8">
-                    <input type="file" name="file">
+                    <input type="file" name="file" accept="image/png, image/jpeg">
                 </div>
             </div>
             <div class="d-flex justify-content-between">
