@@ -43,8 +43,7 @@ class admin extends Controller
                 )
             ) {
                 $profile_picture = null;
-                if ($_FILES["file"]["tmp_name"])
-                {
+                if ($_FILES["file"]["tmp_name"]) {
                     $file = $_FILES["file"]["name"];
                     $file_loc = $_FILES["file"]["tmp_name"];
                     $folder = __DIR__ . '/../../public/uploads/';
@@ -60,7 +59,6 @@ class admin extends Controller
                     $_POST["userType"],
                     $profile_picture
                 );
-
 
 
                 FlashMessage::create_flash_message(
@@ -87,42 +85,43 @@ class admin extends Controller
             $this->checkAuth("admin/edit", function () {
                 return ["user" => $_SESSION["user"]];
             });
-        } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $this->checkAuth("admin/edit", function () {}) ;
+        } else if ($_SERVER["REQUEST_METHOD"] == "PUT") {
+            $this->checkAuth("admin/edit", function () {
+            });
 
-            if (isset($_POST["update"])) {
-                if (isset(
-                    $_POST["username"],
-                    $_POST["name"],
-                    $_POST["userType"]
-                )) {
-                    if ($this->validate_update_user_data($_POST["username"], $_POST["name"], $_POST["userType"])) {
-                        $userManager->updateUser($_POST["username"], $_POST["name"], $_POST["userType"]);
-                        FlashMessage::create_flash_message(
-                            "update-user",
-                            "User `" . $_POST["username"] . "` updated successfully.",
-                            new SuccessFlashMessage()
-                        );
-                    }
-                }
+            if (!isset(
+                $_POST["username"],
+                $_POST["name"],
+                $_POST["userType"]
+            )) {
+                http_response_code(400);
+                die;
             }
-            else if (isset($_POST["remove"])) {
-                if (isset(
-                    $_POST["username"],
-                    $_POST["name"],
-                    $_POST["userType"]
-                )) {
-                    if (!$this->is_username_available($_POST["username"])) {
-                        $userManager->removeUser($_POST["username"]);
-                        FlashMessage::create_flash_message(
-                            "remove-user",
-                            "User `" . $_POST["username"] . "` removed successfully.",
-                            new SuccessFlashMessage()
-                        );
-                    }
-                }
+            if (!$this->validate_update_user_data($_POST["username"], $_POST["name"], $_POST["userType"])) {
+                http_response_code(400);
+                die;
             }
-            header("Location: " . BASE_URL . "admin/edit");
+            // TODO: handle profile picture updates
+            $userManager->updateUser($_POST["username"], $_POST["name"], $_POST["userType"]);
+            http_response_code(204);
+            $response = $userManager->getUser($_POST["username"]);
+            echo json_encode($response);
+            die;
+        } else if ($_SERVER["REQUEST_METHOD"] == "DELETE") {
+            if (!isset(
+                $_POST["username"],
+                $_POST["name"],
+                $_POST["userType"]
+            )) {
+                http_response_code(400);
+                die;
+            }
+            if ($this->is_username_available($_POST["username"])) {
+                http_response_code(400);
+                die;
+            }
+            $userManager->removeUser($_POST["username"]);
+            http_response_code(204);
             die;
         }
     }
@@ -134,19 +133,21 @@ class admin extends Controller
             $this->checkAuth("admin/search", function () {
                 return false;
             });
-            if (isset(
+            if (!isset(
                 $_GET["username"],
                 $_GET["name"],
                 $_GET["userType"],
             )) {
-                $result = $userManager->getUsersBy(
-                    $_GET["username"],
-                    $_GET["name"],
-                    $_GET["userType"]
-                );
-                if ($result)
-                    echo json_encode($result);
+                http_response_code(400);
+                die;
             }
+            $result = $userManager->getUsersBy(
+                $_GET["username"],
+                $_GET["name"],
+                $_GET["userType"]
+            );
+            if ($result)
+                echo json_encode($result);
         }
     }
 
