@@ -26,7 +26,8 @@ $isAdmin = $isAdmin ?? false;
                class="list-group-item list-group-item-action py-2 ripple">
                 <i class="fas fa-plus fa-fw me-3"></i><span>Create Project</span>
             </a>
-            <a href="#" class="list-group-item list-group-item-action py-2 ripple">
+            <a href="<?php echo htmlspecialchars(BASE_URL . 'project/edit') ?>"
+               class="list-group-item list-group-item-action py-2 ripple">
                 <i class="fas fa-search fa-fw me-3"></i><span>Search/Update Projects</span>
             </a>
         </div>
