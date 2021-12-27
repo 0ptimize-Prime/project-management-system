@@ -126,6 +126,7 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                             </div>
                             <div class="row mb-3">
                                 <div class="col-10">
+                                    <input type="text" name="remove_profile_picture" id="remove_profile_picture" hidden>
                                     <button type="button" id="remove-dp-button" class="btn btn-danger">
                                         Remove profile picture
                                     </button>
