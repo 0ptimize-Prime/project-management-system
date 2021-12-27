@@ -121,8 +121,10 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                         </div>
                         <div class="col-3 offset-1">
                             <div class="row mb-3">
-                                <input accept="image/*" type="file" name="profile_picture" id="profile_picture"
-                                       class="form-control">
+                                <div class="col-12">
+                                    <input accept="image/*" type="file" name="profile_picture" id="profile_picture"
+                                           class="form-control">
+                                </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-10">
