@@ -35,7 +35,7 @@ class UserManager extends AbstractManager
                 'username' => $user['username'],
                 'name' => $user['name'],
                 'userType' => $user['userType'],
-                'profile_picture' => "/public/uploads/" . $user['profile_picture']
+                'profile_picture' => !$user["profile_picture"] ? null : "/public/uploads/" . $user['profile_picture']
             ];
         } else {
             return false;
