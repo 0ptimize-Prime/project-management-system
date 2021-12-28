@@ -15,6 +15,7 @@ const goToButton = document.getElementById("go-to-button");
 
 const resetUpdateForm = () => {
     updateForm.reset();
+    project = null;
     goToButton.hidden = true;
 }
 
@@ -111,6 +112,9 @@ table.querySelector("tbody").addEventListener("click", e => {
 updateForm.addEventListener("submit", e => {
     e.preventDefault();
 
+    if (!project)
+        return;
+
     if (project.title === updateFormFields[0].value
         && project.manager === updateFormFields[1].value
         && project.description === updateFormFields[2].value
@@ -142,6 +146,9 @@ updateForm.addEventListener("submit", e => {
 cancelButton.addEventListener("click", resetUpdateForm);
 
 removeButton.addEventListener("click", () => {
+    if (!project)
+        return;
+
     const xhttp = new XMLHttpRequest();
     xhttp.withCredentials = true;
     xhttp.onreadystatechange = function () {
