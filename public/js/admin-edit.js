@@ -18,8 +18,10 @@ const removeDpButton = document.getElementById("remove-dp-button");
 const removeProfilePicture = document.getElementById("remove_profile_picture");
 
 const placeholderImage = "https://via.placeholder.com/300x300.png";
+
 const resetUpdateForm = () => {
     updateForm.reset();
+    user = null;
     preview.src = placeholderImage;
 }
 
@@ -102,6 +104,9 @@ table.querySelector("tbody").addEventListener("click", e => {
 updateForm.addEventListener("submit", e => {
     e.preventDefault();
 
+    if (!user)
+        return;
+
     const profilePictureChanged = (preview.src === BASE_URL + "uploads/" + user.profilePicture)
         || (preview.src === placeholderImage && user.profilePicture === '');
 
@@ -135,6 +140,9 @@ cancelButton.addEventListener("click", () => {
 });
 
 removeButton.addEventListener("click", () => {
+    if (!user)
+        return;
+
     const xhttp = new XMLHttpRequest();
     xhttp.withCredentials = true;
     xhttp.onreadystatechange = function () {
