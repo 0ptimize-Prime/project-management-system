@@ -124,6 +124,8 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
     </div>
 </main>
 
+<script src="<?php echo htmlspecialchars(BASE_URL . 'js/project-edit.js') ?>"></script>
+
 </body>
 
 </html>
