@@ -77,7 +77,6 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                 <table class="table table-hover" id="user-table">
                     <thead>
                     <tr>
-                        <th style="display: none;"><span></span></th>
                         <th scope="col">Username <span><i class='fas fa-solid fa-sort'></i></span></th>
                         <th scope="col">Name <span><i class='fas fa-solid fa-sort'></i></span></th>
                         <th scope="col">User type <span><i class='fas fa-solid fa-sort'></i></span></th>
