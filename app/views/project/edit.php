@@ -67,7 +67,7 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
             </div>
 
             <div class="row">
-                <form class="container" id="update-form">
+                <form class="col-11" id="update-form">
                     <div class="row mb-3">
                         <label for="title" class="col-sm-1 col-form-label">Title</label>
                         <div class="col-sm-2">
@@ -119,6 +119,11 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                         </div>
                     </div>
                 </form>
+                <div class="col-1">
+                    <button class="btn btn-info" style="margin-left: -350px;" id="go-to-button" hidden>
+                        Go to project page
+                    </button>
+                </div>
             </div>
         </div>
     </div>

@@ -11,6 +11,12 @@ const updateForm = document.getElementById("update-form");
 const updateFormFields = updateForm.querySelectorAll("input,select,textarea");
 const cancelButton = document.getElementById("cancel-button");
 const removeButton = document.getElementById("remove-button");
+const goToButton = document.getElementById("go-to-button");
+
+const resetUpdateForm = () => {
+    updateForm.reset();
+    goToButton.hidden = true;
+}
 
 searchForm.addEventListener("submit", e => {
     e.preventDefault();
@@ -83,7 +89,7 @@ document.querySelectorAll('th').forEach(th => th.addEventListener('click', e => 
 }));
 
 table.querySelector("tbody").addEventListener("click", e => {
-    updateForm.reset();
+    resetUpdateForm();
     const row = e.target.parentElement;
     const {id: projectId, description} = row.dataset;
     const [
@@ -98,6 +104,7 @@ table.querySelector("tbody").addEventListener("click", e => {
     updateFormFields[1].value = manager;
     updateFormFields[2].value = description;
     updateFormFields[3].value = deadline;
+    goToButton.hidden = false;
     project = {projectId, title, manager, managerName, createdAt, deadline, status};
 });
 
@@ -127,12 +134,12 @@ updateForm.addEventListener("submit", e => {
                     row.dataset.description = response.description;
                 }
             });
-            updateForm.reset();
+            resetUpdateForm();
         }
     };
 });
 
-cancelButton.addEventListener("click", updateForm.reset);
+cancelButton.addEventListener("click", resetUpdateForm);
 
 removeButton.addEventListener("click", () => {
     const xhttp = new XMLHttpRequest();
@@ -144,9 +151,15 @@ removeButton.addEventListener("click", () => {
                     table.querySelector("tbody").removeChild(row);
                 }
             });
-            resetUpdateForm();
+            resetUpdateForm()
         }
     };
     xhttp.open("DELETE", BASE_URL + "project/edit", true);
     xhttp.send(new FormData(updateForm))
+});
+
+goToButton.addEventListener("click", () => {
+    if (project) {
+        window.location.assign(BASE_URL + "project/view/" + project.id);
+    }
 });
