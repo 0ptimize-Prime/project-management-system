@@ -27,8 +27,16 @@ $isAdmin = $isAdmin ?? false;
                 <i class="fas fa-plus fa-fw me-3"></i><span>Create Project</span>
             </a>
             <a href="<?php echo htmlspecialchars(BASE_URL . 'project/edit') ?>"
-               class="list-group-item list-group-item-action py-2 ripple">
+               class="list-group-item list-group-item-action py-2 mb-5 ripple">
                 <i class="fas fa-search fa-fw me-3"></i><span>Search/Update Projects</span>
+            </a>
+
+            <div class="list-group-item list-group-item-action py-2 ripple active">
+                <i class="fas fa-tasks fa-fw me-3"></i><span>Tasks</span>
+            </div>
+            <a href="<?php echo htmlspecialchars(BASE_URL . 'task/edit') ?>"
+               class="list-group-item list-group-item-action py-2 ripple">
+                <i class="fas fa-search fa-fw me-3"></i><span>Search/Update Tasks</span>
             </a>
         </div>
     </div>
