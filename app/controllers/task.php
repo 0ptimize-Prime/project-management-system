@@ -90,6 +90,17 @@ class Task extends Controller
         }
     }
 
+    public function edit()
+    {
+        if ($_SERVER["REQUEST_METHOD"] == "GET") {
+            $this->checkAuth("task/edit", function () {
+                return ["user" => $_SESSION["user"]];
+            });
+        } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+        }
+    }
+
     private function check_user(string $username): bool
     {
         if (strlen($username) < 1) {
