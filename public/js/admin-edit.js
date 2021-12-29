@@ -18,8 +18,10 @@ const removeDpButton = document.getElementById("remove-dp-button");
 const removeProfilePicture = document.getElementById("remove_profile_picture");
 
 const placeholderImage = "https://via.placeholder.com/300x300.png";
+
 const resetUpdateForm = () => {
     updateForm.reset();
+    user = null;
     preview.src = placeholderImage;
 }
 
@@ -40,10 +42,7 @@ searchForm.addEventListener("submit", e => {
             tbody.innerHTML = "";
             response.forEach(user => {
                 const tr = document.createElement("tr");
-                const profileTd = document.createElement("td");
-                profileTd.textContent = user.profile_picture;
-                profileTd.style = "display: none;";
-                tr.appendChild(profileTd);
+                tr.dataset.profilePicture = user.profile_picture;
                 const usernameTd = document.createElement("td");
                 usernameTd.textContent = user.username;
                 tr.appendChild(usernameTd);
@@ -91,7 +90,8 @@ document.querySelectorAll('th').forEach(th => th.addEventListener('click', e => 
 table.querySelector("tbody").addEventListener("click", e => {
     resetUpdateForm();
     const row = e.target.parentElement;
-    const [{textContent: profilePicture}, {textContent: username}, {textContent: name}, {textContent: userType}] = row.children;
+    const {profilePicture} = row.dataset;
+    const [{textContent: username}, {textContent: name}, {textContent: userType}] = row.children;
     updateFormFields[0].value = username;
     updateFormFields[1].value = name;
     updateFormFields[2].value = userType;
@@ -101,6 +101,9 @@ table.querySelector("tbody").addEventListener("click", e => {
 
 updateForm.addEventListener("submit", e => {
     e.preventDefault();
+
+    if (!user)
+        return;
 
     const profilePictureChanged = (preview.src === BASE_URL + "uploads/" + user.profilePicture)
         || (preview.src === placeholderImage && user.profilePicture === '');
@@ -117,10 +120,10 @@ updateForm.addEventListener("submit", e => {
         if (this.readyState === 4 && this.status === 200) {
             const response = JSON.parse(this.response);
             table.querySelectorAll("tbody tr").forEach(row => {
-                if (row.children[1].textContent === response.username) {
-                    row.children[0].textContent = response.profile_picture;
-                    row.children[2].textContent = response.name;
-                    row.children[3].textContent = response.userType;
+                if (row.children[0].textContent === response.username) {
+                    row.dataset.profilePicture = response.profile_picture;
+                    row.children[1].textContent = response.name;
+                    row.children[2].textContent = response.userType;
                 }
             });
             resetUpdateForm();
@@ -135,12 +138,15 @@ cancelButton.addEventListener("click", () => {
 });
 
 removeButton.addEventListener("click", () => {
+    if (!user)
+        return;
+
     const xhttp = new XMLHttpRequest();
     xhttp.withCredentials = true;
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             table.querySelectorAll("tbody tr").forEach(row => {
-                if (row.children[1].textContent === updateFormFields[0].value) {
+                if (row.children[0].textContent === updateFormFields[0].value) {
                     table.querySelector("tbody").removeChild(row);
                 }
             });
