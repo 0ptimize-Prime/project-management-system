@@ -105,12 +105,12 @@ updateForm.addEventListener("submit", e => {
     if (!user)
         return;
 
-    const profilePictureChanged = (preview.src === BASE_URL + "uploads/" + user.profilePicture)
+    const profilePictureUnchanged = (preview.src === BASE_URL + "uploads/" + user.profilePicture)
         || (preview.src === placeholderImage && user.profilePicture === '');
 
     if (user.name === updateFormFields[1].value
         && user.userType === updateFormFields[2].value
-        && !profilePictureChanged) {
+        && profilePictureUnchanged) {
         return;
     }
 
@@ -129,7 +129,7 @@ updateForm.addEventListener("submit", e => {
             resetUpdateForm();
         }
     };
-    xhttp.open("PUT", BASE_URL + "admin/edit", true);
+    xhttp.open("POST", BASE_URL + "admin/edit", true);
     xhttp.send(new FormData(updateForm));
 });
 
