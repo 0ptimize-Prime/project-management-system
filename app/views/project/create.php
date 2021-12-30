@@ -26,25 +26,25 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
     <div class='d-flex justify-content-center mt-5'>
         <form action='create' method="post" enctype="multipart/form-data">
             <div class="form-group row mb-3">
-                <label class="col-sm-3" for="title">Project Title:</label>
+                <label class="col-sm-3 col-form-label" for="title">Project Title:</label>
                 <div class="col-sm-9">
                     <input type="text" class="form-control" name="title" id="title" required="required">
                 </div>
             </div>
             <div class="form-group row mb-3">
-                <label class="col-sm-3" for="description">Description:</label>
+                <label class="col-sm-3 col-form-label" for="description">Description:</label>
                 <div class="col-sm-9">
                     <textarea id="description" name="description" rows="5" cols="33"></textarea>
                 </div>
             </div>
             <div class="form-group row mb-3">
-                <label class="col-sm-3" for="file">File:</label>
+                <label class="col-sm-3 col-form-label" for="file">File:</label>
                 <div class="col-sm-9">
-                    <input type="file" name="file">
+                    <input type="file" name="file" class="form-control">
                 </div>
             </div>
             <div class="form-group row mb-3">
-                <label class="col-sm-3" for="deadline">Deadline:</label>
+                <label class="col-sm-3 col-form-label" for="deadline">Deadline</label>
                 <div class="col-sm-4">
                     <input type="date" class="form-control" name="deadline" id="deadline">
                 </div>
