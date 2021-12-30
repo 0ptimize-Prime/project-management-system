@@ -24,8 +24,8 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
 
     <?php FlashMessage::display_flash_message("create-task") ?>
 
-    <div class='d-flex justify-content-center mt-5'>
-        <form action="<?php echo htmlspecialchars(BASE_URL . 'task/create/' . $data["projectId"]) ?>" method="post">
+    <div class="d-flex justify-content-center mt-5">
+        <form action="<?php echo htmlspecialchars(BASE_URL . 'task/create/' . $data['projectId']) ?>" method="post">
             <input id="projectId" name="projectId" value="<?php echo htmlspecialchars($data["projectId"]); ?>" hidden>
 
             <div class="form-group row mb-3">
@@ -41,7 +41,7 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                 </div>
             </div>
             <div class="form-group row mb-3">
-                <label for="username" class="col-sm-3 col-form-label">Username</label>
+                <label for="username" class="col-sm-3 col-form-label">Assignee</label>
                 <div class="col-sm-6">
                     <input class="form-control" id="username" name="username">
                 </div>
@@ -64,7 +64,7 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                     <input type="number" class="form-control" id="effort" name="effort" min="0" max="11" required>
                 </div>
             </div>
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between mt-5">
                 <button type="reset" name="reset" class="btn btn-secondary col-sm-2">Clear</button>
                 <button type="submit" name="submit" class="btn btn-primary col-sm-2">Submit</button>
             </div>
