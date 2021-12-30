@@ -47,6 +47,12 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                 </div>
             </div>
             <div class="form-group row mb-3">
+                <label class="col-sm-3 col-form-label" for="file">File</label>
+                <div class="col-sm-9">
+                    <input type="file" id="file" name="file" class="form-control">
+                </div>
+            </div>
+            <div class="form-group row mb-3">
                 <label for="deadline" class="col-sm-3 col-form-label">Deadline</label>
                 <div class="col-sm-4">
                     <input class="form-control" type="date" id="deadline" name="deadline">
