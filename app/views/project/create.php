@@ -23,22 +23,22 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
 
     <?php FlashMessage::display_flash_message("create-project") ?>
 
-    <div class='d-flex justify-content-center mt-5'>
-        <form action='create' method="post" enctype="multipart/form-data">
+    <div class="d-flex justify-content-center mt-5">
+        <form action="<?php echo htmlspecialchars(BASE_URL . 'project/create') ?>" method="post" enctype="multipart/form-data">
             <div class="form-group row mb-3">
-                <label class="col-sm-3 col-form-label" for="title">Project Title:</label>
+                <label class="col-sm-3 col-form-label" for="title">Project Title</label>
                 <div class="col-sm-9">
                     <input type="text" class="form-control" name="title" id="title" required="required">
                 </div>
             </div>
             <div class="form-group row mb-3">
-                <label class="col-sm-3 col-form-label" for="description">Description:</label>
+                <label class="col-sm-3 col-form-label" for="description">Description</label>
                 <div class="col-sm-9">
                     <textarea id="description" name="description" rows="5" cols="33"></textarea>
                 </div>
             </div>
             <div class="form-group row mb-3">
-                <label class="col-sm-3 col-form-label" for="file">File:</label>
+                <label class="col-sm-3 col-form-label" for="file">File</label>
                 <div class="col-sm-9">
                     <input type="file" name="file" class="form-control">
                 </div>
@@ -49,7 +49,7 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                     <input type="date" class="form-control" name="deadline" id="deadline">
                 </div>
             </div>
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between mt-5">
                 <button type="reset" name="Reset" class="btn btn-secondary col-sm-2">Clear</button>
                 <button type="submit" name="submit" class="btn btn-primary col-sm-2">Submit</button>
             </div>
