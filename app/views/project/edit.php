@@ -68,6 +68,7 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
 
             <div class="row">
                 <form class="col-11" id="update-form">
+                    <input type="text" name="id" id="id" hidden>
                     <div class="row mb-3">
                         <label for="title" class="col-sm-1 col-form-label">Title</label>
                         <div class="col-sm-2">

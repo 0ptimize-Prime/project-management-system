@@ -92,7 +92,7 @@ document.querySelectorAll('th').forEach(th => th.addEventListener('click', e => 
 table.querySelector("tbody").addEventListener("click", e => {
     resetUpdateForm();
     const row = e.target.parentElement;
-    const {id: projectId, description} = row.dataset;
+    const {id, description} = row.dataset;
     const [
         {textContent: title},
         {textContent: managerName, dataset: {username: manager}},
@@ -101,12 +101,13 @@ table.querySelector("tbody").addEventListener("click", e => {
         {textContent: status}
     ] = row.children;
 
-    updateFormFields[0].value = title;
-    updateFormFields[1].value = manager;
-    updateFormFields[2].value = description;
-    updateFormFields[3].value = deadline;
+    updateFormFields[0].value = id;
+    updateFormFields[1].value = title;
+    updateFormFields[2].value = manager;
+    updateFormFields[3].value = description;
+    updateFormFields[4].value = deadline;
     goToButton.hidden = false;
-    project = {projectId, title, manager, managerName, createdAt, deadline, status};
+    project = {id, title, manager, managerName, createdAt, deadline, status};
 });
 
 updateForm.addEventListener("submit", e => {
