@@ -78,6 +78,17 @@ class project extends Controller
         }
     }
 
+    public function edit()
+    {
+        if ($_SERVER["REQUEST_METHOD"] == "GET") {
+            $this->checkAuth("project/edit", function () {
+                return ["user" => $_SESSION["user"]];
+            });
+        } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+        }
+    }
+
     private function validate_create_project(string $title): bool
     {
         $args = func_get_args();

@@ -12,6 +12,11 @@ body {
     }
 }
 
+nav img {
+    height: 40px;
+    width: 40px;
+}
+
 /* Sidebar */
 .sidebar {
     position: fixed;

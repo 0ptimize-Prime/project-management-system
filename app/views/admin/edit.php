@@ -32,8 +32,6 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
 <main style="margin-top: 80px;">
     <h1 class="text-center">Search/Update User</h1>
 
-    <?php FlashMessage::display_flash_message("create-user") ?>
-
     <div class="d-flex justify-content-center mt-4">
         <div class="container">
             <form class="row mb-4 gx-1" id="search-form">
@@ -49,16 +47,16 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                         </div>
                         <div class="col-4">
                             <div class="row">
-                                <label for="name" class="col-4 col-form-label">By name</label>
-                                <div class="col-8">
+                                <label for="name" class="col-4 offset-1 col-form-label">By name</label>
+                                <div class="col-7">
                                     <input class="form-control" id="name" name="name">
                                 </div>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="row">
-                                <label for="userType" class="col-4 col-form-label">By type</label>
-                                <div class="col-6">
+                                <label for="userType" class="col-4 offset-1 col-form-label">By type</label>
+                                <div class="col-6" style="margin-left: -15px;">
                                     <select name="userType" id="userType" class="form-select">
                                         <option value="" selected>Any</option>
                                         <option value="ADMIN">Admin</option>
@@ -79,7 +77,6 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                 <table class="table table-hover" id="user-table">
                     <thead>
                     <tr>
-                        <th style="display: none;"><span></span></th>
                         <th scope="col">Username <span><i class='fas fa-solid fa-sort'></i></span></th>
                         <th scope="col">Name <span><i class='fas fa-solid fa-sort'></i></span></th>
                         <th scope="col">User type <span><i class='fas fa-solid fa-sort'></i></span></th>
@@ -97,7 +94,7 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                             <div class="form-group row mb-3">
                                 <label for="username" class="col-sm-4 col-form-label">Username</label>
                                 <div class="col-sm-8">
-                                    <input class="form-control" id="username" name="username">
+                                    <input class="form-control" id="username" name="username" readonly>
                                 </div>
                             </div>
                             <div class="form-group row mb-3">
@@ -117,16 +114,20 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                                 </div>
                             </div>
                         </div>
-                        <div class="col-3 offset-2">
+                        <div class="col-3 offset-1">
                             <img src="https://via.placeholder.com/300x300.png" id="preview" alt="..."
                                  class="img-circle">
                         </div>
-                        <div class="col-3">
+                        <div class="col-3 offset-1">
                             <div class="row mb-3">
-                                <input accept="image/*" type="file" name="profile_picture" id="profile_picture">
+                                <div class="col-12">
+                                    <input accept="image/*" type="file" name="profile_picture" id="profile_picture"
+                                           class="form-control">
+                                </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-10">
+                                    <input type="text" name="remove_profile_picture" id="remove_profile_picture" hidden>
                                     <button type="button" id="remove-dp-button" class="btn btn-danger">
                                         Remove profile picture
                                     </button>
@@ -138,10 +139,14 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                         <div class="col-sm-8 offset-sm-3">
                             <div class="row">
                                 <div class="col-2">
-                                    <button id="cancel-button" name="submit" class="btn btn-secondary">Cancel</button>
+                                    <button type="button" id="cancel-button" name="cancel" class="btn btn-secondary">
+                                        Cancel
+                                    </button>
                                 </div>
                                 <div class="col-2">
-                                    <button id="remove-button" name="submit" class="btn btn-danger">Remove</button>
+                                    <button type="button" id="remove-button" name="remove" class="btn btn-danger">
+                                        Remove
+                                    </button>
                                 </div>
                                 <div class="col-2">
                                     <button type="submit" name="submit" class="btn btn-primary">Update</button>

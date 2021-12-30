@@ -1,28 +1,22 @@
 const BASE_URL = document.head.querySelector("[name=BASE_URL][content]").content;
 
 const searchForm = document.getElementById("search-form");
-const searchFormFields = searchForm.querySelectorAll("input,select");
+const searchFormFields = searchForm.querySelectorAll("input");
 
 let sortOrder = null;
-const table = document.getElementById("user-table");
+const table = document.getElementById("project-table");
 
-let user = null;
+let project = null;
 const updateForm = document.getElementById("update-form");
-const updateFormFields = updateForm.querySelectorAll("input,select");
+const updateFormFields = updateForm.querySelectorAll("input,select,textarea");
 const cancelButton = document.getElementById("cancel-button");
 const removeButton = document.getElementById("remove-button");
-
-const imgInput = document.getElementById("profile_picture");
-const preview = document.getElementById("preview");
-const removeDpButton = document.getElementById("remove-dp-button");
-const removeProfilePicture = document.getElementById("remove_profile_picture");
-
-const placeholderImage = "https://via.placeholder.com/300x300.png";
+const goToButton = document.getElementById("go-to-button");
 
 const resetUpdateForm = () => {
     updateForm.reset();
-    user = null;
-    preview.src = placeholderImage;
+    project = null;
+    goToButton.hidden = true;
 }
 
 searchForm.addEventListener("submit", e => {
@@ -40,23 +34,31 @@ searchForm.addEventListener("submit", e => {
             const response = JSON.parse(this.response);
             const tbody = table.querySelector("tbody");
             tbody.innerHTML = "";
-            response.forEach(user => {
+            response.forEach(project => {
                 const tr = document.createElement("tr");
-                tr.dataset.profilePicture = user.profile_picture;
-                const usernameTd = document.createElement("td");
-                usernameTd.textContent = user.username;
-                tr.appendChild(usernameTd);
-                const nameTd = document.createElement("td");
-                nameTd.textContent = user.name
-                tr.appendChild(nameTd);
-                const userTypeTd = document.createElement("td");
-                userTypeTd.textContent = user.userType;
-                tr.appendChild(userTypeTd);
+                tr.dataset.id = project.id;
+                tr.dataset.description = project.description;
+                const titleTd = document.createElement("td");
+                titleTd.textContent = project.title;
+                tr.appendChild(titleTd);
+                const managerTd = document.createElement("td");
+                managerTd.textContent = project.manager_name;
+                managerTd.dataset.username = project.manager;
+                tr.appendChild(managerTd);
+                const createdAtTd = document.createElement("td");
+                createdAtTd.textContent = project.created_at;
+                tr.appendChild(createdAtTd);
+                const deadlineTd = document.createElement("td");
+                deadlineTd.textContent = project.deadline;
+                tr.appendChild(deadlineTd);
+                const statusTd = document.createElement("td");
+                statusTd.textContent = project.status;
+                tr.appendChild(statusTd);
                 tbody.appendChild(tr);
             });
         }
     }
-    xhttp.open("GET", BASE_URL + "admin/search" + query, true);
+    xhttp.open("GET", BASE_URL + "project/search" + query, true);
     xhttp.send();
 });
 
@@ -90,27 +92,33 @@ document.querySelectorAll('th').forEach(th => th.addEventListener('click', e => 
 table.querySelector("tbody").addEventListener("click", e => {
     resetUpdateForm();
     const row = e.target.parentElement;
-    const {profilePicture} = row.dataset;
-    const [{textContent: username}, {textContent: name}, {textContent: userType}] = row.children;
-    updateFormFields[0].value = username;
-    updateFormFields[1].value = name;
-    updateFormFields[2].value = userType;
-    preview.src = profilePicture ? BASE_URL + "uploads/" + profilePicture : placeholderImage;
-    user = {username, name, userType, profilePicture};
+    const {id: projectId, description} = row.dataset;
+    const [
+        {textContent: title},
+        {textContent: managerName, dataset: {username: manager}},
+        {textContent: createdAt},
+        {textContent: deadline},
+        {textContent: status}
+    ] = row.children;
+
+    updateFormFields[0].value = title;
+    updateFormFields[1].value = manager;
+    updateFormFields[2].value = description;
+    updateFormFields[3].value = deadline;
+    goToButton.hidden = false;
+    project = {projectId, title, manager, managerName, createdAt, deadline, status};
 });
 
 updateForm.addEventListener("submit", e => {
     e.preventDefault();
 
-    if (!user)
+    if (!project)
         return;
 
-    const profilePictureChanged = (preview.src === BASE_URL + "uploads/" + user.profilePicture)
-        || (preview.src === placeholderImage && user.profilePicture === '');
-
-    if (user.name === updateFormFields[1].value
-        && user.userType === updateFormFields[2].value
-        && !profilePictureChanged) {
+    if (project.title === updateFormFields[0].value
+        && project.manager === updateFormFields[1].value
+        && project.description === updateFormFields[2].value
+        && project.deadline === updateFormFields[3].value) {
         return;
     }
 
@@ -120,25 +128,25 @@ updateForm.addEventListener("submit", e => {
         if (this.readyState === 4 && this.status === 200) {
             const response = JSON.parse(this.response);
             table.querySelectorAll("tbody tr").forEach(row => {
-                if (row.children[0].textContent === response.username) {
-                    row.dataset.profilePicture = response.profile_picture;
-                    row.children[1].textContent = response.name;
-                    row.children[2].textContent = response.userType;
+                if (row.dataset.id === response.id) {
+                    row.children[0].textContent = response.title;
+                    row.children[1].textContent = response.managerName;
+                    row.children[1].dataset.username = response.manager;
+                    row.children[2].textContent = response.created_at;
+                    row.children[3].textContent = response.deadline;
+                    row.children[4].textContent = response.status;
+                    row.dataset.description = response.description;
                 }
             });
             resetUpdateForm();
         }
     };
-    xhttp.open("PUT", BASE_URL + "admin/edit", true);
-    xhttp.send(new FormData(updateForm));
 });
 
-cancelButton.addEventListener("click", () => {
-    resetUpdateForm();
-});
+cancelButton.addEventListener("click", resetUpdateForm);
 
 removeButton.addEventListener("click", () => {
-    if (!user)
+    if (!project)
         return;
 
     const xhttp = new XMLHttpRequest();
@@ -146,27 +154,19 @@ removeButton.addEventListener("click", () => {
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             table.querySelectorAll("tbody tr").forEach(row => {
-                if (row.children[0].textContent === updateFormFields[0].value) {
+                if (row.dataset.id === project.id) {
                     table.querySelector("tbody").removeChild(row);
                 }
             });
-            resetUpdateForm();
+            resetUpdateForm()
         }
     };
-    xhttp.open("DELETE", BASE_URL + "admin/edit", true);
+    xhttp.open("DELETE", BASE_URL + "project/edit", true);
     xhttp.send(new FormData(updateForm))
 });
 
-imgInput.addEventListener("change", () => {
-    const [file] = imgInput.files;
-    if (file) {
-        preview.src = URL.createObjectURL(file);
-        removeProfilePicture.value = "";
+goToButton.addEventListener("click", () => {
+    if (project) {
+        window.location.assign(BASE_URL + "project/view/" + project.id);
     }
-});
-
-removeDpButton.addEventListener("click", () => {
-    imgInput.value = "";
-    preview.src = placeholderImage;
-    removeProfilePicture.value = "remove";
 });
