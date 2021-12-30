@@ -133,7 +133,6 @@ updateForm.addEventListener("submit", e => {
                     row.children[0].textContent = response.title;
                     row.children[1].textContent = response.managerName;
                     row.children[1].dataset.username = response.manager;
-                    row.children[2].textContent = response.created_at;
                     row.children[3].textContent = response.deadline;
                     row.children[4].textContent = response.status;
                     row.dataset.description = response.description;
