@@ -85,7 +85,7 @@ class admin extends Controller
             $this->checkAuth("admin/edit", function () {
                 return ["user" => $_SESSION["user"]];
             });
-        } else if ($_SERVER["REQUEST_METHOD"] == "PUT") {
+        } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $this->checkAuth("admin/edit", function () {
             });
 
