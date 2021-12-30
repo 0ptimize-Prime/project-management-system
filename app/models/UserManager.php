@@ -67,7 +67,7 @@ class UserManager extends AbstractManager
                     "username" => $row["username"],
                     "name" => $row["name"],
                     "userType" => $row["user_type"],
-                    "profile_picture" => $row["profile_picture"]
+                    "profile_picture" => $row["profile_picture"] ?? ""
                 ]);
             }
             return $output;
