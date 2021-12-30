@@ -141,6 +141,8 @@ updateForm.addEventListener("submit", e => {
             resetUpdateForm();
         }
     };
+    xhttp.open("POST", BASE_URL + "project/edit", true);
+    xhttp.send(new FormData(updateForm));
 });
 
 cancelButton.addEventListener("click", resetUpdateForm);
