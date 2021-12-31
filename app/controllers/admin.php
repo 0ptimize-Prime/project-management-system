@@ -112,8 +112,9 @@ class admin extends Controller
                 $user = $userManager->getUserDetails($_POST["username"]);
                 if ($user && !empty($user["profile_picture"])) {
                     $fileManager->deleteFile($user["profile_picture"]);
-                    $result = unlink(__DIR__ . '/../../public/uploads/' . $user["profile_picture"]);
-                    assert($result, "File is not deleted");
+                    if (file_exists(__DIR__ . '/../../public/uploads/' . $user["profile_picture"]))
+                        $result = unlink(__DIR__ . '/../../public/uploads/' . $user["profile_picture"]);
+                        assert($result === true, "File is not deleted");
                 }
             }
 
