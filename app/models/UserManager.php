@@ -15,10 +15,22 @@ class UserManager extends AbstractManager
         return $stmt->execute([$username, $name, $password, $type, $profile_picture]);
     }
 
-    public function updateUser($username, $name, $type): bool
+    public function updateUser($username, $name, $type, $profile_picture = ""): bool
     {
-        $stmt = $this->db->prepare("UPDATE user SET name = ?, user_type = ? WHERE username = ?");
-        return $stmt->execute([$name, $type, $username]);
+        $query = "UPDATE user SET name = ?, user_type = ?";
+        $params = [$name, $type];
+        if ($profile_picture === null) { // remove profile picture
+            $query .= ", profile_picture = ?";
+            $params[] = null;
+        } else if (!empty($profile_picture)) { // update profile picture
+            $query .= ", profile_picture = ?";
+            $params[] = $profile_picture;
+        }
+
+        $query .= " WHERE username = ?;";
+        $params[] = $username;
+        $stmt = $this->db->prepare($query);
+        return $stmt->execute($params);
     }
 
     public function removeUser($username): bool
@@ -35,7 +47,7 @@ class UserManager extends AbstractManager
                 'username' => $user['username'],
                 'name' => $user['name'],
                 'userType' => $user['userType'],
-                'profile_picture' => !$user["profile_picture"] ? null : "/public/uploads/" . $user['profile_picture']
+                'profile_picture' => $user["profile_picture"] ?? ""
             ];
         } else {
             return false;
