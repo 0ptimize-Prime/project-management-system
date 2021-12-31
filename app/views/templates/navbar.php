@@ -29,7 +29,7 @@ $isLoggedIn = $isLoggedIn ?? false;
                               data-bs-toggle="dropdown" aria-expanded="false">
                             <?php echo htmlspecialchars($user["name"]) ?>
                         </span>
-                        <img src="<?php echo htmlspecialchars($user['profile_picture'] ?? 'https://via.placeholder.com/40x40.png') ?>"
+                        <img src="<?php echo htmlspecialchars($user['profile_picture'] ? BASE_URL . "uploads/" . $user["profile_picture"] : 'https://via.placeholder.com/40x40.png') ?>"
                              alt="avatar" class="img-fluid img-circle m-1">
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="#">Profile</a></li>

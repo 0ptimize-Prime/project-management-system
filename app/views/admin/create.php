@@ -31,7 +31,7 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
     <?php FlashMessage::display_flash_message("create-user") ?>
 
     <div class="d-flex justify-content-center mt-5">
-        <form class="container" action="<?php echo htmlspecialchars(BASE_URL . 'admin/create') ?>" method="post">
+        <form class="container" action="<?php echo htmlspecialchars(BASE_URL . 'admin/create') ?>" method="post" enctype="multipart/form-data">
             <div class="row mb-5">
                 <div class="col-4">
                     <div class="form-group row mb-3">

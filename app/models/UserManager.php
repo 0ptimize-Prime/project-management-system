@@ -4,22 +4,51 @@ require_once __DIR__ . '/AbstractManager.php';
 
 class UserManager extends AbstractManager
 {
-    public function registerUser($username, $name, $password, $type): bool
+    public function registerUser($username, $name, $password, $type, $profile_picture): bool
     {
         $password = password_hash($password, PASSWORD_DEFAULT);
         if (!$password) {
             return false;
         }
 
-        $stmt = $this->db->prepare("INSERT INTO user(username, name, password, user_type) VALUES(?, ?, ?, ?);");
-        return $stmt->execute([$username, $name, $password, $type]);
+        $stmt = $this->db->prepare("INSERT INTO user(username, name, password, user_type, profile_picture) VALUES(?, ?, ?, ?, ?);");
+        return $stmt->execute([$username, $name, $password, $type, $profile_picture]);
+    }
+
+    public function updateUser($username, $name, $type, $profile_picture = ""): bool
+    {
+        $query = "UPDATE user SET name = ?, user_type = ?";
+        $params = [$name, $type];
+        if ($profile_picture === null) { // remove profile picture
+            $query .= ", profile_picture = ?";
+            $params[] = null;
+        } else if (!empty($profile_picture)) { // update profile picture
+            $query .= ", profile_picture = ?";
+            $params[] = $profile_picture;
+        }
+
+        $query .= " WHERE username = ?;";
+        $params[] = $username;
+        $stmt = $this->db->prepare($query);
+        return $stmt->execute($params);
+    }
+
+    public function removeUser($username): bool
+    {
+        $stmt = $this->db->prepare("DELETE FROM user WHERE username = ?");
+        return $stmt->execute([$username]);
     }
 
     public function getUserDetails($username): array|false
     {
         $user = $this->getUser($username);
         if ($user) {
-            return ['username' => $user['username'], 'name' => $user['name'], 'userType' => $user['userType']];
+            return [
+                'username' => $user['username'],
+                'name' => $user['name'],
+                'userType' => $user['userType'],
+                'profile_picture' => $user["profile_picture"] ?? ""
+            ];
         } else {
             return false;
         }
@@ -33,10 +62,10 @@ class UserManager extends AbstractManager
 
     public function getUsersBy($username = '', $name = '', $type = ''): array|false
     {
-        $query = "SELECT * FROM user WHERE username LIKE ? AND name LIKE ? ";
+        $query = "SELECT username, name, user_type, profile_picture FROM user WHERE username LIKE ? AND name LIKE ? ";
         $params = ['%' . $username . '%', '%' . $name . '%'];
         if (!empty($type)) {
-            $query .= "AND user_type = ?";
+            $query .= "AND user_type = ? ";
             $params[] = $type;
         }
         $query .= ";";
@@ -44,7 +73,16 @@ class UserManager extends AbstractManager
         $stmt->execute($params);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if (gettype($result) === "array") {
-            return $result;
+            $output = array();
+            foreach ($result as $row) {
+                array_push($output, [
+                    "username" => $row["username"],
+                    "name" => $row["name"],
+                    "userType" => $row["user_type"],
+                    "profile_picture" => $row["profile_picture"] ?? ""
+                ]);
+            }
+            return $output;
         } else {
             return false;
         }
@@ -60,7 +98,8 @@ class UserManager extends AbstractManager
                 'username' => $result['username'],
                 'name' => $result['name'],
                 'password' => $result['password'],
-                'userType' => $result["user_type"]
+                'userType' => $result["user_type"],
+                'profile_picture' => $result["profile_picture"]
             ];
         } else {
             return false;
