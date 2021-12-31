@@ -43,12 +43,13 @@ class admin extends Controller
                 )
             ) {
                 $profile_picture = null;
-                if ($_FILES["file"]["tmp_name"]) {
-                    $file = $_FILES["file"]["name"];
-                    $file_loc = $_FILES["file"]["tmp_name"];
+                if ($_FILES["profile_picture"]["tmp_name"]) {
+                    $file = $_FILES["profile_picture"]["name"];
+                    $file_loc = $_FILES["profile_picture"]["tmp_name"];
                     $folder = __DIR__ . '/../../public/uploads/';
                     $profile_picture = $fileManager->addFile($_POST["username"], $file);
-                    move_uploaded_file($file_loc, $folder . $profile_picture);
+                    if ($profile_picture)
+                        move_uploaded_file($file_loc, $folder . $profile_picture);
                 }
 
 
@@ -76,6 +77,7 @@ class admin extends Controller
     {
         session_start();
         $userManager = UserManager::getInstance();
+        $fileManager = FileManager::getInstance();
         if ($_SESSION["user"]["userType"] != "ADMIN") {
             header("Location: " . BASE_URL . "home/dashboard");
             die;
@@ -101,9 +103,32 @@ class admin extends Controller
                 http_response_code(400);
                 die;
             }
-            // TODO: handle profile picture updates
-            $userManager->updateUser($_POST["username"], $_POST["name"], $_POST["userType"]);
-            $response = $userManager->getUser($_POST["username"]);
+
+            $profile_picture = "";
+
+            // handle profile picture remove
+            if (isset($_POST["remove_profile_picture"]) && $_POST["remove_profile_picture"] !== "") {
+                $profile_picture = null;
+                $user = $userManager->getUserDetails($_POST["username"]);
+                if ($user && !empty($user["profile_picture"])) {
+                    $fileManager->deleteFile($user["profile_picture"]);
+                    $result = unlink(__DIR__ . '/../../public/uploads/' . $user["profile_picture"]);
+                    assert($result, "File is not deleted");
+                }
+            }
+
+            // handle new profile picture upload
+            if ($_FILES["profile_picture"]["tmp_name"]) {
+                $file = $_FILES["profile_picture"]["name"];
+                $file_loc = $_FILES["profile_picture"]["tmp_name"];
+                $folder = __DIR__ . '/../../public/uploads/';
+                $profile_picture = $fileManager->addFile($_POST["username"], $file);
+                if ($profile_picture)
+                    move_uploaded_file($file_loc, $folder . $profile_picture);
+            }
+
+            $userManager->updateUser($_POST["username"], $_POST["name"], $_POST["userType"], $profile_picture);
+            $response = $userManager->getUserDetails($_POST["username"]);
             echo json_encode($response);
             die;
         } else if ($_SERVER["REQUEST_METHOD"] == "DELETE") {
