@@ -153,8 +153,8 @@ removeButton.addEventListener("click", () => {
             resetUpdateForm();
         }
     };
-    xhttp.open("DELETE", BASE_URL + "admin/edit", true);
-    xhttp.send(new FormData(updateForm))
+    xhttp.open("DELETE", BASE_URL + "admin/edit/" + encodeURIComponent(user.username), true);
+    xhttp.send()
 });
 
 imgInput.addEventListener("change", () => {

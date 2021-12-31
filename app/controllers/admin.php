@@ -73,7 +73,7 @@ class admin extends Controller
         }
     }
 
-    public function edit()
+    public function edit(...$args)
     {
         session_start();
         $userManager = UserManager::getInstance();
@@ -132,19 +132,21 @@ class admin extends Controller
             echo json_encode($response);
             die;
         } else if ($_SERVER["REQUEST_METHOD"] == "DELETE") {
-            if (!isset(
-                $_POST["username"],
-                $_POST["name"],
-                $_POST["userType"]
-            )) {
-                http_response_code(400);
+            $username = $args[0];
+            if (!$this->is_username_available($username)) {
+                $user = $userManager->getUserDetails($username);
+                $result = true;
+                if (!empty($user["profile_picture"]) && file_exists(__DIR__ . '/../../public/uploads/' . $user["profile_picture"]))
+                    unlink(__DIR__ . '/../../public/uploads/' . $user["profile_picture"]);
+                    $result = $fileManager->deleteFile($user["profile_picture"]);
+                $result = $result && $userManager->removeUser($username);
+                if (!$result)
+                    http_response_code(400);
+                else
+                    http_response_code(200);
                 die;
             }
-            if ($this->is_username_available($_POST["username"])) {
-                http_response_code(400);
-                die;
-            }
-            $userManager->removeUser($_POST["username"]);
+            http_response_code(400);
             die;
         }
     }
