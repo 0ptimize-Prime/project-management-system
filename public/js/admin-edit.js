@@ -105,7 +105,7 @@ updateForm.addEventListener("submit", e => {
     if (!user)
         return;
 
-    const profilePictureUnchanged = (preview.src === BASE_URL + "uploads/" + user.profilePicture)
+    const profilePictureUnchanged = (preview.src.endsWith(BASE_URL + "uploads/" + user.profilePicture))
         || (preview.src === placeholderImage && user.profilePicture === '');
 
     if (user.name === updateFormFields[1].value
