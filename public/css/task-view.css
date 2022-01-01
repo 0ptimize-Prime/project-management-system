@@ -1,0 +1,35 @@
+.d-flex{
+    padding-top: 10px;
+    margin-top: 20px;
+    background-color: whitesmoke;
+}
+.card-text{
+    line-height: normal;
+    font-weight: normal;
+    font-size: initial;
+}
+.card-title{
+    line-height: normal;
+    font-weight: bolder;
+    font-size: x-large;
+
+}
+.card-subtitle{
+    line-height: normal;
+    font-weight: normal;
+}
+.container{
+    padding-top: 10px;
+    margin-top: 20px;
+    background-color: whitesmoke;
+    width: 1000px;
+}
+.col-md-11 .card-subtitle{
+    position: absolute;
+    right: 0;
+    width: 150px;
+}
+.form-select{
+    line-height: normal;
+    font-weight: normal;
+}

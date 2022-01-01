@@ -7,6 +7,7 @@
     <title>Task</title>
     <?php include __DIR__ . "/../templates/head.php" ?>
     <meta name="taskId" content="<?php echo htmlspecialchars($data['task']['id']) ?>">
+    <link rel="stylesheet" href="<?php echo BASE_URL ?>css/task-view.css "/>
 </head>
 
 <body>
@@ -24,10 +25,17 @@ includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" =>
             <p class="card-text">Description: <?php echo htmlspecialchars($data["task"]["description"]) ?></p>
             <?php if ($data["task"]["username"]) { ?>
                 <h6 class="card-subtitle mb-2 text-muted">
-                    Assigned: <?php echo htmlspecialchars($data["task"]["name"]) ?></h6>
+                    Assigned By : <?php echo htmlspecialchars($data["task"]["name"]) ?></h6>
             <?php } ?>
             <h6 class="card-subtitle mb-2 text-muted">
-                Project: <?php echo htmlspecialchars($data["project"]["title"]) ?></h6>
+                Project :<p><a href="<?php echo htmlspecialchars(BASE_URL . 'project/view/' .$data["project"]["id"])  ?>"><?php echo htmlspecialchars($data["project"]["title"]) ?></a></p>
+            <h6 class="card-subtitle mb-2 text-muted">
+                Created at : <?php echo htmlspecialchars($data['task']['created_at']) ?></h6>
+            <h6 class="card-subtitle mb-2 text-muted">
+                Deadline : <?php echo htmlspecialchars($data['task']['deadline']) ?></h6>
+            <h6 class="card-subtitle mb-2 text-muted">
+                Current Status : <?php echo htmlspecialchars($data['task']['status']) ?></h6>
+
             <ul class="list-group list-group-flush">
                 <?php foreach ($data["files"] as $file) { ?>
                     <li class="list-group-item">
@@ -37,11 +45,21 @@ includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" =>
                     </li>
                 <?php } ?>
             </ul>
+                <label for="status">Status :</label>
+                    <select class="form-select" id="status" name="status">
+                        <option value="" selected disabled></option>
+                        <option value="CREATED">Created</option>
+                        <option value="ASSIGNED">Assigned</option>
+                        <option value="IN_PROGRESS">In progress</option>
+                        <option value="PENDING">Pending</option>
+                        <option value="COMPLETE">Complete</option>
+                    </select>
         </div>
     </div>
 </div>
 
 <div class="container overflow-scroll" id="comments">
+    <div class="header"> <h1>Comments</h1></div>
     <?php foreach ($data["comments"] as $comment) { ?>
         <div class="card my-3" id="comment-<?php echo htmlspecialchars($comment['id']) ?>">
             <h5 class="card-header"><?php echo htmlspecialchars($comment["name"]) ?></h5>
@@ -89,6 +107,7 @@ includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" =>
 </style>
 
 <script>
+    const status=document.getElementById("status");
     const form = document.getElementById("comment-form");
     const commentsDiv = document.getElementById("comments");
 
@@ -160,6 +179,19 @@ includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" =>
         };
         xhttp.open("POST", "../../comment/task/" + taskId, true);
         xhttp.send(new FormData(form));
+    });
+    status.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        const xhttp = new XMLHttpRequest();
+        xhttp.withCredentials = true;
+        xhttp.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                //form.reset();
+            }
+        };
+        xhttp.open("POST", BASE_URL + "task/edit/" + taskId, true);
+        xhttp.send(new FormData(status));
     });
 </script>
 
