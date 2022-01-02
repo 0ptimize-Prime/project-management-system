@@ -82,13 +82,42 @@ class project extends Controller
     {
         session_start();
         $userManager = UserManager::getInstance();
+        $projectManager = ProjectManager::getInstance();
         $managers = $userManager->getUsersBy('', '', 'MANAGER');
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $this->checkAuth("project/edit", function ($managers) {
                 return ["user" => $_SESSION["user"], "managers" => $managers];
             }, [$managers]);
         } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $this->checkAuth("project/edit", function() {
+                return false;
+            });
 
+            if ($_SESSION["user"]["userType"] === "ADMIN") {
+                if (!isset(
+                    $_POST["id"],
+                    $_POST["title"],
+                    $_POST["manager"],
+                    $_POST["description"],
+                    $_POST["deadline"]
+                )) {
+                    http_response_code(400);
+                    die;
+                }
+                $result = $projectManager->updateProject(
+                    $_POST["id"],
+                    $_POST["manager"],
+                    $_POST["title"],
+                    $_POST["description"],
+                    $_POST["deadline"]
+                );
+                if ($result) {
+                    $response = $projectManager->getProject($_POST["id"]);
+                    echo json_encode($response);
+                }
+                else
+                    http_response_code(400);
+            }
         }
     }
 
