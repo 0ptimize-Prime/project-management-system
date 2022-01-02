@@ -11,7 +11,10 @@
 <body>
 
 <?php
-includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" => true, "user" => $data["user"]));
+includeWithVariables(
+        __DIR__ . "/../templates/navbar.php",
+        array("isLoggedIn" => true, "user" => $data["user"], "notifications" => $data["notifications"])
+);
 ?>
 
 <?php
