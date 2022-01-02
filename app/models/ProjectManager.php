@@ -55,8 +55,7 @@ class ProjectManager extends AbstractManager
         $stmt = $this->db->prepare(
             "UPDATE project SET manager=?, title=?, description=?, deadline=? WHERE id=?;"
         );
-        $deadlineTimestamp = convertDateToTimestamp($deadline);
-        return $stmt->execute([$manager, $title, $description, $deadlineTimestamp, $id]);
+        return $stmt->execute([$manager, $title, $description, $deadline, $id]);
     }
 
     public function deleteProject(string $id): bool
