@@ -80,7 +80,8 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                     <div class="row mb-3">
                         <label for="manager" class="col-sm-1 col-form-label">Manager</label>
                         <div class="col-sm-3">
-                            <select name="manager" id="manager" class="form-select">
+                            <select name="manager" id="manager" class="form-select"
+                                <?php if ($data["user"]["userType"] != "ADMIN") { ?> disabled <?php } ?>>
                                 <option value=""></option>
                                 <?php foreach ($data['managers'] as $manager) { ?>
                                     <option value="<?php echo htmlspecialchars($manager['username']) ?>">
