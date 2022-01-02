@@ -42,7 +42,7 @@ searchForm.addEventListener("submit", e => {
                 titleTd.textContent = project.title;
                 tr.appendChild(titleTd);
                 const managerTd = document.createElement("td");
-                managerTd.textContent = project.manager_name;
+                managerTd.textContent = project.manager;
                 managerTd.dataset.username = project.manager;
                 tr.appendChild(managerTd);
                 const createdAtTd = document.createElement("td");
@@ -105,7 +105,7 @@ table.querySelector("tbody").addEventListener("click", e => {
     updateFormFields[1].value = title;
     updateFormFields[2].value = manager;
     updateFormFields[3].value = description;
-    updateFormFields[4].value = deadline;
+    updateFormFields[4].value = new Date(deadline).toISOString().substring(0, 10);
     goToButton.hidden = false;
     project = {id, title, manager, managerName, createdAt, deadline, status};
 });
