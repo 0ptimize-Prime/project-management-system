@@ -45,22 +45,24 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                     </div>
                 </div>
             </div>
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Projects</h5>
+            <?php if ($data["user"]["userType"] != "EMPLOYEE") { ?>
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Projects</h5>
+                        </div>
+                        <ul class="list-group list-group-flush overflow-auto" style="max-height: 200px;">
+                            <?php foreach ($data["projects"] ?? [] as $project) { ?>
+                                <li class="list-group-item">
+                                    <a href="<?php echo htmlspecialchars(BASE_URL . 'project/view/' . $project['id']) ?>">
+                                        <?php echo htmlspecialchars($project['title']) ?>
+                                    </a>
+                                </li>
+                            <?php } ?>
+                        </ul>
                     </div>
-                    <ul class="list-group list-group-flush overflow-auto" style="max-height: 200px;">
-                        <?php foreach ($data["projects"] ?? [] as $project) { ?>
-                            <li class="list-group-item">
-                                <a href="<?php echo htmlspecialchars(BASE_URL . 'project/view/' . $project['id']) ?>">
-                                    <?php echo htmlspecialchars($project['title']) ?>
-                                </a>
-                            </li>
-                        <?php } ?>
-                    </ul>
                 </div>
-            </div>
+            <?php } ?>
         </div>
     </div>
     <table class="table">
