@@ -131,7 +131,7 @@ updateForm.addEventListener("submit", e => {
             table.querySelectorAll("tbody tr").forEach(row => {
                 if (row.dataset.id === response.id) {
                     row.children[0].textContent = response.title;
-                    row.children[1].textContent = response.managerName;
+                    row.children[1].textContent = response.manager;
                     row.children[1].dataset.username = response.manager;
                     row.children[3].textContent = response.deadline;
                     row.children[4].textContent = response.status;
