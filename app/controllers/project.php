@@ -80,6 +80,7 @@ class project extends Controller
 
     public function edit()
     {
+        session_start();
         $userManager = UserManager::getInstance();
         $managers = $userManager->getUsersBy('', '', 'MANAGER');
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
@@ -98,16 +99,29 @@ class project extends Controller
             $this->checkAuth("project/edit", function () {
                 return false;
             });
-            if (!isset(
-                $_GET["title"],
-                $_GET["manager"]
-            )) {
-                http_response_code(400);
-                die;
+            if ($_SESSION["user"]["userType"] === "ADMIN") {
+                if (!isset(
+                    $_GET["title"],
+                    $_GET["manager"]
+                )) {
+                    http_response_code(400);
+                    die;
+                }
+                $result = $projectManager->getProjectsBy($_GET["title"], $_GET["manager"]);
+                if ($result)
+                    echo json_encode($result);
             }
-            $result = $projectManager->getProjectsBy($_GET["title"], $_GET["manager"]);
-            if ($result)
-                echo json_encode($result);
+            else if ($_SESSION["user"]["userType"] === "MANAGER") {
+                if (!isset(
+                    $_GET["title"]
+                )) {
+                    http_response_code(400);
+                    die;
+                }
+                $result = $projectManager->getProjectsBy($_GET["title"], $_SESSION["user"]["username"]);
+                if ($result)
+                    echo json_encode($result);
+            }
         }
     }
 
