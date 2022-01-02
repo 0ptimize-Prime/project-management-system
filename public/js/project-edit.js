@@ -105,7 +105,7 @@ table.querySelector("tbody").addEventListener("click", e => {
     updateFormFields[1].value = title;
     updateFormFields[2].value = manager;
     updateFormFields[3].value = description;
-    updateFormFields[4].value = new Date(deadline).toISOString().substring(0, 10);
+    updateFormFields[4].value = deadline;
     goToButton.hidden = false;
     project = {id, title, manager, managerName, createdAt, deadline, status};
 });
