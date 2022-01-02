@@ -37,15 +37,17 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                         </div>
                     </div>
                 </div>
-                <div class="col-5">
-                    <div class="row">
-                        <label for="manager" class="col-3 offset-1 col-form-label">By manager</label>
-                        <div class="col-5">
-                            <input type="text" class="form-control" id="manager" name="manager">
+                <?php if ($data["user"]["userType"] == "ADMIN") { ?>
+                    <div class="col-5">
+                        <div class="row">
+                            <label for="manager" class="col-3 offset-1 col-form-label">By manager</label>
+                            <div class="col-5">
+                                <input type="text" class="form-control" id="manager" name="manager">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-1">
+                <?php } ?>
+                <div class="col-1 ms-5">
                     <button type="submit" class="btn btn-primary" name="search">Search</button>
                 </div>
             </form>
