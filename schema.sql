@@ -14,7 +14,7 @@ CREATE TABLE `project`
     `title`       varchar(50)                                 NOT NULL,
     `description` text                                                 DEFAULT NULL,
     `created_at`  timestamp                                   NOT NULL DEFAULT (current_timestamp()),
-    `deadline`    timestamp                                   NULL     DEFAULT NULL,
+    `deadline`    date                                        NULL     DEFAULT NULL,
     `status`      ENUM ('CREATED', 'IN_PROGRESS', 'COMPLETE') NOT NULL DEFAULT 'CREATED'
 );
 
@@ -26,7 +26,7 @@ CREATE TABLE `task`
     `description` text                    NULL     DEFAULT NULL,
     `username`    varchar(20)             NULL     DEFAULT NULL,
     `created_at`  timestamp               NOT NULL DEFAULT (current_timestamp()),
-    `deadline`    timestamp               NULL     DEFAULT NULL,
+    `deadline`    date                    NULL     DEFAULT NULL,
     `status`      ENUM (
         'CREATED',
         'ASSIGNED',
