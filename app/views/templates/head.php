@@ -9,3 +9,4 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
       crossorigin="anonymous"/>
 <link rel="stylesheet" href="<?php echo BASE_URL ?>css/nav-side-bar.css "/>
+<script defer src="<?php echo htmlspecialchars(BASE_URL . 'js/navbar.js') ?>"></script>
