@@ -17,6 +17,11 @@ nav img {
     width: 40px;
 }
 
+#mark-as-read i {
+    right: 15px;
+    top: 18px;
+}
+
 /* Sidebar */
 .sidebar {
     position: fixed;
