@@ -80,14 +80,37 @@ class project extends Controller
 
     public function edit()
     {
+        $userManager = UserManager::getInstance();
+        $managers = $userManager->getUsersBy('', '', 'MANAGER');
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
-            $this->checkAuth("project/edit", function () {
-                return ["user" => $_SESSION["user"]];
-            });
+            $this->checkAuth("project/edit", function ($managers) {
+                return ["user" => $_SESSION["user"], "managers" => $managers];
+            }, [$managers]);
         } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         }
     }
+
+    public function search()
+    {
+        $projectManager = ProjectManager::getInstance();
+        if ($_SERVER["REQUEST_METHOD"] === "GET") {
+            $this->checkAuth("project/edit", function () {
+                return false;
+            });
+            if (!isset(
+                $_GET["title"],
+                $_GET["manager"]
+            )) {
+                http_response_code(400);
+                die;
+            }
+            $result = $projectManager->getProjectsBy($_GET["title"], $_GET["manager"]);
+            if ($result)
+                echo json_encode($result);
+        }
+    }
+
 
     private function validate_create_project(string $title): bool
     {
