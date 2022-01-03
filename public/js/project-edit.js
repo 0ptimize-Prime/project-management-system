@@ -1,5 +1,7 @@
 const BASE_URL = document.head.querySelector("[name=BASE_URL][content]").content;
 
+const heading = document.querySelector("main h1");
+
 const searchForm = document.getElementById("search-form");
 const searchFormFields = searchForm.querySelectorAll("input");
 
@@ -17,6 +19,19 @@ const resetUpdateForm = () => {
     updateForm.reset();
     project = null;
     goToButton.hidden = true;
+    deleteAlert();
+}
+
+const showAlert = (message, style) => {
+    const div = document.createElement("div");
+    div.classList.add("alert", "alert-" + style);
+    div.textContent = message;
+    div.id = "update-project-message";
+    heading.after(div);
+}
+
+const deleteAlert = () => {
+    document.getElementById("update-project-message").remove();
 }
 
 searchForm.addEventListener("submit", e => {
@@ -37,7 +52,7 @@ searchForm.addEventListener("submit", e => {
             response.forEach(project => {
                 const tr = document.createElement("tr");
                 tr.dataset.id = project.id;
-                tr.dataset.description = project.description;
+                tr.dataset.description = project.description ?? '';
                 const titleTd = document.createElement("td");
                 titleTd.textContent = project.title;
                 tr.appendChild(titleTd);
@@ -126,19 +141,24 @@ updateForm.addEventListener("submit", e => {
     const xhttp = new XMLHttpRequest();
     xhttp.withCredentials = true;
     xhttp.onreadystatechange = function () {
-        if (this.readyState === 4 && this.status === 200) {
-            const response = JSON.parse(this.response);
-            table.querySelectorAll("tbody tr").forEach(row => {
-                if (row.dataset.id === response.id) {
-                    row.children[0].textContent = response.title;
-                    row.children[1].textContent = response.managerName;
-                    row.children[1].dataset.username = response.manager;
-                    row.children[3].textContent = response.deadline;
-                    row.children[4].textContent = response.status;
-                    row.dataset.description = response.description;
-                }
-            });
-            resetUpdateForm();
+        if (this.readyState === 4) {
+            if (this.status === 200) {
+                const response = JSON.parse(this.response);
+                table.querySelectorAll("tbody tr").forEach(row => {
+                    if (row.dataset.id === response.id) {
+                        row.children[0].textContent = response.title;
+                        row.children[1].textContent = response.managerName;
+                        row.children[1].dataset.username = response.manager;
+                        row.children[3].textContent = response.deadline;
+                        row.children[4].textContent = response.status;
+                        row.dataset.description = response.description;
+                    }
+                });
+                resetUpdateForm();
+                showAlert("Project successfully updated", "success");
+            } else {
+               showAlert("Project update failed", "danger");
+            }
         }
     };
     xhttp.open("POST", BASE_URL + "project/edit", true);
