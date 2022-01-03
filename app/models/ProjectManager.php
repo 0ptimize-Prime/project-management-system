@@ -37,7 +37,10 @@ class ProjectManager extends AbstractManager
 
     public function getProjectsBy($title = '', $manager = ''): array|false
     {
-        $query = "SELECT * FROM project WHERE title LIKE ? AND manager LIKE ?;";
+        $query = "
+            SELECT project.*, user.name as managerName FROM project
+            LEFT JOIN user on project.manager = user.username
+            WHERE title LIKE ? AND manager LIKE ?;";
         $params = ['%' . $title . '%', '%' . $manager . '%'];
 
         $stmt = $this->db->prepare($query);
