@@ -31,7 +31,9 @@ const showAlert = (message, style) => {
 }
 
 const deleteAlert = () => {
-    document.getElementById("update-project-message").remove();
+    const alertDiv = document.getElementById("update-project-message");
+    if (alertDiv)
+        alertDiv.remove();
 }
 
 searchForm.addEventListener("submit", e => {
@@ -157,7 +159,7 @@ updateForm.addEventListener("submit", e => {
                 resetUpdateForm();
                 showAlert("Project successfully updated", "success");
             } else {
-               showAlert("Project update failed", "danger");
+                showAlert("Project update failed", "danger");
             }
         }
     };
