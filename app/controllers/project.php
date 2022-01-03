@@ -84,7 +84,8 @@ class project extends Controller
         $userManager = UserManager::getInstance();
         $projectManager = ProjectManager::getInstance();
         $fileManager = FileManager::getInstance();
-        $managers = $userManager->getUsersBy('', '', 'MANAGER');
+        $managers = $userManager->getUsersBy('', '', 'MANAGER') ?? [];
+        $managers = array_merge($managers, $userManager->getUsersBy('', '', 'ADMIN') ?? []);
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             if ($_SESSION["user"]["userType"] === "EMPLOYEE") {
                 header("Location: " . BASE_URL . "home/dashboard");
