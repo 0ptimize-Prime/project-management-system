@@ -78,17 +78,18 @@ class project extends Controller
         }
     }
 
-    public function edit()
+    public function edit(...$args)
     {
         session_start();
         $userManager = UserManager::getInstance();
         $projectManager = ProjectManager::getInstance();
+        $fileManager = FileManager::getInstance();
         $managers = $userManager->getUsersBy('', '', 'MANAGER');
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $this->checkAuth("project/edit", function ($managers) {
                 return ["user" => $_SESSION["user"], "managers" => $managers];
             }, [$managers]);
-        } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        } else if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $this->checkAuth("project/edit", function () {
                 return false;
             });
@@ -140,6 +141,24 @@ class project extends Controller
                     $response = $projectManager->getProject($_POST["id"]);
                     echo json_encode($response);
                 } else
+                    http_response_code(400);
+            }
+        }
+        else if ($_SERVER["REQUEST_METHOD"] === "DELETE") {
+            if ($_SESSION["user"]["userType"] === "ADMIN") {
+                $id = $args[0];
+                $result = true;
+                // delete file associated with project
+                $files = $fileManager->getFiles($id);
+                if ($files) {
+                    if (file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
+                        unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
+                    }
+                    $result = $fileManager->deleteFile($files[0]["id"]);
+                }
+                if ($result)
+                    $result = $projectManager->deleteProject($id);
+                if (!$result)
                     http_response_code(400);
             }
         }
