@@ -37,7 +37,7 @@ searchForm.addEventListener("submit", e => {
             response.forEach(project => {
                 const tr = document.createElement("tr");
                 tr.dataset.id = project.id;
-                tr.dataset.description = project.description;
+                tr.dataset.description = project.description ?? '';
                 const titleTd = document.createElement("td");
                 titleTd.textContent = project.title;
                 tr.appendChild(titleTd);
