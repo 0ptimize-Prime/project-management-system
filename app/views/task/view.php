@@ -38,6 +38,8 @@ includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" =>
 
             <ul class="list-group list-group-flush">
                 <?php foreach ($data["files"] as $file) { ?>
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        Files:</h6>
                     <li class="list-group-item">
                         <a href="<?php echo BASE_URL . "uploads/" . htmlspecialchars($file["id"]) ?>">
                             <?php echo htmlspecialchars($file["name"]) ?>
