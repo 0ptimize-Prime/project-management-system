@@ -137,18 +137,19 @@ class admin extends Controller
             if (!$this->is_username_available($username)) {
                 $user = $userManager->getUserDetails($username);
                 $result = true;
-                if (!empty($user["profile_picture"]) && file_exists(__DIR__ . '/../../public/uploads/' . $user["profile_picture"]))
+                if (!empty($user["profile_picture"]) && file_exists(__DIR__ . '/../../public/uploads/' . $user["profile_picture"])) {
                     unlink(__DIR__ . '/../../public/uploads/' . $user["profile_picture"]);
                     $result = $fileManager->deleteFile($user["profile_picture"]);
-                $result = $result && $userManager->removeUser($username);
-                if (!$result)
+                }
+
+                if ($result) {
+                    $result = $userManager->removeUser($username);
+                } else {
                     http_response_code(400);
-                else
-                    http_response_code(200);
-                die;
+                }
+
             }
             http_response_code(400);
-            die;
         }
     }
 
