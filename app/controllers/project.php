@@ -118,6 +118,33 @@ class project extends Controller
                 else
                     http_response_code(400);
             }
+            else if ($_SESSION["user"]["userType"] === "MANAGER") {
+                if (!isset(
+                    $_POST["id"],
+                    $_POST["title"],
+                    $_POST["description"],
+                    $_POST["deadline"]
+                )) {
+                    http_response_code(400);
+                    die;
+                }
+                $project = $projectManager->getProject($_POST["id"]);
+                if ($project && $project["manager"] !== $_SESSION["user"]["username"])
+                    die;
+                $result = $projectManager->updateProject(
+                    $_POST["id"],
+                    $_SESSION["user"]["username"],
+                    $_POST["title"],
+                    $_POST["description"],
+                    $_POST["deadline"]
+                );
+                if ($result) {
+                    $response = $projectManager->getProject($_POST["id"]);
+                    echo json_encode($response);
+                }
+                else
+                    http_response_code(400);
+            }
         }
     }
 
