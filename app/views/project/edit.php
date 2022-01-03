@@ -37,15 +37,17 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                         </div>
                     </div>
                 </div>
-                <div class="col-5">
-                    <div class="row">
-                        <label for="manager" class="col-3 offset-1 col-form-label">By manager</label>
-                        <div class="col-5">
-                            <input type="text" class="form-control" id="manager" name="manager">
+                <?php if ($data["user"]["userType"] == "ADMIN") { ?>
+                    <div class="col-5">
+                        <div class="row">
+                            <label for="manager" class="col-3 offset-1 col-form-label">By manager</label>
+                            <div class="col-5">
+                                <input type="text" class="form-control" id="manager" name="manager">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-1">
+                <?php } ?>
+                <div class="col-1 ms-5">
                     <button type="submit" class="btn btn-primary" name="search">Search</button>
                 </div>
             </form>
@@ -78,7 +80,8 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                     <div class="row mb-3">
                         <label for="manager" class="col-sm-1 col-form-label">Manager</label>
                         <div class="col-sm-3">
-                            <select name="manager" id="manager" class="form-select">
+                            <select name="manager" id="manager" class="form-select"
+                                <?php if ($data["user"]["userType"] != "ADMIN") { ?> disabled <?php } ?>>
                                 <option value=""></option>
                                 <?php foreach ($data['managers'] as $manager) { ?>
                                     <option value="<?php echo htmlspecialchars($manager['username']) ?>">
