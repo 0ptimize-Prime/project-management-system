@@ -86,6 +86,11 @@ class project extends Controller
         $fileManager = FileManager::getInstance();
         $managers = $userManager->getUsersBy('', '', 'MANAGER');
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
+            if ($_SESSION["user"]["userType"] === "EMPLOYEE") {
+                header("Location: " . BASE_URL . "home/dashboard");
+                die;
+            }
+
             $this->checkAuth("project/edit", function ($managers) {
                 return ["user" => $_SESSION["user"], "managers" => $managers];
             }, [$managers]);
