@@ -42,7 +42,7 @@ searchForm.addEventListener("submit", e => {
                 titleTd.textContent = project.title;
                 tr.appendChild(titleTd);
                 const managerTd = document.createElement("td");
-                managerTd.textContent = project.manager_name;
+                managerTd.textContent = project.managerName;
                 managerTd.dataset.username = project.manager;
                 tr.appendChild(managerTd);
                 const createdAtTd = document.createElement("td");
@@ -107,7 +107,7 @@ table.querySelector("tbody").addEventListener("click", e => {
     updateFormFields[3].value = description;
     updateFormFields[4].value = deadline;
     goToButton.hidden = false;
-    project = {id, title, manager, managerName, createdAt, deadline, status};
+    project = {id, title, manager, managerName, description, createdAt, deadline, status};
 });
 
 updateForm.addEventListener("submit", e => {
@@ -116,10 +116,10 @@ updateForm.addEventListener("submit", e => {
     if (!project)
         return;
 
-    if (project.title === updateFormFields[0].value
-        && project.manager === updateFormFields[1].value
-        && project.description === updateFormFields[2].value
-        && project.deadline === updateFormFields[3].value) {
+    if (project.title === updateFormFields[1].value
+        && project.manager === updateFormFields[2].value
+        && project.description === updateFormFields[3].value
+        && project.deadline === updateFormFields[4].value) {
         return;
     }
 
@@ -163,8 +163,8 @@ removeButton.addEventListener("click", () => {
             resetUpdateForm()
         }
     };
-    xhttp.open("DELETE", BASE_URL + "project/edit", true);
-    xhttp.send(new FormData(updateForm))
+    xhttp.open("DELETE", BASE_URL + "project/edit/" + encodeURIComponent(project.id), true);
+    xhttp.send();
 });
 
 goToButton.addEventListener("click", () => {

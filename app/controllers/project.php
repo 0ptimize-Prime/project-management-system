@@ -78,16 +78,130 @@ class project extends Controller
         }
     }
 
-    public function edit()
+    public function edit(...$args)
     {
+        session_start();
+        $userManager = UserManager::getInstance();
+        $projectManager = ProjectManager::getInstance();
+        $fileManager = FileManager::getInstance();
+        $managers = $userManager->getUsersBy('', '', 'MANAGER') ?? [];
+        $managers = array_merge($managers, $userManager->getUsersBy('', '', 'ADMIN') ?? []);
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
-            $this->checkAuth("project/edit", function () {
-                return ["user" => $_SESSION["user"]];
-            });
-        } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            if ($_SESSION["user"]["userType"] === "EMPLOYEE") {
+                header("Location: " . BASE_URL . "home/dashboard");
+                die;
+            }
 
+            $this->checkAuth("project/edit", function ($managers) {
+                return ["user" => $_SESSION["user"], "managers" => $managers];
+            }, [$managers]);
+        } else if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $this->checkAuth("project/edit", function () {
+                return false;
+            });
+
+            if ($_SESSION["user"]["userType"] === "ADMIN") {
+                if (!isset(
+                    $_POST["id"],
+                    $_POST["title"],
+                    $_POST["manager"],
+                    $_POST["description"],
+                    $_POST["deadline"]
+                )) {
+                    http_response_code(400);
+                    die;
+                }
+                $result = $projectManager->updateProject(
+                    $_POST["id"],
+                    $_POST["manager"],
+                    $_POST["title"],
+                    $_POST["description"],
+                    $_POST["deadline"]
+                );
+                if ($result) {
+                    $response = $projectManager->getProject($_POST["id"]);
+                    echo json_encode($response);
+                } else
+                    http_response_code(400);
+            } else if ($_SESSION["user"]["userType"] === "MANAGER") {
+                if (!isset(
+                    $_POST["id"],
+                    $_POST["title"],
+                    $_POST["description"],
+                    $_POST["deadline"]
+                )) {
+                    http_response_code(400);
+                    die;
+                }
+                $project = $projectManager->getProject($_POST["id"]);
+                if ($project && $project["manager"] !== $_SESSION["user"]["username"])
+                    die;
+                $result = $projectManager->updateProject(
+                    $_POST["id"],
+                    $_SESSION["user"]["username"],
+                    $_POST["title"],
+                    $_POST["description"],
+                    $_POST["deadline"]
+                );
+                if ($result) {
+                    $response = $projectManager->getProject($_POST["id"]);
+                    echo json_encode($response);
+                } else
+                    http_response_code(400);
+            }
+        }
+        else if ($_SERVER["REQUEST_METHOD"] === "DELETE") {
+            if ($_SESSION["user"]["userType"] === "ADMIN") {
+                $id = $args[0];
+                $result = true;
+                // delete file associated with project
+                $files = $fileManager->getFiles($id);
+                if ($files) {
+                    if (file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
+                        unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
+                    }
+                    $result = $fileManager->deleteFile($files[0]["id"]);
+                }
+                if ($result)
+                    $result = $projectManager->deleteProject($id);
+                if (!$result)
+                    http_response_code(400);
+            }
         }
     }
+
+    public function search()
+    {
+        $projectManager = ProjectManager::getInstance();
+        if ($_SERVER["REQUEST_METHOD"] === "GET") {
+            $this->checkAuth("project/edit", function () {
+                return false;
+            });
+            if ($_SESSION["user"]["userType"] === "ADMIN") {
+                if (!isset(
+                    $_GET["title"],
+                    $_GET["manager"]
+                )) {
+                    http_response_code(400);
+                    die;
+                }
+                $result = $projectManager->getProjectsBy($_GET["title"], $_GET["manager"]);
+                if ($result)
+                    echo json_encode($result);
+            } else if ($_SESSION["user"]["userType"] === "MANAGER") {
+                if (!isset(
+                    $_GET["title"]
+                )) {
+                    http_response_code(400);
+                    die;
+                }
+                $result = $projectManager->getProjectsBy($_GET["title"], $_SESSION["user"]["username"]);
+                if ($result)
+                    echo json_encode($result);
+            }
+        }
+    }
+
 
     private function validate_create_project(string $title): bool
     {
