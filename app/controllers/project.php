@@ -89,7 +89,7 @@ class project extends Controller
                 return ["user" => $_SESSION["user"], "managers" => $managers];
             }, [$managers]);
         } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $this->checkAuth("project/edit", function() {
+            $this->checkAuth("project/edit", function () {
                 return false;
             });
 
@@ -114,11 +114,9 @@ class project extends Controller
                 if ($result) {
                     $response = $projectManager->getProject($_POST["id"]);
                     echo json_encode($response);
-                }
-                else
+                } else
                     http_response_code(400);
-            }
-            else if ($_SESSION["user"]["userType"] === "MANAGER") {
+            } else if ($_SESSION["user"]["userType"] === "MANAGER") {
                 if (!isset(
                     $_POST["id"],
                     $_POST["title"],
@@ -141,8 +139,7 @@ class project extends Controller
                 if ($result) {
                     $response = $projectManager->getProject($_POST["id"]);
                     echo json_encode($response);
-                }
-                else
+                } else
                     http_response_code(400);
             }
         }
@@ -166,8 +163,7 @@ class project extends Controller
                 $result = $projectManager->getProjectsBy($_GET["title"], $_GET["manager"]);
                 if ($result)
                     echo json_encode($result);
-            }
-            else if ($_SESSION["user"]["userType"] === "MANAGER") {
+            } else if ($_SESSION["user"]["userType"] === "MANAGER") {
                 if (!isset(
                     $_GET["title"]
                 )) {
