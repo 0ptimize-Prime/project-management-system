@@ -16,4 +16,13 @@ class Home extends Controller
             ];
         });
     }
+
+    public function profile()
+    {
+        if ($_SERVER["REQUEST_METHOD"] == "GET") {
+            $this->checkAuth("home/profile", function () {
+                return ["user" => $_SESSION["user"]];
+            });
+        }
+    }
 }
