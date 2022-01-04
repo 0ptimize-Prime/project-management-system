@@ -24,7 +24,10 @@ class ProjectManager extends AbstractManager
 
     public function getProject(string $id): array|false
     {
-        $stmt = $this->db->prepare("SELECT * FROM project WHERE id=?;");
+        $stmt = $this->db->prepare("
+            SELECT project.*, user.name as managerName FROM project
+            LEFT JOIN user on project.manager = user.username
+            WHERE id=?;");
         $stmt->execute([$id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
