@@ -6,11 +6,6 @@
 <head>
     <title>Search/Update Task</title>
     <?php include __DIR__ . "/../templates/head.php" ?>
-    <style>
-        #task-table tbody {
-            cursor: pointer;
-        }
-    </style>
 </head>
 
 <body>
@@ -51,7 +46,7 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
             </form>
 
             <div class="row mb-4">
-                <table class="table table-hover" id="task-table">
+                <table class="table" id="task-table">
                     <thead>
                     <tr>
                         <th scope="col">Project <span><i class="fas fa-solid fa-sort"></i></span></th>
