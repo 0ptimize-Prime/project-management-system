@@ -6,11 +6,6 @@
 <head>
     <title>Search/Update Project</title>
     <?php include __DIR__ . "/../templates/head.php" ?>
-    <style>
-        #project-table tbody {
-            cursor: pointer;
-        }
-    </style>
 </head>
 
 <body>
@@ -53,7 +48,7 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
             </form>
 
             <div class="row mb-4">
-                <table class="table table-hover" id="project-table">
+                <table class="table" id="project-table">
                     <thead>
                     <tr>
                         <th scope="col">Title <span><i class="fas fa-solid fa-sort"></i></span></th>
@@ -61,6 +56,7 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                         <th scope="col">Created at <span><i class="fas fa-solid fa-sort"></i></span></th>
                         <th scope="col">Deadline <span><i class="fas fa-solid fa-sort"></i></span></th>
                         <th scope="col">Status <span><i class="fas fa-solid fa-sort"></i></span></th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -104,19 +100,19 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-8 offset-sm-4">
-                            <div class="row mt-4">
-                                <div class="col-2">
+                        <div class="col-sm-8">
+                            <div class="row mt-5">
+                                <div class="col-3">
                                     <button type="button" id="cancel-button" name="cancel" class="btn btn-secondary">
                                         Cancel
                                     </button>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-3">
                                     <button type="button" id="remove-button" name="remove" class="btn btn-danger">
                                         Remove
                                     </button>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-3" style="margin-left: 10px;">
                                     <button type="submit" name="submit" class="btn btn-primary">Update</button>
                                 </div>
                             </div>
