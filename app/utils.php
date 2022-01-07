@@ -8,6 +8,19 @@ function includeWithVariables($filePath, $variables = [])
     }
 }
 
+function showNavbar(array $data, bool $isLoggedIn = true)
+{
+    includeWithVariables(
+        __DIR__ . "/views/templates/navbar.php",
+        array("isLoggedIn" => $isLoggedIn, "user" => $data["user"] ?? null, "notifications" => $data["notifications"] ?? [])
+    );
+}
+
+function showSidebar(array $data)
+{
+    includeWithVariables(__DIR__ . "/views/templates/sidebar.php", array("isAdmin" => $data["user"]["userType"] == "ADMIN"));
+}
+
 
 function convertDateToTimestamp(string $date): int
 {
