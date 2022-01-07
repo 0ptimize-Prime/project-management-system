@@ -18,7 +18,7 @@ function showNavbar(array $data, bool $isLoggedIn = true)
 
 function showSidebar(array $data)
 {
-    includeWithVariables(__DIR__ . "/views/templates/sidebar.php", array("isAdmin" => $data["user"]["userType"] == "ADMIN"));
+    includeWithVariables(__DIR__ . "/views/templates/sidebar.php", array("userType" => $data["user"]["userType"]));
 }
 
 

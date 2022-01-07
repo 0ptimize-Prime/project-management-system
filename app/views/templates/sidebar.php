@@ -1,11 +1,11 @@
 <?php
-$isAdmin = $isAdmin ?? false;
+$userType = $userType ?? "EMPLOYEE";
 ?>
 
 <nav id="sidebarMenu" class="d-lg-block sidebar collapse bg-white">
     <div class="position-sticky">
         <div class="list-group list-group-flush mx-3 mt-4">
-            <?php if ($isAdmin) { ?>
+            <?php if ($userType == "ADMIN") { ?>
                 <div class="list-group-item list-group-item-action py-2 ripple active">
                     <i class="fas fa-user fa-fw me-3"></i><span>Users</span>
                 </div>
