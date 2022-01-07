@@ -87,22 +87,22 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
             <div class="row">
                 <form class="container" id="update-form">
                     <div class="row mb-4">
-                        <div class="col-4">
+                        <div class="col-5">
                             <div class="form-group row mb-3">
-                                <label for="username" class="col-sm-4 col-form-label">Username</label>
-                                <div class="col-sm-8">
+                                <label for="username" class="col-sm-3 col-form-label">Username</label>
+                                <div class="col-sm-7">
                                     <input class="form-control" id="username" name="username" readonly>
                                 </div>
                             </div>
                             <div class="form-group row mb-3">
-                                <label for="name" class="col-sm-4 col-form-label">Name</label>
-                                <div class="col-sm-8">
+                                <label for="name" class="col-sm-3 col-form-label">Name</label>
+                                <div class="col-sm-7">
                                     <input class="form-control" id="name" name="name">
                                 </div>
                             </div>
                             <div class="form-group row mb-3">
-                                <label for="userType" class="col-sm-4 col-form-label">User Type</label>
-                                <div class="col-sm-8">
+                                <label for="userType" class="col-sm-3 col-form-label">User Type</label>
+                                <div class="col-sm-7">
                                     <select class="form-select" id="userType" name="userType">
                                         <option value="ADMIN">Admin</option>
                                         <option value="MANAGER">Manager</option>
@@ -116,7 +116,7 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                                         Cancel
                                     </button>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-4" style="margin-left: -10px;">
                                     <button type="button" id="remove-button" name="remove" class="btn btn-danger">
                                         Remove
                                     </button>
@@ -126,7 +126,7 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                                 </div>
                             </div>
                         </div>
-                        <div class="col-3 offset-1">
+                        <div class="col-3">
                             <img src="https://via.placeholder.com/300x300.png" id="preview" alt="..."
                                  class="img-circle">
                         </div>

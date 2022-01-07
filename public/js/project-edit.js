@@ -1,5 +1,3 @@
-const BASE_URL = document.head.querySelector("[name=BASE_URL][content]").content;
-
 const heading = document.querySelector("main h1");
 
 const searchForm = document.getElementById("search-form");
