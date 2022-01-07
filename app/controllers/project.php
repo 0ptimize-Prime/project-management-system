@@ -84,6 +84,7 @@ class project extends Controller
         $userManager = UserManager::getInstance();
         $projectManager = ProjectManager::getInstance();
         $fileManager = FileManager::getInstance();
+        $taskManager = TaskManager::getInstance();
         $managers = $userManager->getUsersBy('', '', 'MANAGER') ?? [];
         $managers = array_merge($managers, $userManager->getUsersBy('', '', 'ADMIN') ?? []);
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
@@ -161,6 +162,25 @@ class project extends Controller
                         unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
                     }
                     $result = $fileManager->deleteFile($files[0]["id"]);
+                }
+
+                if (!$result) {
+                    http_response_code(400);
+                    die;
+                }
+
+                // delete files associated with tasks
+                $tasks = $taskManager->getTasks($id);
+                if ($tasks) {
+                    foreach ($tasks as $task) {
+                        $files = $fileManager->getFiles($task["id"]);
+                        if ($files) {
+                            if (file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
+                                unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
+                            }
+                            $result = $fileManager->deleteFile($files[0]["id"]);
+                        }
+                    }
                 }
                 if ($result)
                     $result = $projectManager->deleteProject($id);
