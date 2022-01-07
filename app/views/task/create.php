@@ -25,7 +25,7 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
     <?php FlashMessage::display_flash_message("create-task") ?>
 
     <div class="d-flex justify-content-center mt-5">
-        <form action="<?php echo htmlspecialchars(BASE_URL . 'task/create/' . $data['projectId']) ?>" method="post">
+        <form action="<?php echo htmlspecialchars(BASE_URL . 'task/create/' . $data['projectId']) ?>" method="post" enctype="multipart/form-data">
             <input id="projectId" name="projectId" value="<?php echo htmlspecialchars($data["projectId"]); ?>" hidden>
 
             <div class="form-group row mb-3">
