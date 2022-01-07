@@ -27,7 +27,7 @@
 <body>
 
 <?php
-includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" => true, "user" => $data["user"]));
+showNavbar($data);
 ?>
 
 <h1 class="text-center">Project view</h1>
