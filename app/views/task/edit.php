@@ -60,6 +60,7 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                         <th scope="col">Deadline <span><i class="fas fa-solid fa-sort"></i></span></th>
                         <th scope="col">Status <span><i class="fas fa-solid fa-sort"></i></span></th>
                         <th scope="col">Assigned to <span><i class="fas fa-solid fa-sort"></i></span></th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody>
