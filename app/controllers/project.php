@@ -38,11 +38,14 @@ class project extends Controller
                 }
                 $projectID = $ProjectManager->createProject($manager, $title, $description, $deadline);
 
-                $file = $_FILES['file']['name'];
-                $file_loc = $_FILES['file']['tmp_name'];
-                $folder = __DIR__ . '/../../public/uploads/';
-                $final_file = $FileManager->addFile($projectID, $file);
-                move_uploaded_file($file_loc, $folder . $final_file);
+                if ($_FILES["file"]["tmp_name"]) {
+                    $file = $_FILES['file']['name'];
+                    $file_loc = $_FILES['file']['tmp_name'];
+                    $folder = __DIR__ . '/../../public/uploads/';
+                    $final_file = $FileManager->addFile($projectID, $file);
+                    if ($final_file)
+                        move_uploaded_file($file_loc, $folder . $final_file);
+                }
 
                 header('Location: ' . BASE_URL . "project/view/$projectID");
             }
