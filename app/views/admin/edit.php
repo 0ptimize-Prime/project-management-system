@@ -12,10 +12,6 @@
             width: 300px;
             height: 300px;
         }
-
-        #user-table tbody {
-            cursor: pointer;
-        }
     </style>
 </head>
 
@@ -74,12 +70,13 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
             </form>
 
             <div class="row mb-4">
-                <table class="table table-hover" id="user-table">
+                <table class="table" id="user-table">
                     <thead>
                     <tr>
                         <th scope="col">Username <span><i class='fas fa-solid fa-sort'></i></span></th>
                         <th scope="col">Name <span><i class='fas fa-solid fa-sort'></i></span></th>
                         <th scope="col">User type <span><i class='fas fa-solid fa-sort'></i></span></th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -113,6 +110,21 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                                     </select>
                                 </div>
                             </div>
+                            <div class="row" style="margin-top: 5rem;">
+                                <div class="col-4">
+                                    <button type="button" id="cancel-button" name="cancel" class="btn btn-secondary">
+                                        Cancel
+                                    </button>
+                                </div>
+                                <div class="col-4">
+                                    <button type="button" id="remove-button" name="remove" class="btn btn-danger">
+                                        Remove
+                                    </button>
+                                </div>
+                                <div class="col-4">
+                                    <button type="submit" name="submit" class="btn btn-primary">Update</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-3 offset-1">
                             <img src="https://via.placeholder.com/300x300.png" id="preview" alt="..."
@@ -131,25 +143,6 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                                     <button type="button" id="remove-dp-button" class="btn btn-danger">
                                         Remove profile picture
                                     </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-8 offset-sm-3">
-                            <div class="row">
-                                <div class="col-2">
-                                    <button type="button" id="cancel-button" name="cancel" class="btn btn-secondary">
-                                        Cancel
-                                    </button>
-                                </div>
-                                <div class="col-2">
-                                    <button type="button" id="remove-button" name="remove" class="btn btn-danger">
-                                        Remove
-                                    </button>
-                                </div>
-                                <div class="col-2">
-                                    <button type="submit" name="submit" class="btn btn-primary">Update</button>
                                 </div>
                             </div>
                         </div>
