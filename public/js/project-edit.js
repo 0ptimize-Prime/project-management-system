@@ -93,11 +93,16 @@ const comparer = (idx, asc) => (a, b) => {
 document.querySelectorAll('th').forEach(th => th.addEventListener('click', e => {
     // Set icons
     const span = e.currentTarget.querySelector("span");
+    if (!span)
+        return;
     const icon = "sort-" + (sortOrder ? "up" : "down");
     span.innerHTML = `<i class="fas fa-solid fa-${icon}"></i>`;
     table.querySelectorAll("th").forEach(x => {
         if (x.cellIndex !== th.cellIndex) { // Remove other icons
-            x.querySelector("span").innerHTML = "<i class='fas fa-solid fa-sort'></i>";
+            const span = x.querySelector("span");
+            if (!span)
+                return;
+            span.innerHTML = "<i class='fas fa-solid fa-sort'></i>";
         }
     });
 
