@@ -71,6 +71,9 @@ searchForm.addEventListener("submit", e => {
                 const statusTd = document.createElement("td");
                 statusTd.textContent = project.status;
                 tr.appendChild(statusTd);
+                const editTd = document.createElement("td");
+                editTd.innerHTML = "<button type='button' class='btn btn-primary btn-sm'><i class='fas fa-edit'></i></button>"
+                tr.appendChild(editTd);
                 tbody.appendChild(tr);
             });
         }
