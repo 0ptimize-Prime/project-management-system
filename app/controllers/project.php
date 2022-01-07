@@ -152,6 +152,9 @@ class project extends Controller
             }
         }
         else if ($_SERVER["REQUEST_METHOD"] === "DELETE") {
+            $this->checkAuth("project/edit", function () {
+                return false;
+            });
             if ($_SESSION["user"]["userType"] === "ADMIN") {
                 $id = $args[0];
                 $result = true;
