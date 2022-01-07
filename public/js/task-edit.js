@@ -1,5 +1,3 @@
-const BASE_URL = document.head.querySelector("[name=BASE_URL][content]").content;
-
 const searchForm = document.getElementById("search-form");
 const searchFormFields = searchForm.querySelectorAll("input");
 
