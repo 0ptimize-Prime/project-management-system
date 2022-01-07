@@ -12,6 +12,7 @@ class Task extends Controller
     public function create(string $projectId)
     {
         session_start();
+        $fileManager = FileManager::getInstance();
         $project = $this->check_project($projectId);
         if (!$project || $_SESSION["user"]["username"] != $project["manager"]) {
             header("Location: " . BASE_URL . "home/dashboard");
@@ -36,6 +37,16 @@ class Task extends Controller
                     $_POST["deadline"],
                     $_POST["effort"],
                 );
+
+                if ($result && $_FILES["file"]["tmp_name"]) {
+                    $file = $_FILES["file"]["name"];
+                    $file_loc = $_FILES["file"]["tmp_name"];
+                    $folder = __DIR__ . '/../../public/uploads/';
+                    $final_file = $fileManager->addFile($result, $file);
+                    if ($final_file)
+                        move_uploaded_file($file_loc, $folder . $final_file);
+                }
+
                 if ($result) {
                     FlashMessage::create_flash_message(
                         "create-task",
