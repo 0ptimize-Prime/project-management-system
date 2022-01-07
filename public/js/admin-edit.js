@@ -96,8 +96,15 @@ document.querySelectorAll('th').forEach(th => th.addEventListener('click', e => 
 }));
 
 table.querySelector("tbody").addEventListener("click", e => {
+    let row;
+    if (e.target.nodeName === "I")
+        row = e.target.parentElement.parentElement.parentElement;
+    else if (e.target.nodeName === "BUTTON")
+        row = e.target.parentElement.parentElement;
+    else
+        return;
+
     resetUpdateForm();
-    const row = e.target.parentElement;
     const {profilePicture} = row.dataset;
     const [{textContent: username}, {textContent: name}, {textContent: userType}] = row.children;
     updateFormFields[0].value = username;

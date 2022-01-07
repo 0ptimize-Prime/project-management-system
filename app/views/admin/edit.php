@@ -12,10 +12,6 @@
             width: 300px;
             height: 300px;
         }
-
-        #user-table tbody {
-            cursor: pointer;
-        }
     </style>
 </head>
 
@@ -74,7 +70,7 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
             </form>
 
             <div class="row mb-4">
-                <table class="table table-hover" id="user-table">
+                <table class="table" id="user-table">
                     <thead>
                     <tr>
                         <th scope="col">Username <span><i class='fas fa-solid fa-sort'></i></span></th>
