@@ -80,6 +80,7 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                         <th scope="col">Username <span><i class='fas fa-solid fa-sort'></i></span></th>
                         <th scope="col">Name <span><i class='fas fa-solid fa-sort'></i></span></th>
                         <th scope="col">User type <span><i class='fas fa-solid fa-sort'></i></span></th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody>
