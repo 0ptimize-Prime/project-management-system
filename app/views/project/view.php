@@ -82,19 +82,20 @@ showNavbar($data);
     <?php } ?>
     </tbody>
 </table>
+
 <div class="row">
     <div class="col-sm-8 offset-sm-4">
         <div class="row mt-4">
             <div class="col-2">
-                <form action="<?php echo htmlspecialchars(BASE_URL . 'task/create/' .$data["project"]["id"]) ?>">
-                    <button class = "newtask" type="submit">Add Task</button>
+                <form action="<?php echo htmlspecialchars(BASE_URL . 'task/create/' . $data["project"]["id"]) ?>">
+                    <button class="btn btn-primary" type="submit">Add Task</button>
                 </form>
             </div>
             <div class="col-3">
-                <button type="submit" name="newmilestone" class="milestone">Add Milestone</button>
+                <button type="submit" name="newmilestone" class="btn btn-primary">Add Milestone</button>
             </div>
             <div class="col-3">
-                <button type="submit" name="removemilestone" class="rmilestone">Remove Milestone</button>
+                <button type="submit" name="removemilestone" class="btn btn-danger">Remove Milestone</button>
             </div>
             <div class="col-1">
                 <button class="top" onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
