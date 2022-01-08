@@ -177,8 +177,7 @@ class project extends Controller
                 } else
                     http_response_code(400);
             }
-        }
-        else if ($_SERVER["REQUEST_METHOD"] === "DELETE") {
+        } else if ($_SERVER["REQUEST_METHOD"] === "DELETE") {
             $this->checkAuth("project/edit", function () {
                 return false;
             });
@@ -252,6 +251,30 @@ class project extends Controller
         }
     }
 
+    public function reorder() {
+        $projectManager = ProjectManager::getInstance();
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $this->checkAuth("project/reorder", function (){});
+            if (!isset(
+                $_POST["id"],
+                $_POST["items"]
+            )) {
+                http_response_code(400);
+                die;
+            }
+
+            $project = $projectManager->getProject($_POST["id"]);
+            if (!$project || $project["manager"] !== $_SESSION["user"]["username"]) {
+                http_response_code(400);
+                die;
+            }
+
+            $result = $projectManager->reorder($_POST["items"]);
+            if (!$result)
+                http_response_code(400);
+        }
+    }
+
     private function validate_create_project(string $title): bool
     {
         $args = func_get_args();
@@ -270,7 +293,8 @@ class project extends Controller
         return true;
     }
 
-    private function validate_update_project(string $id, string $manager, string $title, string $description, string $deadline): bool {
+    private function validate_update_project(string $id, string $manager, string $title, string $description, string $deadline): bool
+    {
         // check if all the inputs are non-empty
         $args = func_get_args();
         foreach ($args as $arg) {
@@ -291,7 +315,8 @@ class project extends Controller
 
     }
 
-    private function is_project_valid($id): bool {
+    private function is_project_valid($id): bool
+    {
         $projectManager = ProjectManager::getInstance();
         $project = $projectManager->getProject($id);
         if (!$project)
@@ -299,7 +324,8 @@ class project extends Controller
         return true;
     }
 
-    private function is_manager_valid($manager): bool {
+    private function is_manager_valid($manager): bool
+    {
         $userManager = UserManager::getInstance();
         $manager = $userManager->getUserDetails($manager);
         if (!$manager || ($manager["userType"] !== "MANAGER" && $manager["userType"] !== "ADMIN"))

@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . "/../models/NotificationManager.php";
+
 abstract class Controller
 {
     public function model(string $model)
@@ -15,7 +17,7 @@ abstract class Controller
 
     public function checkAuth(string $view, callable $cb, array $args = [])
     {
-        if (!isset($_SESSION)) {
+        if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
         if (isset($_SESSION['last_activity']) && time() - $_SESSION['last_activity'] < 3600) {
@@ -31,5 +33,16 @@ abstract class Controller
             header("Location: " . BASE_URL . "auth/logout");
             die;
         }
+    }
+
+    public function getViewData()
+    {
+        if (session_status() == PHP_SESSION_NONE)
+            session_start();
+        $notifications = NotificationManager::getInstance()->getNotifications($_SESSION["user"]["username"]);
+        return [
+            "user" => $_SESSION["user"],
+            "notifications" => $notifications
+        ];
     }
 }
