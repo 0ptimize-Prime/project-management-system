@@ -87,7 +87,12 @@ $notifications = array_map(function ($notification) use ($notifTypeToMessageMap,
                                  alt="avatar" class="img-fluid img-circle m-1">
                         </span>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarProfileDropdown">
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-fw fa-user"></i> Profile</a></li>
+                            <li>
+                                <a class="dropdown-item"
+                                   href="<?php echo htmlspecialchars(BASE_URL . 'home/profile') ?>">
+                                    <i class="fas fa-fw fa-user"></i> Profile
+                                </a>
+                            </li>
                             <li>
                                 <a class="dropdown-item"
                                    href="<?php echo htmlspecialchars(BASE_URL . 'auth/logout') ?>">
