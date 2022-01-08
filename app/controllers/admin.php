@@ -225,11 +225,6 @@ class admin extends Controller
         $args = func_get_args();
         foreach ($args as $arg) {
             if (strlen($arg) < 1) {
-                FlashMessage::create_flash_message(
-                    "create-user",
-                    "All the fields are required.",
-                    new ErrorFlashMessage()
-                );
                 return false;
             }
         }
@@ -238,19 +233,9 @@ class admin extends Controller
             return false;
         } // check if the name is alphabetic
         else if (!ctype_alpha(str_replace(" ", "", $name))) {
-            FlashMessage::create_flash_message(
-                "update-user",
-                "The name should be alphabetic.",
-                new ErrorFlashMessage()
-            );
             return false;
         } // check if the user_type is valid
         else if (!$this->is_valid_user_type($user_type)) {
-            FlashMessage::create_flash_message(
-                "update-user",
-                "User type is not valid.",
-                new ErrorFlashMessage()
-            );
             return false;
         } else return true;
     }
