@@ -103,12 +103,30 @@ class Task extends Controller
 
     public function edit()
     {
+        $userManager = UserManager::getInstance();
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
-            $this->checkAuth("task/edit", function () {
-                return ["user" => $_SESSION["user"]];
-            });
+            $employees = $userManager->getUsersBy('', '', 'EMPLOYEE') ?? [];
+            $this->checkAuth("task/edit", function ($employees) {
+                return ["user" => $_SESSION["user"], "employees" => $employees];
+            }, [$employees]);
         } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+        }
+    }
+
+    public function search() {
+        $taskManager = TaskManager::getInstance();
+        if ($_SERVER["REQUEST_METHOD"] === "GET") {
+            $this->checkAuth("task/edit", function () {
+                return false;
+            });
+            if (!isset($_GET["project-title"], $_GET["task-title"])) {
+                http_response_code(400);
+                die;
+            }
+            $result = $taskManager->getTasksBy($_SESSION["user"]["username"], $_GET["project-title"], $_GET["task-title"]);
+            if ($result)
+                echo json_encode($result);
         }
     }
 
