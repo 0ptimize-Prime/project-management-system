@@ -25,4 +25,13 @@ class NotificationManager extends AbstractManager
         );
         return $stmt->execute([$username]);
     }
+
+    public function markAsRead(string $id): bool
+    {
+        $stmt = $this->db->prepare(
+            "UPDATE notification SET is_read = 1
+            WHERE id = ?;"
+        );
+        return $stmt->execute([$id]);
+    }
 }
