@@ -97,19 +97,9 @@ showNavbar($data);
             <div class="col-3">
                 <button type="submit" name="removemilestone" class="btn btn-danger">Remove Milestone</button>
             </div>
-            <div class="col-1">
-                <button class="top" onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
-            </div>
         </div>
     </div>
 </div>
-<script>
-    mybutton = document.getElementById("myBtn");
-    function topFunction() {
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 0;
-    }
-</script>
 
 </body>
 
