@@ -1,5 +1,18 @@
 <?php require_once __DIR__ . "/../../utils.php" ?>
 
+<?php
+function statusBadgeColor(string $status): string
+{
+    return match ($status) {
+        "ASSIGNED" => "secondary",
+        "PENDING" => "info",
+        "COMPLETE" => "success",
+        default => "primary",
+    };
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -82,26 +95,71 @@ showNavbar($data);
     </div>
 </div>
 
-<table class="table">
+<table class="table mt-4">
     <thead>
     <tr>
         <th scope="col">Title</th>
+        <th scope="col">Assigned to</th>
         <th scope="col">Deadline</th>
         <th scope="col">Status</th>
+        <th scope="col">Effort</th>
     </tr>
     </thead>
     <tbody>
-    <?php foreach ($data['tasks'] as $task) { ?>
-        <tr>
+    <?php
+
+    function _showTaskRow($task)
+    {
+        ?>
+        <tr data-id="<?php echo htmlspecialchars($task['id']) ?>">
             <td>
                 <a href="<?php echo htmlspecialchars(BASE_URL . 'task/view/' . $task['id']) ?>">
                     <?php echo htmlspecialchars($task['title']) ?>
                 </a>
             </td>
+            <td data-username="<?php echo htmlspecialchars($task['username']) ?>"><?php echo htmlspecialchars($task['name']) ?></td>
             <td><?php echo htmlspecialchars($task['deadline']) ?></td>
-            <td><?php echo htmlspecialchars($task['status']) ?></td>
+            <td>
+                <span class="badge rounded-pill bg-<?php echo htmlspecialchars(statusBadgeColor($task['status'])) ?>">
+                    <?php echo htmlspecialchars($task['status']) ?>
+                </span>
+            </td>
+            <td><?php echo htmlspecialchars($task['effort']) ?></td>
         </tr>
-    <?php } ?>
+        <?php
+    }
+
+    function _showMilestoneRow($milestone)
+    {
+        ?>
+        <tr data-id="<?php echo htmlspecialchars($milestone['id']) ?>" class="table-info">
+            <td><?php echo htmlspecialchars($milestone['title']) ?></td>
+            <td></td>
+            <td></td>
+            <td>
+                <span class="badge rounded-pill bg-<?php echo htmlspecialchars(statusBadgeColor($milestone['status'])) ?>">
+                    <?php echo htmlspecialchars($milestone['status']) ?>
+                </span>
+            </td>
+            <td></td>
+        </tr>
+        <?php
+    }
+
+    $taskInd = 0;
+    $milestoneInd = 0;
+    while (count($data["tasks"]) > $taskInd && count($data["milestones"]) > $milestoneInd) {
+        if ((int)$data["tasks"][$taskInd]["ind"] < (int)$data["milestones"][$milestoneInd]["ind"]) {
+            _showTaskRow($data["tasks"][$taskInd++]);
+        } else {
+            _showMilestoneRow($data["milestones"][$milestoneInd++]);
+        }
+    }
+    while (count($data["tasks"]) > $taskInd)
+        _showTaskRow($data["tasks"][$taskInd++]);
+    while (count($data["milestones"]) > $milestoneInd)
+        _showMilestoneRow($data["milestones"][$milestoneInd++]);
+    ?>
     </tbody>
 </table>
 
