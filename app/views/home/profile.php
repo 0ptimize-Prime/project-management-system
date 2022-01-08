@@ -17,13 +17,8 @@
 <body>
 
 <?php
-includeWithVariables(
-    __DIR__ . "/../templates/navbar.php", array("isLoggedIn" => true, "user" => $data["user"])
-);
-?>
-
-<?php
-includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $data["user"]["userType"] == "ADMIN"));
+showNavbar($data);
+showSidebar($data);
 ?>
 
 <main style="margin-top: 78px">
