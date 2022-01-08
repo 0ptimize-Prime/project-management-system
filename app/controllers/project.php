@@ -115,6 +115,18 @@ class project extends Controller
                     http_response_code(400);
                     die;
                 }
+
+                if (!$this->validate_update_project(
+                    $_POST["id"],
+                    $_POST["manager"],
+                    $_POST["title"],
+                    $_POST["description"],
+                    $_POST["deadline"]
+                )) {
+                    http_response_code(400);
+                    die;
+                }
+
                 $result = $projectManager->updateProject(
                     $_POST["id"],
                     $_POST["manager"],
@@ -137,6 +149,18 @@ class project extends Controller
                     http_response_code(400);
                     die;
                 }
+
+                if (!$this->validate_update_project(
+                    $_POST["id"],
+                    $_POST["manager"],
+                    $_POST["title"],
+                    $_POST["description"],
+                    $_POST["deadline"]
+                )) {
+                    http_response_code(400);
+                    die;
+                }
+
                 $project = $projectManager->getProject($_POST["id"]);
                 if ($project && $project["manager"] !== $_SESSION["user"]["username"])
                     die;
@@ -228,7 +252,6 @@ class project extends Controller
         }
     }
 
-
     private function validate_create_project(string $title): bool
     {
         $args = func_get_args();
@@ -244,6 +267,43 @@ class project extends Controller
                 }
             }
         }
+        return true;
+    }
+
+    private function validate_update_project(string $id, string $manager, string $title, string $description, string $deadline): bool {
+        // check if all the inputs are non-empty
+        $args = func_get_args();
+        foreach ($args as $arg) {
+            if (strlen($arg) < 1) {
+                return false;
+            }
+        }
+
+        // check if the project id is valid
+        if (!$this->is_project_valid($id))
+            return false;
+
+        // check if the manager is valid
+        if (!$this->is_manager_valid($manager))
+            return false;
+
+        return true;
+
+    }
+
+    private function is_project_valid($id): bool {
+        $projectManager = ProjectManager::getInstance();
+        $project = $projectManager->getProject($id);
+        if (!$project)
+            return false;
+        return true;
+    }
+
+    private function is_manager_valid($manager): bool {
+        $userManager = UserManager::getInstance();
+        $manager = $userManager->getUserDetails($manager);
+        if (!$manager || ($manager["userType"] !== "MANAGER" && $manager["userType"] !== "ADMIN"))
+            return false;
         return true;
     }
 }
