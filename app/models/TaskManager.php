@@ -57,6 +57,31 @@ class TaskManager extends AbstractManager
         }
     }
 
+    public function getTasksBy(string $manager, string $project = "", string $task = ""): array|false {
+        $query = "
+            SELECT
+                task.*,
+                user.name as employeeName,
+                project.id AS projectId,
+                project.title AS projectName
+            FROM
+                task
+            LEFT JOIN project ON task.project_id = project.id
+            LEFT JOIN user ON task.username = user.username
+            WHERE
+            task.title LIKE ? AND project.title LIKE ? AND project.manager = ?;";
+        $params = ['%' . $task . '%', '%' . $project . '%', $manager];
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute($params);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if (gettype($result) === "array") {
+            return $result;
+        } else {
+            return false;
+        }
+    }
+
     public function updateTask(string $id, string $title, string $description, string $username, string $deadline, string $effort): bool
     {
         $stmt = $this->db->prepare(
