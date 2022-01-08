@@ -29,3 +29,51 @@
 .row{
     margin-top: -10px;
 }
+.newtask{
+    background-color: dodgerblue;
+    color: white;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: none;
+    padding: 10px;
+}
+.milestone{
+    background-color: dodgerblue;
+    color: white;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: none;
+    padding: 10px;
+}
+.rmilestone{
+    background-color: red;
+    color: white;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: none;
+    padding: 10px;
+}
+.top{
+    background-color: dodgerblue;
+    color: white;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: none;
+    padding: 10px;
+}

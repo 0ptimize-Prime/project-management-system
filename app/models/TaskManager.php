@@ -89,6 +89,18 @@ class TaskManager extends AbstractManager
         );
         return $stmt->execute([$title, $description, $username, $deadline, $effort, $id]);
     }
+    public function updateStatus(string $id,string $status): bool
+    {
+        $stmt = $this->db->prepare(
+            "UPDATE task SET status=? WHERE id=?;"
+        );
+        $result = $stmt->execute([$status, $id]);
+        if ($result) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public function deleteTask(string $id): bool
     {
