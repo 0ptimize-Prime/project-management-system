@@ -29,10 +29,8 @@ includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" =>
     $totalEffort=0;
     foreach ($data["tasks"] as $key=>$task) {
         if ($task["status"]=="COMPLETE") {
-            if ($task["deadline"]) {
-                $graph[$task["id"]]=array($task["deadline"], $task["effort"]);
-            } else {
-                $graph[$task["id"]]=array(date("Y-m-d"), $task["effort"]);
+            if ($task["completed_date"]) {
+                $graph[$task["id"]]=array($task["completed_date"], $task["effort"]);
             }
         }
         $totalEffort+=$task["effort"];
@@ -152,7 +150,17 @@ includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" =>
                     time: {
                         unit: 'day' 
                     }
-                }
+                },
+                y: {
+                    max: 1.1,
+                    ticks: {
+                        callback: function(value, index, values) {
+                            if (value<=1) {
+                                return `${value*100}%`;
+                            }
+                        }
+                    }
+                },
             },
             title: {
             display: true,
