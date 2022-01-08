@@ -204,8 +204,8 @@ removeButton.addEventListener("click", () => {
             resetUpdateForm()
         }
     };
-    xhttp.open("DELETE", BASE_URL + "task/edit", true);
-    xhttp.send(new FormData(updateForm))
+    xhttp.open("DELETE", BASE_URL + "task/edit/" + encodeURIComponent(task.id), true);
+    xhttp.send();
 });
 
 goToProjectButton.addEventListener("click", () => {
