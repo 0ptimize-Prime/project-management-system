@@ -33,7 +33,7 @@ showSidebar($data);
             <label for="name" class="col-2 col-form-label">Display name</label>
             <div class="col-3" style="margin-left: -50px;">
                 <input type="text" name="name" id="name" class="form-control"
-                       value="<?php echo htmlspecialchars($data["user"]["name"]) ?>">
+                       value="<?php echo htmlspecialchars($data["user"]["name"]) ?>" required>
             </div>
             <div class="col-3 offset-1">
                 <button type="submit" class="btn btn-primary">Update</button>
