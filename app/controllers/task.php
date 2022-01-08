@@ -104,13 +104,55 @@ class Task extends Controller
     public function edit()
     {
         $userManager = UserManager::getInstance();
+        $taskManager = TaskManager::getInstance();
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $employees = $userManager->getUsersBy('', '', 'EMPLOYEE') ?? [];
             $this->checkAuth("task/edit", function ($employees) {
                 return ["user" => $_SESSION["user"], "employees" => $employees];
             }, [$employees]);
         } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $this->checkAuth("task/edit", function () {});
 
+            if (!isset(
+                $_POST["id"],
+                $_POST["title"],
+                $_POST["username"],
+                $_POST["description"],
+                $_POST["deadline"],
+                $_POST["status"],
+                $_POST["effort"]
+            )) {
+                http_response_code(400);
+                die;
+            }
+
+            if (!$this->validate_update_task_data(
+                $_POST["id"],
+                $_POST["title"],
+                $_POST["username"],
+                $_POST["description"],
+                $_POST["deadline"],
+                $_POST["status"],
+                $_POST["effort"]
+            )) {
+                http_response_code(400);
+                die;
+            }
+
+            $result = $taskManager->updateTask(
+              $_POST["id"],
+              $_POST["title"],
+              $_POST["description"],
+              $_POST["username"],
+              $_POST["deadline"],
+              $_POST["effort"]
+            );
+
+            if ($result) {
+                $response = $taskManager->getTask($_POST["id"]);
+                echo json_encode($response);
+            } else
+                http_response_code(400);
         }
     }
 
@@ -144,4 +186,49 @@ class Task extends Controller
         $projectManager = ProjectManager::getInstance();
         return $projectManager->getProject($projectId);
     }
+
+    private function validate_update_task_data($id, $title, $username, $description, $deadline, $status, $effort): bool {
+        $userManager = UserManager::getInstance();
+        $args = func_get_args();
+        foreach ($args as $arg) {
+            if (strlen($arg) < 1)
+                return false;
+        }
+
+        // Check if the task id valid
+        if (!$this->is_task_valid($id))
+            return false;
+
+        // Check if the username is valid and is an employee
+        $user = $userManager->getUserDetails($username);
+        if (!$user || $user["userType"] !== "EMPLOYEE")
+            return false;
+
+        // Check if the status is valid
+        if (!$this->is_valid_status($status))
+            return false;
+
+        return true;
+    }
+
+    private function is_task_valid($id): bool{
+        $taskManager = TaskManager::getInstance();
+        $result = $taskManager->getTask($id);
+        if (!$result)
+            return false;
+        return true;
+    }
+
+    private function is_valid_status(string $status): bool
+    {
+        $status_types = array(
+            'CREATED',
+            'ASSIGNED',
+            'IN_PROGRESS',
+            'PENDING',
+            'COMPLETE'
+        );
+        return in_array($status, $status_types);
+    }
+
 }
