@@ -6,7 +6,7 @@
 <head>
     <title>Project</title>
     <?php include __DIR__ . "/../templates/head.php" ?>
-    <link rel="stylesheet" href="<?php echo BASE_URL ?>css/project-view.css?<?php echo time(); ?>"</>
+    <link rel="stylesheet" href="<?php echo BASE_URL ?>css/project-view.css?<?php echo time(); ?>"/>
     <style>
         .card-text {
             white-space: pre-wrap;
