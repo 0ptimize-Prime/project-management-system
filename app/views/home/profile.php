@@ -33,7 +33,7 @@ showSidebar($data);
             <label for="name" class="col-2 col-form-label">Display name</label>
             <div class="col-3" style="margin-left: -50px;">
                 <input type="text" name="name" id="name" class="form-control"
-                       value="<?php echo htmlspecialchars($data["user"]["name"]) ?>">
+                       value="<?php echo htmlspecialchars($data["user"]["name"]) ?>" required>
             </div>
             <div class="col-3 offset-1">
                 <button type="submit" class="btn btn-primary">Update</button>
@@ -48,19 +48,21 @@ showSidebar($data);
             <div class="row mb-3">
                 <label for="old_password" class="col-2 col-form-label">Current password</label>
                 <div class="col-3">
-                    <input type="password" name="old_password" id="old_password" class="form-control">
+                    <input type="password" name="old_password" id="old_password" class="form-control" required>
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="new_password" class="col-2 col-form-label">New password</label>
                 <div class="col-3">
-                    <input type="password" name="new_password" id="new_password" class="form-control">
+                    <input type="password" name="new_password" id="new_password" class="form-control" required>
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="confirm_password" class="col-2 col-form-label">Confirm password</label>
                 <div class="col-3">
-                    <input type="password" name="confirm_password" id="confirm_password" class="form-control">
+                    <input type="password" name="confirm_password" id="confirm_password" class="form-control" required>
+                    <div class="valid-feedback" id="password-valid-feedback">Passwords match!</div>
+                    <div class="invalid-feedback" id="password-invalid-feedback">Passwords don't match!</div>
                 </div>
             </div>
             <div class="row mb-3 mt-3">
