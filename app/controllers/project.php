@@ -152,7 +152,7 @@ class project extends Controller
 
                 if (!$this->validate_update_project(
                     $_POST["id"],
-                    $_POST["manager"],
+                    $_SESSION["user"]["username"],
                     $_POST["title"],
                     $_POST["description"],
                     $_POST["deadline"]
