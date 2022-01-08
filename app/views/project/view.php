@@ -70,7 +70,7 @@ showNavbar($data);
                 <div class="row mb-3">
                     <div class="col-3">Status:</div>
                     <div class="col-2">
-                        <span class="badge rounded-pill bg-primary">
+                        <span class="badge rounded-pill bg-<?php echo htmlspecialchars(statusBadgeColor($data['project']['status'])) ?>">
                             <?php echo htmlspecialchars($data["project"]["status"]) ?>
                         </span>
                     </div>
