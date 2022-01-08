@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . "/../models/NotificationManager.php";
+
 abstract class Controller
 {
     public function model(string $model)
@@ -31,5 +33,15 @@ abstract class Controller
             header("Location: " . BASE_URL . "auth/logout");
             die;
         }
+    }
+
+    public function getViewData()
+    {
+        session_start();
+        $notifications = NotificationManager::getInstance()->getNotifications($_SESSION["user"]["username"]);
+        return [
+            "user" => $_SESSION["user"],
+            "notifications" => $notifications
+        ];
     }
 }
