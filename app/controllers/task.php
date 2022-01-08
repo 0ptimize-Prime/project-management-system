@@ -101,10 +101,12 @@ class Task extends Controller
         }
     }
 
-    public function edit()
+    public function edit(...$args)
     {
         $userManager = UserManager::getInstance();
         $taskManager = TaskManager::getInstance();
+        $projectManager = ProjectManager::getInstance();
+        $fileManager = FileManager::getInstance();
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $employees = $userManager->getUsersBy('', '', 'EMPLOYEE') ?? [];
             $this->checkAuth("task/edit", function ($employees) {
@@ -154,6 +156,33 @@ class Task extends Controller
             } else
                 http_response_code(400);
         }
+        else if ($_SERVER["REQUEST_METHOD"] == "DELETE") {
+            $this->checkAuth("task/edit", function () {
+                return false;
+            });
+
+            $id = $args[0];
+            $task = $taskManager->getTask($id);
+            if ($task &&
+                $_SESSION["user"]["username"] === $projectManager->getProject($task["project_id"])["manager"]) {
+                $result = true;
+                $files = $fileManager->getFiles($task["id"]);
+                if ($files) {
+                    if (file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
+                        unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
+                    }
+                    $result = $fileManager->deleteFile($files[0]["id"]);
+                }
+
+                if ($result)
+                    $result = $taskManager->deleteTask($id);
+                if (!$result) {
+                    http_response_code(400);
+                }
+            }
+
+        }
+
     }
 
     public function search() {
