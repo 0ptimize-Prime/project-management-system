@@ -96,8 +96,13 @@ showSidebar($data);
                     </div>
                     <div class="row mb-3">
                         <label for="created_at" class="col-sm-2 col-form-label">Created at</label>
-                        <div class="col-sm-2">
-                            <input type="date" class="form-control" name="created_at" id="created_at" disabled>
+                        <div class="col-sm-3">
+                            <div class="row">
+                                <div class="col-11">
+                                    <input type="text" class="form-control text-center" name="created_at"
+                                           id="created_at" disabled>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row mb-3">
