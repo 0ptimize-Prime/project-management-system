@@ -115,4 +115,40 @@ class Task extends Controller
         $projectManager = ProjectManager::getInstance();
         return $projectManager->getProject($projectId);
     }
+    public function status(string $taskID)
+    {
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $this->checkAuth("task/status", function () {});
+            $check_user = $this->check_user($_SESSION["user"]["username"]);
+
+            if ($check_user) {
+                $taskManager = TaskManager::getInstance();
+                $result = $taskManager->updateStatus(
+                    $taskID,$_POST["status"]
+                );
+                if ($result) {
+                    FlashMessage::create_flash_message(
+                        "update-status",
+                        "Status `" . $_POST["status"] . "` updated successfully.",
+                        new SuccessFlashMessage()
+                    );
+                } else {
+                    FlashMessage::create_flash_message(
+                        "update-status",
+                        "Something went wrong, couldn't update status.",
+                        new ErrorFlashMessage()
+                    );
+                }
+
+            }
+            else {
+                FlashMessage::create_flash_message(
+                    "update-status",
+                    "Invalid request to update task.",
+                    new ErrorFlashMessage()
+                );
+            }
+            die;
+        }
+    }
 }

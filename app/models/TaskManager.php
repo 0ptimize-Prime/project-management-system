@@ -65,6 +65,18 @@ class TaskManager extends AbstractManager
         $deadlineTimestamp = convertDateToTimestamp($deadline);
         return $stmt->execute([$title, $description, $username, $deadlineTimestamp, $effort, $id]);
     }
+    public function updateStatus(string $id,string $status): bool
+    {
+        $stmt = $this->db->prepare(
+            "UPDATE task SET status=? WHERE id=?;"
+        );
+        $result = $stmt->execute([$status, $id]);
+        if ($result) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public function deleteTask(string $id): bool
     {

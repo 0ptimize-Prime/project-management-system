@@ -94,10 +94,10 @@ includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" =>
                 <button type="submit" name="newmilestone" class="milestone">Add Milestone</button>
             </div>
             <div class="col-3">
-                <button type="submit" name="removemilestone" class="milestone">Remove Milestone</button>
+                <button type="submit" name="removemilestone" class="rmilestone">Remove Milestone</button>
             </div>
             <div class="col-1">
-                <button class="top" onclick="topFunction()" id="myBtn" title="Go to top">Up</button>
+                <button class="top" onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
             </div>
         </div>
     </div>
