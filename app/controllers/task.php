@@ -113,7 +113,8 @@ class Task extends Controller
                 return ["user" => $_SESSION["user"], "employees" => $employees];
             }, [$employees]);
         } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $this->checkAuth("task/edit", function () {});
+            $this->checkAuth("task/edit", function () {
+            });
 
             if (!isset(
                 $_POST["id"],
@@ -142,12 +143,12 @@ class Task extends Controller
             }
 
             $result = $taskManager->updateTask(
-              $_POST["id"],
-              $_POST["title"],
-              $_POST["description"],
-              $_POST["username"],
-              $_POST["deadline"],
-              $_POST["effort"]
+                $_POST["id"],
+                $_POST["title"],
+                $_POST["description"],
+                $_POST["username"],
+                $_POST["deadline"],
+                $_POST["effort"]
             );
 
             if ($result) {
@@ -155,8 +156,7 @@ class Task extends Controller
                 echo json_encode($response);
             } else
                 http_response_code(400);
-        }
-        else if ($_SERVER["REQUEST_METHOD"] == "DELETE") {
+        } else if ($_SERVER["REQUEST_METHOD"] == "DELETE") {
             $this->checkAuth("task/edit", function () {
                 return false;
             });
@@ -185,7 +185,8 @@ class Task extends Controller
 
     }
 
-    public function search() {
+    public function search()
+    {
         $taskManager = TaskManager::getInstance();
         if ($_SERVER["REQUEST_METHOD"] === "GET") {
             $this->checkAuth("task/edit", function () {
@@ -216,7 +217,8 @@ class Task extends Controller
         return $projectManager->getProject($projectId);
     }
 
-    private function validate_update_task_data($id, $title, $username, $description, $deadline, $status, $effort): bool {
+    private function validate_update_task_data($id, $title, $username, $description, $deadline, $status, $effort): bool
+    {
         $userManager = UserManager::getInstance();
         $args = func_get_args();
         foreach ($args as $arg) {
@@ -240,7 +242,8 @@ class Task extends Controller
         return true;
     }
 
-    private function is_task_valid($id): bool{
+    private function is_task_valid($id): bool
+    {
         $taskManager = TaskManager::getInstance();
         $result = $taskManager->getTask($id);
         if (!$result)
