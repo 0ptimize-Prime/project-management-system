@@ -32,6 +32,7 @@ class Home extends Controller
             });
             $userManager = UserManager::getInstance();
             $fileManager = FileManager::getInstance();
+            $is_profile_updated = false;
             switch ($arg) {
                 case "name":
                     if (!isset($_POST["name"])) {
@@ -55,6 +56,7 @@ class Home extends Controller
                             "Updated display name successfully.",
                             new SuccessFlashMessage()
                         );
+                        $is_profile_updated = true;
                     } else {
                         FlashMessage::create_flash_message(
                             "update-profile",
@@ -62,7 +64,6 @@ class Home extends Controller
                             new ErrorFlashMessage()
                         );
                     }
-                    header("Location: " . BASE_URL . "home/profile");
                     break;
                 case "password":
                     if (!isset(
@@ -85,14 +86,13 @@ class Home extends Controller
                             "Password changed successfully.",
                             new SuccessFlashMessage()
                         );
-                        header("Location: " . BASE_URL . "home/profile");
+                        $is_profile_updated = true;
                     } else {
                         FlashMessage::create_flash_message(
                             "update-profile",
                             "Current password is incorrect.",
                             new ErrorFlashMessage()
                         );
-                        header("Location: " . BASE_URL . "home/profile");
                     }
                     break;
                 case "profile-picture":
@@ -112,6 +112,7 @@ class Home extends Controller
                                 "Successfully removed profile picture.",
                                 new SuccessFlashMessage()
                             );
+                            $is_profile_updated = true;
                         } else {
                             FlashMessage::create_flash_message(
                                 "update-profile",
@@ -147,6 +148,7 @@ class Home extends Controller
                                 "Successfully updated profile picture.",
                                 new SuccessFlashMessage()
                             );
+                            $is_profile_updated = true;
                         } else {
                             FlashMessage::create_flash_message(
                                 "update-profile",
@@ -154,13 +156,14 @@ class Home extends Controller
                                 new ErrorFlashMessage()
                             );
                         }
-                        header("Location: " . BASE_URL . "home/profile");
                     }
-
                     break;
                 default:
                     break;
             }
+            header("Location: " . BASE_URL . "home/profile");
+            if ($is_profile_updated)
+                $_SESSION["user"] = $userManager->getUserDetails($_SESSION["user"]["username"]);
         }
     }
 
