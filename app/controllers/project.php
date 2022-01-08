@@ -251,6 +251,30 @@ class project extends Controller
         }
     }
 
+    public function reorder() {
+        $projectManager = ProjectManager::getInstance();
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $this->checkAuth("project/reorder", function (){});
+            if (!isset(
+                $_POST["id"],
+                $_POST["items"]
+            )) {
+                http_response_code(400);
+                die;
+            }
+
+            $project = $projectManager->getProject($_POST["id"]);
+            if (!$project || $project["manager"] !== $_SESSION["user"]["username"]) {
+                http_response_code(400);
+                die;
+            }
+
+            $result = $projectManager->reorder($_POST["items"]);
+            if (!$result)
+                http_response_code(400);
+        }
+    }
+
     private function validate_create_project(string $title): bool
     {
         $args = func_get_args();
