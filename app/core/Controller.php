@@ -17,7 +17,7 @@ abstract class Controller
 
     public function checkAuth(string $view, callable $cb, array $args = [])
     {
-        if (!isset($_SESSION)) {
+        if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
         if (isset($_SESSION['last_activity']) && time() - $_SESSION['last_activity'] < 3600) {
@@ -37,7 +37,8 @@ abstract class Controller
 
     public function getViewData()
     {
-        session_start();
+        if (session_status() == PHP_SESSION_NONE)
+            session_start();
         $notifications = NotificationManager::getInstance()->getNotifications($_SESSION["user"]["username"]);
         return [
             "user" => $_SESSION["user"],
