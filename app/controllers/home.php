@@ -86,13 +86,20 @@ class Home extends Controller
                             new SuccessFlashMessage()
                         );
                         header("Location: " . BASE_URL . "home/profile");
+                    } else {
+                        FlashMessage::create_flash_message(
+                            "update-profile",
+                            "Current password is incorrect.",
+                            new ErrorFlashMessage()
+                        );
+                        header("Location: " . BASE_URL . "home/profile");
                     }
                     break;
                 case "profile-picture":
                     $user = $_SESSION["user"];
                     if (
                         isset($_POST["remove_profile_picture"]) &&
-                        $_POST["profile_picture"] !== "" &&
+                        $_POST["remove_profile_picture"] !== "" &&
                         !empty($user["profile_picture"])) {
                         $fileManager->deleteFile($user["profile_picture"]);
                         if (file_exists(__DIR__ . '/../../public/uploads/' . $user["profile_picture"])) {
@@ -120,7 +127,7 @@ class Home extends Controller
                         $file = $_FILES["profile_picture"]["tmp_name"];
                         $file_loc = $_FILES["profile_picture"]["tmp_name"];
                         $folder = __DIR__ . '/../../public/uploads/';
-                        $profile_picture = $fileManager->addFile($_POST["username"], $file);
+                        $profile_picture = $fileManager->addFile($user["username"], $file);
                         if ($profile_picture)
                             move_uploaded_file($file_loc, $folder . $profile_picture);
                         else {
