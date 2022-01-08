@@ -262,16 +262,18 @@ class Task extends Controller
         );
         return in_array($status, $status_types);
     }
+
     public function status(string $taskID)
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $this->checkAuth("task/status", function () {});
+            $this->checkAuth("task/status", function () {
+            });
             $check_user = $this->check_user($_SESSION["user"]["username"]);
 
             if ($check_user) {
                 $taskManager = TaskManager::getInstance();
                 $result = $taskManager->updateStatus(
-                    $taskID,$_POST["status"]
+                    $taskID, $_POST["status"]
                 );
                 if ($result) {
                     FlashMessage::create_flash_message(
@@ -287,8 +289,7 @@ class Task extends Controller
                     );
                 }
 
-            }
-            else {
+            } else {
                 FlashMessage::create_flash_message(
                     "update-status",
                     "Invalid request to update task.",

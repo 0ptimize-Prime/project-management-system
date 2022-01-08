@@ -33,6 +33,13 @@ class UserManager extends AbstractManager
         return $stmt->execute($params);
     }
 
+    public function updatePassword($username, $password): bool
+    {
+        $stmt = $this->db->prepare("UPDATE user SET password = ? WHERE username = ?;");
+        $password = password_hash($password, PASSWORD_DEFAULT);
+        return $stmt->execute([$password, $username]);
+    }
+
     public function removeUser($username): bool
     {
         $stmt = $this->db->prepare("DELETE FROM user WHERE username = ?");
