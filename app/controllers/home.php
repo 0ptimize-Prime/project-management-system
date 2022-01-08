@@ -1,5 +1,6 @@
 <?php
 
+require_once __DIR__ . "/../utils.php";
 require_once __DIR__ . "/../models/UserManager.php";
 require_once __DIR__ . "/../models/NotificationManager.php";
 require_once __DIR__ . "/../models/FileManager.php";
