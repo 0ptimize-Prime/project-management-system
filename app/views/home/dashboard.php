@@ -121,6 +121,22 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
         display: true,
         text: 'Statistics of all Projects'
       },
+      indexAxis: 'y',
+      scales: {
+        x: {
+          max: 1,
+          ticks: {
+            callback: function(value, index, values) {
+              return `${value*100}%`;
+            }
+          }
+        },
+        y: {
+          grid: {
+            display: false
+          },
+        },
+      },
     }
     });
     <?php } ?>
