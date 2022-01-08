@@ -22,7 +22,10 @@ abstract class Controller
             $_SESSION['last_activity'] = time();
             if ($_SERVER["REQUEST_METHOD"] == "GET") {
                 $data = call_user_func_array($cb, $args);
-                $this->showView($view, $data);
+                if ($data !== false)
+                {
+                    $this->showView($view, $data);
+                }
             }
         } else {
             header("Location: " . BASE_URL . "auth/logout");

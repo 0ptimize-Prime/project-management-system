@@ -12,7 +12,7 @@
 <body>
 
 <?php
-includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" => false));
+showNavbar($data, false);
 ?>
 
 <?php FlashMessage::display_flash_message("login") ?>

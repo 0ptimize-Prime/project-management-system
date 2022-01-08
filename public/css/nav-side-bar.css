@@ -12,6 +12,16 @@ body {
     }
 }
 
+nav img {
+    height: 40px;
+    width: 40px;
+}
+
+#mark-as-read i {
+    right: 15px;
+    top: 18px;
+}
+
 /* Sidebar */
 .sidebar {
     position: fixed;

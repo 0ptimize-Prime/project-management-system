@@ -6,6 +6,7 @@
 <head>
     <title>Project</title>
     <?php include __DIR__ . "/../templates/head.php" ?>
+    <link rel="stylesheet" href="<?php echo BASE_URL ?>css/project-view.css?<?php echo time(); ?>"</>
     <style>
         .card-text {
             white-space: pre-wrap;
@@ -15,13 +16,18 @@
             margin: auto;
             width: 50%;
         }
+        .table th {
+            background-color: dodgerblue;
+            color: white;
+        }
+
     </style>
 </head>
 
 <body>
 
 <?php
-includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" => true, "user" => $data["user"]));
+showNavbar($data);
 ?>
 
 <?php 
@@ -58,9 +64,15 @@ includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" =>
             <h6 class="card-subtitle mb-2 text-muted">
                 Manager: <?php echo htmlspecialchars($data["project"]["manager"]) ?></h6>
             <h6 class="card-subtitle mb-2 text-muted">
+                Created at : <?php echo htmlspecialchars($data['project']['created_at']) ?></h6>
+            <h6 class="card-subtitle mb-2 text-muted">
+                Deadline : <?php echo htmlspecialchars($data['project']['deadline']) ?></h6>
+            <h6 class="card-subtitle mb-2 text-muted">
                 Status: <?php echo htmlspecialchars($data["project"]["status"]) ?></h6>
             <ul class="list-group list-group-flush">
                 <?php foreach ($data["files"] as $file) { ?>
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        Files:</h6>
                     <li class="list-group-item">
                         <a href="<?php echo BASE_URL . "uploads/" . htmlspecialchars($file["id"]) ?>">
                             <?php echo htmlspecialchars($file["name"]) ?>
@@ -94,6 +106,33 @@ includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" =>
     <?php } ?>
     </tbody>
 </table>
+<div class="row">
+    <div class="col-sm-8 offset-sm-4">
+        <div class="row mt-4">
+            <div class="col-2">
+                <form action="<?php echo htmlspecialchars(BASE_URL . 'task/create/' .$data["project"]["id"]) ?>">
+                    <button class = "newtask" type="submit">Add Task</button>
+                </form>
+            </div>
+            <div class="col-3">
+                <button type="submit" name="newmilestone" class="milestone">Add Milestone</button>
+            </div>
+            <div class="col-3">
+                <button type="submit" name="removemilestone" class="rmilestone">Remove Milestone</button>
+            </div>
+            <div class="col-1">
+                <button class="top" onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    mybutton = document.getElementById("myBtn");
+    function topFunction() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
+</script>
 
 <div class="container py-5">
     <div class="row justify-content-center">

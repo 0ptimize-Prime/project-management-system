@@ -24,11 +24,32 @@ class ProjectManager extends AbstractManager
 
     public function getProject(string $id): array|false
     {
-        $stmt = $this->db->prepare("SELECT * FROM project WHERE id=?;");
+        $stmt = $this->db->prepare("
+            SELECT project.*, user.name as managerName FROM project
+            LEFT JOIN user on project.manager = user.username
+            WHERE id=?;");
         $stmt->execute([$id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($result) {
+            return $result;
+        } else {
+            return false;
+        }
+    }
+
+    public function getProjectsBy($title = '', $manager = ''): array|false
+    {
+        $query = "
+            SELECT project.*, user.name as managerName FROM project
+            LEFT JOIN user on project.manager = user.username
+            WHERE title LIKE ? AND manager LIKE ?;";
+        $params = ['%' . $title . '%', '%' . $manager . '%'];
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute($params);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if (gettype($result) === "array") {
             return $result;
         } else {
             return false;
@@ -40,8 +61,7 @@ class ProjectManager extends AbstractManager
         $stmt = $this->db->prepare(
             "UPDATE project SET manager=?, title=?, description=?, deadline=? WHERE id=?;"
         );
-        $deadlineTimestamp = convertDateToTimestamp($deadline);
-        return $stmt->execute([$manager, $title, $description, $deadlineTimestamp, $id]);
+        return $stmt->execute([$manager, $title, $description, $deadline, $id]);
     }
 
     public function deleteProject(string $id): bool

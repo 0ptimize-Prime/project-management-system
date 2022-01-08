@@ -86,7 +86,32 @@ class TaskManager extends AbstractManager
         $stmt->execute([$manager]);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($result) {
+        if (gettype($result) === "array") {
+            return $result;
+        } else {
+            return false;
+        }
+    }
+
+    public function getTasksBy(string $manager, string $project = "", string $task = ""): array|false {
+        $query = "
+            SELECT
+                task.*,
+                user.name as employeeName,
+                project.id AS projectId,
+                project.title AS projectName
+            FROM
+                task
+            LEFT JOIN project ON task.project_id = project.id
+            LEFT JOIN user ON task.username = user.username
+            WHERE
+            task.title LIKE ? AND project.title LIKE ? AND project.manager = ?;";
+        $params = ['%' . $task . '%', '%' . $project . '%', $manager];
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute($params);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if (gettype($result) === "array") {
             return $result;
         } else {
             return false;
@@ -98,8 +123,20 @@ class TaskManager extends AbstractManager
         $stmt = $this->db->prepare(
             "UPDATE task SET title=?, description=?, username=?, deadline=?, effort=? WHERE id=?;"
         );
-        $deadlineTimestamp = convertDateToTimestamp($deadline);
-        return $stmt->execute([$title, $description, $username, $deadlineTimestamp, $effort, $id]);
+        return $stmt->execute([$title, $description, $username, $deadline, $effort, $id]);
+    }
+
+    public function updateStatus(string $id,string $status): bool
+    {
+        $stmt = $this->db->prepare(
+            "UPDATE task SET status=? WHERE id=?;"
+        );
+        $result = $stmt->execute([$status, $id]);
+        if ($result) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function deleteTask(string $id): bool

@@ -1,5 +1,27 @@
 <?php
 $isLoggedIn = $isLoggedIn ?? false;
+$notifications = $notifications ?? [];
+
+$notifTypeToMessageMap = [
+    "TASK_ASSIGNMENT" => "Task has been assigned",
+    "TASK_PENDING_APPROVAL" => "Task is pending approval",
+    "TASK_COMPLETED" => "Task has been approved"
+];
+$notifTypeToLinkMap = [
+    "TASK_ASSIGNMENT" => "task/view/",
+    "TASK_PENDING_APPROVAL" => "task/view/",
+    "TASK_COMPLETED" => "task/view/"
+];
+
+$notifications = array_map(function ($notification) use ($notifTypeToMessageMap, $notifTypeToLinkMap) {
+    return array_merge(
+        [
+            'message' => $notifTypeToMessageMap[$notification['type']],
+            'link' => BASE_URL . $notifTypeToLinkMap[$notification['type']] . $notification['item_id']
+        ],
+        $notification
+    );
+}, $notifications);
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
@@ -25,18 +47,56 @@ $isLoggedIn = $isLoggedIn ?? false;
             <ul class="navbar-nav">
                 <?php if ($isLoggedIn) { ?>
                     <li class="nav-item dropdown">
-                        <span class="text-white dropdown-toggle ps-4" id="navbarDropdown" role="button"
+                        <span class="text-white nav-link dropdown-toggle" id="navbarNotificationDropdown" role="button"
+                              data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-bell"></i> Notifications
+                        </span>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarNotificationDropdown"
+                            id="notifications">
+                            <li id="mark-as-read">
+                                <a href="#" class="dropdown-item">
+                                    Mark as read <i class="fas fa-check position-absolute"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <?php foreach ($notifications as $notification) { ?>
+                                <li data-id="<?php echo htmlspecialchars($notification['id']) ?>">
+                                    <a href="<?php echo htmlspecialchars($notification['link']) ?>"
+                                       class="dropdown-item">
+                                        <?php if ($notification['is_read']) { ?>
+                                            <i class="fas fa-envelope-open"></i>
+                                        <?php } else { ?>
+                                            <i class="fas fa-envelope"></i>
+                                        <?php } ?>
+                                        <?php echo htmlspecialchars($notification['message']) ?>
+                                    </a>
+                                </li>
+                            <?php } ?>
+                            <?php if (empty($notifications)) { ?>
+                                <li id="no-notifications"><span class="dropdown-item">No notifications</span></li>
+                            <?php } ?>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <span class="text-white dropdown-toggle" id="navbarProfileDropdown" role="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
                             <?php echo htmlspecialchars($user["name"]) ?>
+                            <img src="<?php echo htmlspecialchars($user['profile_picture'] ? BASE_URL . "uploads/" . $user["profile_picture"] : 'https://via.placeholder.com/40x40.png') ?>"
+                                 alt="avatar" class="img-fluid img-circle m-1">
                         </span>
-                        <img src="<?php echo htmlspecialchars($user['profile_picture'] ?? 'https://via.placeholder.com/40x40.png') ?>"
-                             alt="avatar" class="img-fluid img-circle m-1">
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarProfileDropdown">
+                            <li>
+                                <a class="dropdown-item"
+                                   href="<?php echo htmlspecialchars(BASE_URL . 'home/profile') ?>">
+                                    <i class="fas fa-fw fa-user"></i> Profile
+                                </a>
+                            </li>
                             <li>
                                 <a class="dropdown-item"
                                    href="<?php echo htmlspecialchars(BASE_URL . 'auth/logout') ?>">
-                                    Log out
+                                    <i class="fas fa-fw fa-sign-out-alt"></i> Log out
                                 </a>
                             </li>
                         </ul>
@@ -52,4 +112,3 @@ $isLoggedIn = $isLoggedIn ?? false;
         </div>
     </div>
 </nav>
-
