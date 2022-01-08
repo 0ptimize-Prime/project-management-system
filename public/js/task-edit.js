@@ -1,5 +1,3 @@
-const BASE_URL = document.head.querySelector("[name=BASE_URL][content]").content;
-
 const searchForm = document.getElementById("search-form");
 const searchFormFields = searchForm.querySelectorAll("input");
 
@@ -39,7 +37,7 @@ searchForm.addEventListener("submit", e => {
             response.forEach(task => {
                 const tr = document.createElement("tr");
                 tr.dataset.id = task.id;
-                tr.dataset.description = task.description;
+                tr.dataset.description = task.description ?? '';
                 tr.dataset.effort = task.effort;
                 const projectTd = document.createElement("td");
                 projectTd.textContent = task.projectName;
@@ -61,6 +59,9 @@ searchForm.addEventListener("submit", e => {
                 employeeTd.textContent = task.employeeName;
                 employeeTd.dataset.username = task.username;
                 tr.appendChild(employeeTd);
+                const editTd = document.createElement("td");
+                editTd.innerHTML = "<button type='button' class='btn btn-primary btn-sm'><i class='fas fa-edit'></i></button>"
+                tr.appendChild(editTd);
                 tbody.appendChild(tr);
             });
         }
@@ -80,11 +81,16 @@ const comparer = (idx, asc) => (a, b) => {
 document.querySelectorAll('th').forEach(th => th.addEventListener('click', e => {
     // Set icons
     const span = e.currentTarget.querySelector("span");
+    if (!span)
+        return;
     const icon = "sort-" + (sortOrder ? "up" : "down");
     span.innerHTML = `<i class="fas fa-solid fa-${icon}"></i>`;
     table.querySelectorAll("th").forEach(x => {
         if (x.cellIndex !== th.cellIndex) { // Remove other icons
-            x.querySelector("span").innerHTML = "<i class='fas fa-solid fa-sort'></i>";
+            const span = x.querySelector("span");
+            if (!span)
+                return;
+            span.innerHTML = "<i class='fas fa-solid fa-sort'></i>";
         }
     });
 
@@ -97,8 +103,15 @@ document.querySelectorAll('th').forEach(th => th.addEventListener('click', e => 
 }));
 
 table.querySelector("tbody").addEventListener("click", e => {
+    let row;
+    if (e.target.nodeName === "I")
+        row = e.target.parentElement.parentElement.parentElement;
+    else if (e.target.nodeName === "BUTTON")
+        row = e.target.parentElement.parentElement;
+    else
+        return;
+
     resetUpdateForm();
-    const row = e.target.parentElement;
     const {id, description, effort} = row.dataset;
     const [
         {textContent: projectTitle, dataset: {id: projectId}},
@@ -191,8 +204,8 @@ removeButton.addEventListener("click", () => {
             resetUpdateForm()
         }
     };
-    xhttp.open("DELETE", BASE_URL + "task/edit", true);
-    xhttp.send(new FormData(updateForm))
+    xhttp.open("DELETE", BASE_URL + "task/edit/" + encodeURIComponent(task.id), true);
+    xhttp.send();
 });
 
 goToProjectButton.addEventListener("click", () => {

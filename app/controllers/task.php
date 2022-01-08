@@ -12,6 +12,7 @@ class Task extends Controller
     public function create(string $projectId)
     {
         session_start();
+        $fileManager = FileManager::getInstance();
         $project = $this->check_project($projectId);
         if (!$project || $_SESSION["user"]["username"] != $project["manager"]) {
             header("Location: " . BASE_URL . "home/dashboard");
@@ -36,6 +37,16 @@ class Task extends Controller
                     $_POST["deadline"],
                     $_POST["effort"],
                 );
+
+                if ($result && $_FILES["file"]["tmp_name"]) {
+                    $file = $_FILES["file"]["name"];
+                    $file_loc = $_FILES["file"]["tmp_name"];
+                    $folder = __DIR__ . '/../../public/uploads/';
+                    $final_file = $fileManager->addFile($result, $file);
+                    if ($final_file)
+                        move_uploaded_file($file_loc, $folder . $final_file);
+                }
+
                 if ($result) {
                     FlashMessage::create_flash_message(
                         "create-task",
@@ -90,14 +101,104 @@ class Task extends Controller
         }
     }
 
-    public function edit()
+    public function edit(...$args)
     {
+        $userManager = UserManager::getInstance();
+        $taskManager = TaskManager::getInstance();
+        $projectManager = ProjectManager::getInstance();
+        $fileManager = FileManager::getInstance();
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
-            $this->checkAuth("task/edit", function () {
-                return ["user" => $_SESSION["user"]];
-            });
+            $employees = $userManager->getUsersBy('', '', 'EMPLOYEE') ?? [];
+            $this->checkAuth("task/edit", function ($employees) {
+                return ["user" => $_SESSION["user"], "employees" => $employees];
+            }, [$employees]);
         } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $this->checkAuth("task/edit", function () {
+            });
 
+            if (!isset(
+                $_POST["id"],
+                $_POST["title"],
+                $_POST["username"],
+                $_POST["description"],
+                $_POST["deadline"],
+                $_POST["status"],
+                $_POST["effort"]
+            )) {
+                http_response_code(400);
+                die;
+            }
+
+            if (!$this->validate_update_task_data(
+                $_POST["id"],
+                $_POST["title"],
+                $_POST["username"],
+                $_POST["description"],
+                $_POST["deadline"],
+                $_POST["status"],
+                $_POST["effort"]
+            )) {
+                http_response_code(400);
+                die;
+            }
+
+            $result = $taskManager->updateTask(
+                $_POST["id"],
+                $_POST["title"],
+                $_POST["description"],
+                $_POST["username"],
+                $_POST["deadline"],
+                $_POST["effort"]
+            );
+
+            if ($result) {
+                $response = $taskManager->getTask($_POST["id"]);
+                echo json_encode($response);
+            } else
+                http_response_code(400);
+        } else if ($_SERVER["REQUEST_METHOD"] == "DELETE") {
+            $this->checkAuth("task/edit", function () {
+                return false;
+            });
+
+            $id = $args[0];
+            $task = $taskManager->getTask($id);
+            if ($task &&
+                $_SESSION["user"]["username"] === $projectManager->getProject($task["project_id"])["manager"]) {
+                $result = true;
+                $files = $fileManager->getFiles($task["id"]);
+                if ($files) {
+                    if (file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
+                        unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
+                    }
+                    $result = $fileManager->deleteFile($files[0]["id"]);
+                }
+
+                if ($result)
+                    $result = $taskManager->deleteTask($id);
+                if (!$result) {
+                    http_response_code(400);
+                }
+            }
+
+        }
+
+    }
+
+    public function search()
+    {
+        $taskManager = TaskManager::getInstance();
+        if ($_SERVER["REQUEST_METHOD"] === "GET") {
+            $this->checkAuth("task/edit", function () {
+                return false;
+            });
+            if (!isset($_GET["project-title"], $_GET["task-title"])) {
+                http_response_code(400);
+                die;
+            }
+            $result = $taskManager->getTasksBy($_SESSION["user"]["username"], $_GET["project-title"], $_GET["task-title"]);
+            if ($result)
+                echo json_encode($result);
         }
     }
 
@@ -115,4 +216,88 @@ class Task extends Controller
         $projectManager = ProjectManager::getInstance();
         return $projectManager->getProject($projectId);
     }
+
+    private function validate_update_task_data($id, $title, $username, $description, $deadline, $status, $effort): bool
+    {
+        $userManager = UserManager::getInstance();
+        $args = func_get_args();
+        foreach ($args as $arg) {
+            if (strlen($arg) < 1)
+                return false;
+        }
+
+        // Check if the task id valid
+        if (!$this->is_task_valid($id))
+            return false;
+
+        // Check if the username is valid and is an employee
+        $user = $userManager->getUserDetails($username);
+        if (!$user || $user["userType"] !== "EMPLOYEE")
+            return false;
+
+        // Check if the status is valid
+        if (!$this->is_valid_status($status))
+            return false;
+
+        return true;
+    }
+
+    private function is_task_valid($id): bool
+    {
+        $taskManager = TaskManager::getInstance();
+        $result = $taskManager->getTask($id);
+        if (!$result)
+            return false;
+        return true;
+    }
+
+    private function is_valid_status(string $status): bool
+    {
+        $status_types = array(
+            'CREATED',
+            'ASSIGNED',
+            'IN_PROGRESS',
+            'PENDING',
+            'COMPLETE'
+        );
+        return in_array($status, $status_types);
+    }
+    public function status(string $taskID)
+    {
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $this->checkAuth("task/status", function () {});
+            $check_user = $this->check_user($_SESSION["user"]["username"]);
+
+            if ($check_user) {
+                $taskManager = TaskManager::getInstance();
+                $result = $taskManager->updateStatus(
+                    $taskID,$_POST["status"]
+                );
+                if ($result) {
+                    FlashMessage::create_flash_message(
+                        "update-status",
+                        "Status `" . $_POST["status"] . "` updated successfully.",
+                        new SuccessFlashMessage()
+                    );
+                } else {
+                    FlashMessage::create_flash_message(
+                        "update-status",
+                        "Something went wrong, couldn't update status.",
+                        new ErrorFlashMessage()
+                    );
+                }
+
+            }
+            else {
+                FlashMessage::create_flash_message(
+                    "update-status",
+                    "Invalid request to update task.",
+                    new ErrorFlashMessage()
+                );
+            }
+            die;
+        }
+    }
+
+
 }

@@ -1,5 +1,3 @@
-const BASE_URL = document.head.querySelector("[name=BASE_URL][content]").content;
-
 const searchForm = document.getElementById("search-form");
 const searchFormFields = searchForm.querySelectorAll("input,select");
 
@@ -52,6 +50,9 @@ searchForm.addEventListener("submit", e => {
                 const userTypeTd = document.createElement("td");
                 userTypeTd.textContent = user.userType;
                 tr.appendChild(userTypeTd);
+                const editTd = document.createElement("td");
+                editTd.innerHTML = "<button type='button' class='btn btn-primary btn-sm'><i class='fas fa-edit'></i></button>"
+                tr.appendChild(editTd);
                 tbody.appendChild(tr);
             });
         }
@@ -71,11 +72,16 @@ const comparer = (idx, asc) => (a, b) => {
 document.querySelectorAll('th').forEach(th => th.addEventListener('click', e => {
     // Set icons
     const span = e.currentTarget.querySelector("span");
+    if (!span)
+        return;
     const icon = "sort-" + (sortOrder ? "up" : "down");
     span.innerHTML = `<i class="fas fa-solid fa-${icon}"></i>`;
     table.querySelectorAll("th").forEach(x => {
         if (x.cellIndex !== th.cellIndex) { // Remove other icons
-            x.querySelector("span").innerHTML = "<i class='fas fa-solid fa-sort'></i>";
+            const span = x.querySelector("span");
+            if (!span)
+                return;
+            span.innerHTML = "<i class='fas fa-solid fa-sort'></i>";
         }
     });
 
@@ -88,8 +94,15 @@ document.querySelectorAll('th').forEach(th => th.addEventListener('click', e => 
 }));
 
 table.querySelector("tbody").addEventListener("click", e => {
+    let row;
+    if (e.target.nodeName === "I")
+        row = e.target.parentElement.parentElement.parentElement;
+    else if (e.target.nodeName === "BUTTON")
+        row = e.target.parentElement.parentElement;
+    else
+        return;
+
     resetUpdateForm();
-    const row = e.target.parentElement;
     const {profilePicture} = row.dataset;
     const [{textContent: username}, {textContent: name}, {textContent: userType}] = row.children;
     updateFormFields[0].value = username;

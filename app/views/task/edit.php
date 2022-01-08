@@ -6,21 +6,13 @@
 <head>
     <title>Search/Update Task</title>
     <?php include __DIR__ . "/../templates/head.php" ?>
-    <style>
-        #task-table tbody {
-            cursor: pointer;
-        }
-    </style>
 </head>
 
 <body>
 
 <?php
-includeWithVariables(__DIR__ . "/../templates/navbar.php", array("isLoggedIn" => true, "user" => $data["user"]));
-?>
-
-<?php
-includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $data["user"]["userType"] == "ADMIN"));
+showNavbar($data);
+showSidebar($data);
 ?>
 
 <main style="margin-top: 80px;">
@@ -51,7 +43,7 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
             </form>
 
             <div class="row mb-4">
-                <table class="table table-hover" id="task-table">
+                <table class="table" id="task-table">
                     <thead>
                     <tr>
                         <th scope="col">Project <span><i class="fas fa-solid fa-sort"></i></span></th>
@@ -60,6 +52,7 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                         <th scope="col">Deadline <span><i class="fas fa-solid fa-sort"></i></span></th>
                         <th scope="col">Status <span><i class="fas fa-solid fa-sort"></i></span></th>
                         <th scope="col">Assigned to <span><i class="fas fa-solid fa-sort"></i></span></th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -103,8 +96,13 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                     </div>
                     <div class="row mb-3">
                         <label for="created_at" class="col-sm-2 col-form-label">Created at</label>
-                        <div class="col-sm-2">
-                            <input type="date" class="form-control" name="created_at" id="created_at" disabled>
+                        <div class="col-sm-3">
+                            <div class="row">
+                                <div class="col-11">
+                                    <input type="text" class="form-control text-center" name="created_at"
+                                           id="created_at" disabled>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -132,20 +130,20 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
                             <input type="number" class="form-control" name="effort" id="effort">
                         </div>
                     </div>
-                    <div class="row mb-5">
-                        <div class="col-sm-8 offset-sm-4">
+                    <div class="row">
+                        <div class="col-sm-8">
                             <div class="row mt-4">
-                                <div class="col-2">
+                                <div class="col-3">
                                     <button type="button" id="cancel-button" name="cancel" class="btn btn-secondary">
                                         Cancel
                                     </button>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-3">
                                     <button type="button" id="remove-button" name="remove" class="btn btn-danger">
                                         Remove
                                     </button>
                                 </div>
-                                <div class="col-2" style="margin-left: 15px;">
+                                <div class="col-3" style="margin-left: 15px;">
                                     <button type="submit" name="submit" class="btn btn-primary">Update</button>
                                 </div>
                             </div>
