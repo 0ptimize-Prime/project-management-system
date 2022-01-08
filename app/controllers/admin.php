@@ -113,8 +113,7 @@ class admin extends Controller
                 if ($user && !empty($user["profile_picture"])) {
                     $fileManager->deleteFile($user["profile_picture"]);
                     if (file_exists(__DIR__ . '/../../public/uploads/' . $user["profile_picture"]))
-                        $result = unlink(__DIR__ . '/../../public/uploads/' . $user["profile_picture"]);
-                        assert($result === true, "File is not deleted");
+                        unlink(__DIR__ . '/../../public/uploads/' . $user["profile_picture"]);
                 }
             }
 
@@ -128,10 +127,12 @@ class admin extends Controller
                     move_uploaded_file($file_loc, $folder . $profile_picture);
             }
 
-            $userManager->updateUser($_POST["username"], $_POST["name"], $_POST["userType"], $profile_picture);
-            $response = $userManager->getUserDetails($_POST["username"]);
-            echo json_encode($response);
-            die;
+            $result = $userManager->updateUser($_POST["username"], $_POST["name"], $_POST["userType"], $profile_picture);
+            if ($result) {
+                $response = $userManager->getUserDetails($_POST["username"]);
+                echo json_encode($response);
+            } else
+                http_response_code(400);
         } else if ($_SERVER["REQUEST_METHOD"] == "DELETE") {
             $username = $args[0];
             if (!$this->is_username_available($username)) {
