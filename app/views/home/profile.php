@@ -33,7 +33,8 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
         <div class="row mb-4">
             <h3>Change display name</h3>
         </div>
-        <form class="row mb-5" id="display-name-form">
+        <form class="row mb-5" id="display-name-form" method="post"
+              action="<?php echo htmlspecialchars(BASE_URL . 'home/profile/name') ?>">
             <label for="name" class="col-2 col-form-label">Display name</label>
             <div class="col-3" style="margin-left: -50px;">
                 <input type="text" name="name" id="name" class="form-control"
@@ -47,7 +48,8 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
         <div class="row mb-4">
             <h3>Change password</h3>
         </div>
-        <form class="row mb-5" id="password-form">
+        <form class="row mb-5" id="password-form" method="post"
+              action="<?php echo htmlspecialchars(BASE_URL . 'home/profile/password') ?>">
             <div class="row mb-3">
                 <label for="currentPassword" class="col-2 col-form-label">Current password</label>
                 <div class="col-3">
@@ -75,7 +77,8 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
         <div class="row mb-4 mt-5">
             <h3>Change profile picture</h3>
         </div>
-        <form class="row mb-5" id="profile-picture-form">
+        <form class="row mb-5" id="profile-picture-form" enctype="multipart/form-data"
+              action="<?php echo htmlspecialchars(BASE_URL . 'home/profile/profile-picture') ?>" method="post">
             <div class="col-3">
                 <img id="preview" alt="profile picture" class="img-circle"
                      src="<?php echo htmlspecialchars($data['user']['profile_picture'] ? BASE_URL . 'uploads/' . $data['user']['profile_picture'] : 'https://via.placeholder.com/300x300.png') ?>">
