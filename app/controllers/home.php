@@ -18,7 +18,7 @@ class Home extends Controller
         });
     }
 
-    public function profile(string $arg)
+    public function profile(string $arg = '')
     {
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $this->checkAuth("home/profile", function () {
