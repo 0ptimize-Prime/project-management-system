@@ -51,21 +51,21 @@ includeWithVariables(__DIR__ . "/../templates/sidebar.php", array("isAdmin" => $
         <form class="row mb-5" id="password-form" method="post"
               action="<?php echo htmlspecialchars(BASE_URL . 'home/profile/password') ?>">
             <div class="row mb-3">
-                <label for="currentPassword" class="col-2 col-form-label">Current password</label>
+                <label for="old_password" class="col-2 col-form-label">Current password</label>
                 <div class="col-3">
-                    <input type="password" name="currentPassword" id="currentPassword" class="form-control">
+                    <input type="password" name="old_password" id="old_password" class="form-control">
                 </div>
             </div>
             <div class="row mb-3">
-                <label for="newPassword" class="col-2 col-form-label">New password</label>
+                <label for="new_password" class="col-2 col-form-label">New password</label>
                 <div class="col-3">
-                    <input type="password" name="newPassword" id="newPassword" class="form-control">
+                    <input type="password" name="new_password" id="new_password" class="form-control">
                 </div>
             </div>
             <div class="row mb-3">
-                <label for="confirmPassword" class="col-2 col-form-label">Confirm password</label>
+                <label for="confirm_password" class="col-2 col-form-label">Confirm password</label>
                 <div class="col-3">
-                    <input type="password" name="confirmPassword" id="confirmPassword" class="form-control">
+                    <input type="password" name="confirm_password" id="confirm_password" class="form-control">
                 </div>
             </div>
             <div class="row mb-3 mt-3">
