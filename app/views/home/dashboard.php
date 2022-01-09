@@ -18,7 +18,7 @@ showSidebar($data);
 
 <main style="margin-top: 58px">
     <div class="container py-4">
-        <div class="row">
+        <div class="row mb-5">
             <?php if ($data["user"]["userType"] != "EMPLOYEE") { ?>
                 <div class="col">
                     <div class="card mb-3" style="width: 18rem;" id="project-statistics">
@@ -67,55 +67,55 @@ showSidebar($data);
                 </div>
             <?php } ?>
         </div>
-    </div>
-    <table class="table">
-        <thead>
-        <tr>
+        <table class="table">
+            <thead>
+            <tr>
+                <?php if ($data["user"]["userType"] == "EMPLOYEE") { ?>
+                    <th scope="col">Title</th>
+                    <th scope="col">Project</th>
+                    <th scope="col">Deadline</th>
+                    <th scope="col">Status</th>
+                <?php } else { ?>
+                    <th scope="col">Title</th>
+                    <th scope="col">Deadline</th>
+                    <th scope="col">Status</th>
+                <?php } ?>
+            </tr>
+            </thead>
+            <tbody>
             <?php if ($data["user"]["userType"] == "EMPLOYEE") { ?>
-                <th scope="col">Title</th>
-                <th scope="col">Project</th>
-                <th scope="col">Deadline</th>
-                <th scope="col">Status</th>
+                <?php foreach ($data['tasks'] as $task) { ?>
+                    <tr>
+                        <td>
+                            <a href="<?php echo htmlspecialchars(BASE_URL . 'task/view/' . $task['id']) ?>">
+                                <?php echo htmlspecialchars($task['title']) ?>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="<?php echo htmlspecialchars(BASE_URL . 'project/view/' . $task['projectId']) ?>">
+                                <?php echo htmlspecialchars($task['projectName']) ?>
+                            </a>
+                        </td>
+                        <td><?php echo htmlspecialchars($task['deadline']) ?></td>
+                        <td><?php echo htmlspecialchars($task['status']) ?></td>
+                    </tr>
+                <?php } ?>
             <?php } else { ?>
-                <th scope="col">Title</th>
-                <th scope="col">Deadline</th>
-                <th scope="col">Status</th>
+                <?php foreach ($data["projects"] as $project) { ?>
+                    <tr>
+                        <td>
+                            <a href="<?php echo htmlspecialchars(BASE_URL . 'project/view/' . $project['id']) ?>">
+                                <?php echo htmlspecialchars($project["title"]) ?>
+                            </a>
+                        </td>
+                        <td><?php echo htmlspecialchars($project["deadline"]) ?></td>
+                        <td><?php echo htmlspecialchars($project["status"]) ?></td>
+                    </tr>
+                <?php } ?>
             <?php } ?>
-        </tr>
-        </thead>
-        <tbody>
-        <?php if ($data["user"]["userType"] == "EMPLOYEE") { ?>
-            <?php foreach ($data['tasks'] as $task) { ?>
-                <tr>
-                    <td>
-                        <a href="<?php echo htmlspecialchars(BASE_URL . 'task/view/' . $task['id']) ?>">
-                            <?php echo htmlspecialchars($task['title']) ?>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="<?php echo htmlspecialchars(BASE_URL . 'project/view/' . $task['projectId']) ?>">
-                            <?php echo htmlspecialchars($task['projectName']) ?>
-                        </a>
-                    </td>
-                    <td><?php echo htmlspecialchars($task['deadline']) ?></td>
-                    <td><?php echo htmlspecialchars($task['status']) ?></td>
-                </tr>
-            <?php } ?>
-        <?php } else { ?>
-            <?php foreach ($data["projects"] as $project) { ?>
-                <tr>
-                    <td>
-                        <a href="<?php echo htmlspecialchars(BASE_URL . 'project/view/' . $project['id']) ?>">
-                            <?php echo htmlspecialchars($project["title"]) ?>
-                        </a>
-                    </td>
-                    <td><?php echo htmlspecialchars($project["deadline"]) ?></td>
-                    <td><?php echo htmlspecialchars($project["status"]) ?></td>
-                </tr>
-            <?php } ?>
-        <?php } ?>
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
 <script>
