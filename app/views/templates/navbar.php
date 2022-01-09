@@ -46,10 +46,16 @@ $notifications = array_map(function ($notification) use ($notifTypeToMessageMap,
             </ul>
             <ul class="navbar-nav">
                 <?php if ($isLoggedIn) { ?>
-                    <li class="nav-item dropdown">
-                        <span class="text-white nav-link dropdown-toggle" id="navbarNotificationDropdown" role="button"
-                              data-bs-toggle="dropdown" aria-expanded="false">
+                    <li class="nav-item dropdown me-3">
+                        <span class="text-white nav-link"
+                              id="navbarNotificationDropdown" role="button" data-bs-toggle="dropdown"
+                              aria-expanded="false">
                             <i class="fas fa-bell"></i> Notifications
+                            <?php if (count($notifications) > 0) { ?>
+                                <span class="position-absolute top-0 start-100 p-2 bg-danger border border-light rounded-circle"
+                                      style="transform: translate(-80%, -20%);">
+                                </span>
+                            <?php } ?>
                         </span>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarNotificationDropdown"
                             id="notifications">
