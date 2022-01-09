@@ -10,6 +10,7 @@ function statusBadgeColor(string $status): string
         default => "primary",
     };
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -194,19 +195,41 @@ usort($graph, "compare_func");
     </tbody>
 </table>
 
-<div class="row">
-    <div class="col-sm-8 offset-sm-4">
-        <div class="row mt-4">
-            <div class="col-2">
-                <form action="<?php echo htmlspecialchars(BASE_URL . 'task/create/' . $data["project"]["id"]) ?>">
-                    <button class="btn btn-primary" type="submit">Add Task</button>
-                </form>
+<div class="row mt-3">
+    <div class="col-1 offset-4">
+        <a href="<?php echo htmlspecialchars(BASE_URL . 'task/create/' . $data['project']['id']) ?>"
+           class="btn btn-primary">Add Task</a>
+    </div>
+    <div class="col-2 offset-2">
+        <a href="#" class="btn btn-primary" role="button" data-bs-toggle="modal" data-bs-target="#newMilestoneModal">
+            Add Milestone
+        </a>
+    </div>
+</div>
+
+<div class="modal fade" id="newMilestoneModal" tabindex="-1" aria-labelledby="newMilestoneModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newMilestoneModalLabel">New milestone</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="col-3">
-                <button type="submit" name="newmilestone" class="btn btn-primary">Add Milestone</button>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row justify-content-center">
+                        <label for="title" class="col-2 col-form-label">Title</label>
+                        <div class="col-6">
+                            <input type="text" class="form-control" name="title" id="title">
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-3">
-                <button type="submit" name="removemilestone" class="btn btn-danger">Remove Milestone</button>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="submit-new-milestone" data-bs-dismiss="modal">
+                    Submit
+                </button>
             </div>
         </div>
     </div>
