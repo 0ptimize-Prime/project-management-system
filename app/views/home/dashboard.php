@@ -15,7 +15,6 @@ showNavbar($data);
 showSidebar($data);
 ?>
 
-
 <main style="margin-top: 58px">
     <div class="container py-4">
         <div class="row mb-5">
@@ -67,6 +66,7 @@ showSidebar($data);
                 </div>
             <?php } ?>
         </div>
+
         <table class="table">
             <thead>
             <tr>
@@ -97,7 +97,11 @@ showSidebar($data);
                             </a>
                         </td>
                         <td><?php echo htmlspecialchars($task['deadline']) ?></td>
-                        <td><?php echo htmlspecialchars($task['status']) ?></td>
+                        <td>
+                            <span class="badge rounded-pill bg-<?php echo htmlspecialchars(statusBadgeColor($task['status'])) ?>">
+                                <?php echo htmlspecialchars($task["status"]) ?>
+                            </span>
+                        </td>
                     </tr>
                 <?php } ?>
             <?php } else { ?>
@@ -109,7 +113,11 @@ showSidebar($data);
                             </a>
                         </td>
                         <td><?php echo htmlspecialchars($project["deadline"]) ?></td>
-                        <td><?php echo htmlspecialchars($project["status"]) ?></td>
+                        <td>
+                            <span class="badge rounded-pill bg-<?php echo htmlspecialchars(statusBadgeColor($project['status'])) ?>">
+                                <?php echo htmlspecialchars($project["status"]) ?>
+                            </span>
+                        </td>
                     </tr>
                 <?php } ?>
             <?php } ?>
@@ -117,6 +125,7 @@ showSidebar($data);
         </table>
     </div>
 </main>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
 <script>
     let colorPallet = ["#84DFFF", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"]
