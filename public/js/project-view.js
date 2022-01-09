@@ -1,6 +1,7 @@
 const projectId = document.head.querySelector("[name=project_id][content]").content;
 const table = document.getElementById("task-table");
 const newMilestoneModal = document.getElementById("newMilestoneModal");
+const editMilestoneModal = document.getElementById("editMilestoneModal");
 
 const statusBadgeColorMap = new Map();
 statusBadgeColorMap.set("ASSIGNED", "secondary");
@@ -92,13 +93,58 @@ const addMilestone = (milestone) => {
     const shiftTd = document.createElement("td");
     shiftTd.innerHTML = "<i class=\"shift-up fas fa-chevron-up\"></i> <i class=\"shift-down fas fa-chevron-down\"></i>";
     tr.appendChild(shiftTd);
+    const editTd = document.createElement("td");
+    editTd.innerHTML = "<a href=\"#\" role=\"button\" class=\"btn btn-warning btn-sm edit-milestone\"><i class=\"fas fa-edit\"></i></a>";
+    tr.appendChild(editTd);
     table.querySelector("tbody").appendChild(tr);
 };
+
+const editMilestone = (row) => {
+    const modal = new bootstrap.Modal(editMilestoneModal);
+    const idInput = editMilestoneModal.querySelector("input#id")
+    const titleInput = editMilestoneModal.querySelector("input#title");
+    idInput.value = row.dataset.id;
+    titleInput.value = row.children[0].textContent;
+    modal.show();
+};
+
+editMilestoneModal.querySelector("#update-milestone").addEventListener("click", e => {
+    const modal = bootstrap.Modal.getInstance(editMilestoneModal);
+    const idInput = editMilestoneModal.querySelector("input#id")
+    const titleInput = editMilestoneModal.querySelector("input#title");
+    const row = Array.from(table.querySelectorAll("tbody tr")).find(row => row.dataset.id === idInput.value);
+
+    if (row.children[0].textContent === titleInput.value) {
+        modal.dispose();
+        return;
+    }
+
+    const xhttp = new XMLHttpRequest();
+    xhttp.withCredentials = true;
+    xhttp.onreadystatechange = function () {
+        if (this.readyState === 4) {
+            if (this.status === 200) {
+                row.children[0].textContent = titleInput.value;
+                modal.dispose();
+            }
+        }
+    }
+    xhttp.open("POST", BASE_URL + "milestone/edit", true);
+    const formData = new FormData();
+    formData.set("id", idInput.value);
+    formData.set("title", titleInput.value);
+    xhttp.send(formData);
+});
 
 table.addEventListener("click", e => {
     const target = e.target;
     if (target.nodeName === "I" && (target.classList.contains("shift-up") || target.classList.contains("shift-down"))) {
         shiftRow(e);
+    } else if ((target.nodeName === "A" && target.classList.contains("edit-milestone"))
+        || (target.nodeName === "I" && target.parentElement.classList.contains("edit-milestone"))) {
+        e.preventDefault();
+        const row = target.closest("tr");
+        editMilestone(row);
     }
 });
 

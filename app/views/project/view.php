@@ -133,6 +133,7 @@ usort($graph, "compare_func");
         <th scope="col">Status</th>
         <th scope="col">Effort</th>
         <th scope="col"></th>
+        <th scope="col"></th>
     </tr>
     </thead>
     <tbody>
@@ -156,6 +157,12 @@ usort($graph, "compare_func");
             </td>
             <td><?php echo htmlspecialchars($task['effort']) ?></td>
             <td><i class="shift-up fas fa-chevron-up"></i> <i class="shift-down fas fa-chevron-down"></i></td>
+            <td>
+                <a class="btn btn-warning btn-sm"
+                   href="<?php echo htmlspecialchars(BASE_URL . 'task/edit/' . $task['id']) ?>">
+                    <i class="fas fa-edit"></i>
+                </a>
+            </td>
         </tr>
         <?php
     }
@@ -174,6 +181,9 @@ usort($graph, "compare_func");
             </td>
             <td></td>
             <td><i class="shift-up fas fa-chevron-up"></i> <i class="shift-down fas fa-chevron-down"></i></td>
+            <td>
+                <a href="#" role="button" class="btn btn-warning btn-sm edit-milestone"><i class="fas fa-edit"></i></a>
+            </td>
         </tr>
         <?php
     }
@@ -229,6 +239,35 @@ usort($graph, "compare_func");
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-primary" id="submit-new-milestone" data-bs-dismiss="modal">
                     Submit
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editMilestoneModal" tabindex="-1" aria-labelledby="editMilestoneModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editMilestoneModalLabel">Edit milestone</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row justify-content-center">
+                        <input type="text" name="id" id="id" hidden>
+                        <label for="title" class="col-2 col-form-label">Title</label>
+                        <div class="col-6">
+                            <input type="text" class="form-control" name="title" id="title">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="update-milestone" data-bs-dismiss="modal">
+                    Update
                 </button>
             </div>
         </div>
