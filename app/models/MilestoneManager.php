@@ -33,7 +33,7 @@ class MilestoneManager extends AbstractManager
 
     public function getMilestones(string $projectId): array|false
     {
-        $stmt = $this->db->prepare("SELECT * FROM milestone WHERE project_id=?;");
+        $stmt = $this->db->prepare("SELECT * FROM milestone WHERE project_id=? ORDER BY ind;");
         $stmt->execute([$projectId]);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

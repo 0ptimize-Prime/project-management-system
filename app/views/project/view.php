@@ -10,6 +10,7 @@ function statusBadgeColor(string $status): string
         default => "primary",
     };
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -36,6 +37,11 @@ function statusBadgeColor(string $status): string
 
         .shift-up, .shift-down {
             cursor: pointer;
+        }
+
+        #edit-button {
+            top: 15px;
+            right: 15px;
         }
     </style>
 </head>
@@ -76,6 +82,8 @@ usort($graph, "compare_func");
     <div class="card mx-auto" style="width: 40rem;">
         <div class="card-body">
             <h5 class="card-title text-center">Project: <?php echo htmlspecialchars($data["project"]["title"]) ?></h5>
+            <a href="<?php echo htmlspecialchars(BASE_URL . 'project/edit/' . $data['project']['id']) ?>"
+               class="btn btn-warning position-absolute" id="edit-button"><i class="fas fa-edit"></i></a>
             <div class="px-3 pt-2">
                 <div class="row mb-3">
                     <div class="col-3">Description:</div>
@@ -132,6 +140,8 @@ usort($graph, "compare_func");
         <th scope="col">Status</th>
         <th scope="col">Effort</th>
         <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
     </tr>
     </thead>
     <tbody>
@@ -155,6 +165,15 @@ usort($graph, "compare_func");
             </td>
             <td><?php echo htmlspecialchars($task['effort']) ?></td>
             <td><i class="shift-up fas fa-chevron-up"></i> <i class="shift-down fas fa-chevron-down"></i></td>
+            <td>
+                <a class="btn btn-warning btn-sm"
+                   href="<?php echo htmlspecialchars(BASE_URL . 'task/edit/' . $task['id']) ?>">
+                    <i class="fas fa-edit"></i>
+                </a>
+            </td>
+            <td>
+                <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+            </td>
         </tr>
         <?php
     }
@@ -173,6 +192,12 @@ usort($graph, "compare_func");
             </td>
             <td></td>
             <td><i class="shift-up fas fa-chevron-up"></i> <i class="shift-down fas fa-chevron-down"></i></td>
+            <td>
+                <a href="#" role="button" class="btn btn-warning btn-sm edit-milestone"><i class="fas fa-edit"></i></a>
+            </td>
+            <td>
+                <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+            </td>
         </tr>
         <?php
     }
@@ -194,19 +219,90 @@ usort($graph, "compare_func");
     </tbody>
 </table>
 
-<div class="row">
-    <div class="col-sm-8 offset-sm-4">
-        <div class="row mt-4">
-            <div class="col-2">
-                <form action="<?php echo htmlspecialchars(BASE_URL . 'task/create/' . $data["project"]["id"]) ?>">
-                    <button class="btn btn-primary" type="submit">Add Task</button>
-                </form>
+<div class="row mt-3">
+    <div class="col-1 offset-4">
+        <a href="<?php echo htmlspecialchars(BASE_URL . 'task/create/' . $data['project']['id']) ?>"
+           class="btn btn-primary">Add Task</a>
+    </div>
+    <div class="col-2 offset-2">
+        <a href="#" class="btn btn-primary" role="button" data-bs-toggle="modal" data-bs-target="#newMilestoneModal">
+            Add Milestone
+        </a>
+    </div>
+</div>
+
+<div class="modal fade" id="newMilestoneModal" tabindex="-1" aria-labelledby="newMilestoneModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newMilestoneModalLabel">New milestone</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="col-3">
-                <button type="submit" name="newmilestone" class="btn btn-primary">Add Milestone</button>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row justify-content-center">
+                        <label for="title" class="col-2 col-form-label">Title</label>
+                        <div class="col-6">
+                            <input type="text" class="form-control" name="title" id="title">
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-3">
-                <button type="submit" name="removemilestone" class="btn btn-danger">Remove Milestone</button>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="submit-new-milestone" data-bs-dismiss="modal">
+                    Submit
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editMilestoneModal" tabindex="-1" aria-labelledby="editMilestoneModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editMilestoneModalLabel">Edit milestone</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row justify-content-center">
+                        <input type="text" name="id" id="id" hidden>
+                        <label for="title" class="col-2 col-form-label">Title</label>
+                        <div class="col-6">
+                            <input type="text" class="form-control" name="title" id="title">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="update-milestone" data-bs-dismiss="modal">
+                    Update
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <input type="text" name="type" id="type" hidden>
+            <input type="text" name="id" id="id" hidden>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="delete-item" data-bs-dismiss="modal">
+                    Delete
+                </button>
             </div>
         </div>
     </div>
