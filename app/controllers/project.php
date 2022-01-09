@@ -85,7 +85,7 @@ class project extends Controller
         }
     }
 
-    public function edit(...$args)
+    public function edit(string $id = null)
     {
         session_start();
         $userManager = UserManager::getInstance();
@@ -186,8 +186,11 @@ class project extends Controller
             $this->checkAuth("project/edit", function () {
                 return false;
             });
+            if (empty($id)) {
+                http_response_code(400);
+                die;
+            }
             if ($_SESSION["user"]["userType"] === "ADMIN") {
-                $id = $args[0];
                 $result = true;
                 // delete file associated with project
                 $files = $fileManager->getFiles($id);
