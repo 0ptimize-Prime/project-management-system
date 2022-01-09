@@ -52,13 +52,11 @@ class Home extends Controller
                 }
             }
             $notificationManager = NotificationManager::getInstance();
-            return [
-                'user' => $_SESSION["user"], 
-                'tasks' => [], 
-                'tasksGraph' => $tasksGraph,
-                'projectsGraph' => $projectsGraph,
-                'notifications' => $notificationManager->getNotifications($_SESSION["user"]["username"])
-            ];
+            $data = $this->getViewData();
+            $data["tasks"] = [];
+            $data["tasksGraph"] = $tasksGraph;
+            $data["projectsGraph"] = $projectsGraph;
+            return $data;
         });
     }
 
@@ -66,9 +64,7 @@ class Home extends Controller
     {
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $this->checkAuth("home/profile", function () {
-                return [
-                    'user' => $_SESSION["user"]
-                ];
+                return $this->getViewData();
             });
         }
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
