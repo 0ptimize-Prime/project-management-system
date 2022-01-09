@@ -40,8 +40,11 @@ searchForm.addEventListener("submit", e => {
                 tr.dataset.description = task.description ?? '';
                 tr.dataset.effort = task.effort;
                 const projectTd = document.createElement("td");
-                projectTd.textContent = task.projectName;
                 projectTd.dataset.id = task.projectId;
+                const projectLink = document.createElement("a");
+                projectLink.textContent = task.projectName;
+                projectLink.href = BASE_URL + "project/view/" + task.projectId;
+                projectTd.appendChild(projectLink);
                 tr.appendChild(projectTd);
                 const titleTd = document.createElement("td");
                 titleTd.textContent = task.title;
