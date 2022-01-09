@@ -21,6 +21,15 @@ function showSidebar(array $data)
     includeWithVariables(__DIR__ . "/views/templates/sidebar.php", array("userType" => $data["user"]["userType"]));
 }
 
+function statusBadgeColor(string $status): string
+{
+    return match ($status) {
+        "ASSIGNED" => "secondary",
+        "PENDING" => "info",
+        "COMPLETE" => "success",
+        default => "primary",
+    };
+}
 
 function convertDateToTimestamp(string $date): int
 {

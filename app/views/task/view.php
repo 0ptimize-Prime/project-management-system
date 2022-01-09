@@ -1,15 +1,4 @@
 <?php require_once __DIR__ . "/../../utils.php" ?>
-<?php
-function statusBadgeColor(string $status): string
-{
-    return match ($status) {
-        "ASSIGNED" => "secondary",
-        "PENDING" => "info",
-        "COMPLETE" => "success",
-        default => "primary",
-    };
-}
-?>
 
 <!DOCTYPE html>
 <html lang="en">
