@@ -2,6 +2,7 @@ const projectId = document.head.querySelector("[name=project_id][content]").cont
 const table = document.getElementById("task-table");
 const newMilestoneModal = document.getElementById("newMilestoneModal");
 const editMilestoneModal = document.getElementById("editMilestoneModal");
+const deleteModal = document.getElementById("deleteModal");
 
 const statusBadgeColorMap = new Map();
 statusBadgeColorMap.set("ASSIGNED", "secondary");
@@ -96,6 +97,9 @@ const addMilestone = (milestone) => {
     const editTd = document.createElement("td");
     editTd.innerHTML = "<a href=\"#\" role=\"button\" class=\"btn btn-warning btn-sm edit-milestone\"><i class=\"fas fa-edit\"></i></a>";
     tr.appendChild(editTd);
+    const deleteTd = document.createElement("td");
+    deleteTd.innerHTML = "<button class=\"btn btn-danger btn-sm\"><i class=\"fas fa-trash\"></i></button>"
+    tr.appendChild(deleteTd);
     table.querySelector("tbody").appendChild(tr);
 };
 
@@ -105,6 +109,16 @@ const editMilestone = (row) => {
     const titleInput = editMilestoneModal.querySelector("input#title");
     idInput.value = row.dataset.id;
     titleInput.value = row.children[0].textContent;
+    modal.show();
+};
+
+const deleteItem = (row) => {
+    const modal = new bootstrap.Modal(deleteModal);
+    const modalLabel = deleteModal.querySelector("#deleteModalLabel");
+    const itemType = row.classList.contains("task-row") ? "task" : "milestone";
+    modalLabel.textContent = `Are you sure you want to delete this ${itemType}?`;
+    deleteModal.querySelector("input#id").value = row.dataset.id;
+    deleteModal.querySelector("input#type").value = itemType;
     modal.show();
 };
 
@@ -136,6 +150,25 @@ editMilestoneModal.querySelector("#update-milestone").addEventListener("click", 
     xhttp.send(formData);
 });
 
+deleteModal.querySelector("#delete-item").addEventListener("click", () => {
+    const modal = bootstrap.Modal.getInstance(deleteModal);
+    const idInput = deleteModal.querySelector("input#id")
+
+    const xhttp = new XMLHttpRequest();
+    xhttp.withCredentials = true;
+    xhttp.onreadystatechange = function () {
+        if (this.readyState === 4) {
+            if (this.status === 200) {
+                Array.from(table.querySelectorAll("tbody tr")).find(row => row.dataset.id === idInput.value).remove();
+                modal.dispose();
+            }
+        }
+    }
+    const url = deleteModal.querySelector("input#type").value === "task" ? "task/edit/" : "milestone/remove/";
+    xhttp.open("DELETE", BASE_URL + url + encodeURIComponent(idInput.value), true);
+    xhttp.send();
+});
+
 table.addEventListener("click", e => {
     const target = e.target;
     if (target.nodeName === "I" && (target.classList.contains("shift-up") || target.classList.contains("shift-down"))) {
@@ -145,6 +178,10 @@ table.addEventListener("click", e => {
         e.preventDefault();
         const row = target.closest("tr");
         editMilestone(row);
+    } else if (target.nodeName === "BUTTON"
+        || (target.nodeName === "I" && target.parentElement.nodeName === "BUTTON")) {
+        const row = target.closest("tr");
+        deleteItem(row);
     }
 });
 
