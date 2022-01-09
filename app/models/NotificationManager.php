@@ -34,4 +34,10 @@ class NotificationManager extends AbstractManager
         );
         return $stmt->execute([$id]);
     }
+
+    public function deleteNotifications(string $username): bool
+    {
+        $stmt = $this->db->prepare("DELETE FROM notification WHERE username = ?;");
+        return $stmt->execute([$username]);
+    }
 }
