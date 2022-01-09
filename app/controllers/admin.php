@@ -4,6 +4,7 @@ require_once __DIR__ . "/../models/UserManager.php";
 require_once __DIR__ . "/../models/FileManager.php";
 require_once __DIR__ . "/../models/ProjectManager.php";
 require_once __DIR__ . "/../models/TaskManager.php";
+require_once __DIR__ . "/../models/NotificationManager.php";
 
 class admin extends Controller
 {
@@ -83,6 +84,7 @@ class admin extends Controller
         $fileManager = FileManager::getInstance();
         $projectManager = ProjectManager::getInstance();
         $taskManager = TaskManager::getInstance();
+        $notificationManager = NotificationManager::getInstance();
         if ($_SESSION["user"]["userType"] != "ADMIN") {
             header("Location: " . BASE_URL . "home/dashboard");
             die;
@@ -183,6 +185,10 @@ class admin extends Controller
                             }
                         }
                     }
+
+                    // delete notifications of the user
+                    $notificationManager->deleteNotificaitons($user["username"]);
+
 
                     // remove profile picture
                     if (!empty($user["profile_picture"]) && file_exists(__DIR__ . '/../../public/uploads/' . $user["profile_picture"])) {
