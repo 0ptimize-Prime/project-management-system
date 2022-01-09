@@ -1,4 +1,15 @@
 <?php require_once __DIR__ . "/../../utils.php" ?>
+<?php
+function statusBadgeColor(string $status): string
+{
+    return match ($status) {
+        "ASSIGNED" => "secondary",
+        "PENDING" => "info",
+        "COMPLETE" => "success",
+        default => "primary",
+    };
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,60 +30,88 @@ showNavbar($data);
 <h1 class="text-center">Task view</h1>
 
 <div class="d-flex">
-    <div class="card mx-auto" style="width: 18rem;">
+    <div class="card mx-auto" style="width: 40rem;">
         <div class="card-body" >
-            <h5 class="card-title">Task: <?php echo htmlspecialchars($data["task"]["title"]) ?></h5>
-            <p class="card-text">Description: <?php echo htmlspecialchars($data["task"]["description"]) ?></p>
-            <?php if ($data["task"]["username"]) { ?>
-                <h6 class="card-subtitle mb-2 text-muted">
-                    Assigned By : <?php echo htmlspecialchars($data["task"]["name"]) ?></h6>
-            <?php } ?>
-            <h6 class="card-subtitle mb-2 text-muted">
-                Project: <a href="<?php echo htmlspecialchars(BASE_URL . 'project/view/' .$data["project"]["id"])  ?>"><?php echo htmlspecialchars($data["project"]["title"]) ?></a>
-            <h6 class="card-subtitle mb-2 text-muted">
-                Created at : <?php echo htmlspecialchars($data['task']['created_at']) ?></h6>
-            <h6 class="card-subtitle mb-2 text-muted">
-                Deadline : <?php echo htmlspecialchars($data['task']['deadline']) ?></h6>
-            <h6 class="card-subtitle mb-2 text-muted">
-                Current Status : <?php echo htmlspecialchars($data['task']['status']) ?></h6>
-
-            <ul class="list-group list-group-flush">
-                <?php foreach ($data["files"] as $file) { ?>
-                    <h6 class="card-subtitle mb-2 text-muted">
-                        Files:</h6>
-                    <li class="list-group-item">
-                        <a href="<?php echo BASE_URL . "uploads/" . htmlspecialchars($file["id"]) ?>">
-                            <?php echo htmlspecialchars($file["name"]) ?>
-                        </a>
-                    </li>
-                <?php } ?>
-            </ul>
-                <table class="accept-decline-table">
-                    <tr>
-                        <form class="updateStatus" id="status-accept">
-                            <?php if ($data["user"]["userType"] != "EMPLOYEE") { ?>
-                                <label for="up-status">Status: </label>
-                                <button type="submit" class="btn btn-primary">Accept</button>
+            <h5 class="card-title text-center">Task: <?php echo htmlspecialchars($data["task"]["title"]) ?></h5>
+            <div class="px-3 pt-2">
+                <div class="row mb-3">
+                    <div class="col-3">Description:</div>
+                    <div class="col-9 card-text"><?php echo htmlspecialchars($data["task"]["description"]) ?></div>
+                </div>
+                <div class="row mb-3">
+                    <?php if ($data["task"]["username"]) { ?>
+                        <div class="col-3">Assigned To:</div>
+                        <div class="col-4"><?php echo htmlspecialchars($data["task"]["name"]) ?></div>
+                    <?php } ?>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-3">Project:</div>
+                    <div class="col-4"><a href="<?php echo htmlspecialchars(BASE_URL . 'project/view/' .$data["project"]["id"])  ?>"><?php echo htmlspecialchars($data["project"]["title"]) ?></a></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-3">Created at:</div>
+                    <div class="col-4"><?php echo htmlspecialchars($data['task']['created_at']) ?></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-3">Deadline:</div>
+                    <div class="col-4"><?php echo htmlspecialchars($data['task']['deadline']) ?></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-3">Current Status:</div>
+                    <div class="col-2">
+                        <span class="badge rounded-pill bg-<?php echo htmlspecialchars(statusBadgeColor($data['task']['status'])) ?>">
+                            <?php echo htmlspecialchars($data["task"]["status"]) ?>
+                        </span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-3">Files:</div>
+                    <?php if (count($data["files"]) == 0) { ?>
+                        <div class="col-4">No files</div>
+                    <?php } ?>
+                    <ul class="list-group col-9">
+                        <?php foreach ($data["files"] as $file) { ?>
+                            <li class="list-group-item">
+                                <a href="<?php echo htmlspecialchars(BASE_URL . 'uploads/' . $file['id']) ?>">
+                                    <?php echo htmlspecialchars($file["name"]) ?>
+                                </a>
+                            </li>
+                        <?php } ?>
+                    </ul>
+                </div>
+                <div>
+                        <form class="updateStatus" id="status-accept" style="display: inline-block">
+                            <?php if ($data["user"]["userType"] != "EMPLOYEE" && $data['task']['status']!="COMPLETE") { ?>
+                                <label for="up-status">Status:</label>
+                                    <button type="submit" class="btn btn-success">Accept</button>
                             <?php } ?>
                         </form>
-                    </tr>
-                    <tr>
-                        <form class="updateStatus" id="status-decline">
+                        <form class="updateStatus" id="status-decline" style="display: inline-block">
                             <?php if ($data["user"]["userType"] != "EMPLOYEE") { ?>
-                                <button type="submit" class="btn btn-primary">Decline</button>
+
+                                <?php if ($data["task"]["status"]!="COMPLETE"){ ?>
+                                    <label for="up-status"></label>
+                                <?php }
+                                else { ?>
+                                    <label for="up-status">Status:</label>
+
+                                <?php } ?>
+                                <button type="submit" class="btn btn-danger">Decline</button>
+
                             <?php } ?>
                         </form>
-                    </tr>
-                </table>
-
+                </div>
                 <form class="updateStatus" id="status-request">
                     <?php if ($data["user"]["userType"] == "EMPLOYEE") { ?>
-                        <label for="up-status">Status: </label>
-                        <button type="submit" class="btn btn-primary">Submit for Approval</button>
+                    <div class="row mb-3">
+                        <div class="col-3">Status:</div>
+                        <div class="col-4"> <button type="submit" class="btn btn-primary">Submit for Approval</button></div>
                     <?php } ?>
+                    </div>
                 </form>
         </div>
     </div>
+</div>
 </div>
 
 <div class="container overflow-scroll" id="comments">
@@ -120,6 +159,9 @@ showNavbar($data);
 
     .img-circle {
         border-radius: 50%;
+    }
+    form{
+        display: inline;
     }
 </style>
 
