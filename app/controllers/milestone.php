@@ -30,8 +30,11 @@ class milestone extends Controller
         }
 
         $result = $milestoneManager->addMilestone($_POST["id"], $_POST["title"]);
-        if (!$result)
+        if (!$result) {
             http_response_code(400);
+        } else {
+            echo json_encode($milestoneManager->getMilestone($result));
+        }
     }
 
     public function remove($id)
