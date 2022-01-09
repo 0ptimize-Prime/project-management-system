@@ -15,10 +15,10 @@ class admin extends Controller
             die;
         }
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
-            $data = $this->getViewData();
-            $this->checkAuth("admin/create", function ($data) {
+            $this->checkAuth("admin/create", function () {
+                $data = $this->getViewData();
                 return $data;
-            }, [$data]);
+            });
         } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
             $this->checkAuth("admin/create", function () {
             });
@@ -85,10 +85,10 @@ class admin extends Controller
         }
 
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
-            $data = $this->getViewData();
-            $this->checkAuth("admin/edit", function ($data) {
+            $this->checkAuth("admin/edit", function () {
+                $data = $this->getViewData();
                 return $data;
-            }, [$data]);
+            });
         } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $this->checkAuth("admin/edit", function () {
             });

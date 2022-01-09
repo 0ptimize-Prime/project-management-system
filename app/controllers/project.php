@@ -19,10 +19,10 @@ class project extends Controller
             die;
         }
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
-            $data = $this->getViewData();
-            $this->checkAuth("project/create", function ($data) {
+            $this->checkAuth("project/create", function () {
+                $data = $this->getViewData();
                 return $data;
-            }, [$data]);
+            });
         } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
             $this->checkAuth("project/create", function () {
             });
@@ -57,8 +57,8 @@ class project extends Controller
     {
         session_start();
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
-            $data = $this->getViewData();
-            $this->checkAuth("project/view", function ($data, string $projectId) {
+            $this->checkAuth("project/view", function (string $projectId) {
+                $data = $this->getViewData();
                 $projectManager = ProjectManager::getInstance();
                 $taskManager = TaskManager::getInstance();
 
@@ -81,7 +81,7 @@ class project extends Controller
                 $data["milestones"] = $milestones;
 
                 return $data;
-            }, [$data, $projectId]);
+            }, [$projectId]);
         }
     }
 
@@ -99,11 +99,11 @@ class project extends Controller
                 header("Location: " . BASE_URL . "home/dashboard");
                 die;
             }
-            $data = $this->getViewData();
-            $data["managers"] = $managers;
-            $this->checkAuth("project/edit", function ($data) {
+            $this->checkAuth("project/edit", function ($managers) {
+                $data = $this->getViewData();
+                $data["managers"] = $managers;
                 return $data;
-            }, [$data]);
+            }, [$managers]);
         } else if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $this->checkAuth("project/edit", function () {
                 return false;
