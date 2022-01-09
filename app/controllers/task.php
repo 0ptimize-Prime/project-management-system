@@ -20,7 +20,10 @@ class Task extends Controller
         }
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $this->checkAuth("task/create", function (string $projectId, string $projectTitle) {
-                return ["user" => $_SESSION["user"], "projectId" => $projectId, "projectTitle" => $projectTitle];
+                $data = $this->getViewData();
+                $data["projectId"] = $projectId;
+                $data["projectTitle"] = $projectTitle;
+                return $data;
             }, [$projectId, $project["title"]]);
         } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
             $this->checkAuth("task/create", function () {
@@ -77,26 +80,30 @@ class Task extends Controller
         session_start();
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $this->checkAuth("task/view", function (string $taskId) {
-                $user = $_SESSION["user"];
+                $data = $this->getViewData();
 
                 $taskManager = TaskManager::getInstance();
                 $task = $taskManager->getTask($taskId);
+                $data["task"] = $task;
 
                 $projectManager = ProjectManager::getInstance();
                 $project = $projectManager->getProject($task["project_id"]);
-                if ($user["username"] != $project["manager"]
-                    && !$taskManager->isEmployeeInProject($user["username"], $project["id"])) {
+                $data["project"] = $project;
+                if ($data["user"]["username"] != $project["manager"]
+                    && !$taskManager->isEmployeeInProject($data["user"]["username"], $project["id"])) {
                     header("Location: " . BASE_URL . "home/dashboard");
                     die;
                 }
 
                 $fileManager = FileManager::getInstance();
                 $files = $fileManager->getFiles($taskId);
+                $data["files"] = $files;
 
                 $commentManager = CommentManager::getInstance();
                 $comments = $commentManager->getComments($taskId);
+                $data["comments"] = $comments;
 
-                return ["user" => $user, "task" => $task, "project" => $project, "files" => $files, "comments" => $comments];
+                return $data;
             }, [$taskId]);
         }
     }
@@ -110,7 +117,9 @@ class Task extends Controller
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $employees = $userManager->getUsersBy('', '', 'EMPLOYEE') ?? [];
             $this->checkAuth("task/edit", function ($employees) {
-                return ["user" => $_SESSION["user"], "employees" => $employees];
+                $data = $this->getViewData();
+                $data["employees"] = $employees;
+                return $data;
             }, [$employees]);
         } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $this->checkAuth("task/edit", function () {
