@@ -187,7 +187,7 @@ class admin extends Controller
                     }
 
                     // delete notifications of the user
-                    $notificationManager->deleteNotificaitons($user["username"]);
+                    $notificationManager->deleteNotifications($user["username"]);
 
 
                     // remove profile picture
