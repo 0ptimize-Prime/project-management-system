@@ -42,7 +42,7 @@ abstract class Controller
         $notifications = NotificationManager::getInstance()->getNotifications($_SESSION["user"]["username"]);
         return [
             "user" => $_SESSION["user"],
-            "notifications" => $notifications
+            "notifications" => $notifications ?? []
         ];
     }
 }
