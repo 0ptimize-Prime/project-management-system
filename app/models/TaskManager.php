@@ -130,7 +130,7 @@ class TaskManager extends AbstractManager
         }
     }
 
-    public function updateTask(string $id, string $title, string $description, string $username, string $deadline, string $effort): bool
+    public function updateTask(string $id, string $title, string $description, string|null $username, string $deadline, string $effort): bool
     {
         $stmt = $this->db->prepare(
             "UPDATE task SET title=?, description=?, username=?, deadline=?, effort=? WHERE id=?;"

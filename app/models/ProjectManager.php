@@ -68,7 +68,7 @@ class ProjectManager extends AbstractManager
         }
     }
 
-    public function updateProject(string $id, string $manager, string $title, string $description, string $deadline): bool
+    public function updateProject(string $id, string|null $manager, string $title, string $description, string $deadline): bool
     {
         $stmt = $this->db->prepare(
             "UPDATE project SET manager=?, title=?, description=?, deadline=? WHERE id=?;"
