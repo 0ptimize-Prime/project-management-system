@@ -274,7 +274,7 @@ class project extends Controller
                 die;
             }
 
-            $result = $projectManager->reorder($_POST["items"]);
+            $result = $projectManager->reorder(json_decode($_POST["items"], true));
             if (!$result)
                 http_response_code(400);
         }

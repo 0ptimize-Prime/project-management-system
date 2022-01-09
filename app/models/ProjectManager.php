@@ -81,5 +81,6 @@ class ProjectManager extends AbstractManager
                 $milestoneStmt->execute([$item['ind'], $item['id']]);
             }
         }
+        return true;
     }
 }
