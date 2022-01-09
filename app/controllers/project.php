@@ -19,9 +19,10 @@ class project extends Controller
             die;
         }
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
-            $this->checkAuth("project/create", function () {
-                return ["user" => $_SESSION["user"]];
-            });
+            $data = $this->getViewData();
+            $this->checkAuth("project/create", function ($data) {
+                return $data;
+            }, [$data]);
         } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
             $this->checkAuth("project/create", function () {
             });
@@ -56,28 +57,31 @@ class project extends Controller
     {
         session_start();
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
-            $this->checkAuth("project/view", function (string $projectId) {
-                $user = $_SESSION["user"];
-
+            $data = $this->getViewData();
+            $this->checkAuth("project/view", function ($data, string $projectId) {
                 $projectManager = ProjectManager::getInstance();
                 $taskManager = TaskManager::getInstance();
 
                 $project = $projectManager->getProject($projectId);
-                if ($user["username"] != $project["manager"]
-                    && !$taskManager->isEmployeeInProject($user["username"], $project["id"])) {
+                $data["project"] = $project;
+                if ($data["user"]["username"] != $project["manager"]
+                    && !$taskManager->isEmployeeInProject($data["user"]["username"], $project["id"])) {
                     header("Location: " . BASE_URL . "home/dashboard");
                     die;
                 }
 
                 $fileManager = FileManager::getInstance();
                 $files = $fileManager->getFiles($projectId);
+                $data["files"] = $files;
 
                 $tasks = $taskManager->getTasks($projectId);
+                $data["tasks"] = $tasks;
                 $milestoneManager = MilestoneManager::getInstance();
                 $milestones = $milestoneManager->getMilestones($projectId);
+                $data["milestones"] = $milestones;
 
-                return ["user" => $user, "project" => $project, "tasks" => $tasks, "milestones" => $milestones, "files" => $files];
-            }, [$projectId]);
+                return $data;
+            }, [$data, $projectId]);
         }
     }
 
@@ -95,10 +99,11 @@ class project extends Controller
                 header("Location: " . BASE_URL . "home/dashboard");
                 die;
             }
-
-            $this->checkAuth("project/edit", function ($managers) {
-                return ["user" => $_SESSION["user"], "managers" => $managers];
-            }, [$managers]);
+            $data = $this->getViewData();
+            $data["managers"] = $managers;
+            $this->checkAuth("project/edit", function ($data) {
+                return $data;
+            }, [$data]);
         } else if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $this->checkAuth("project/edit", function () {
                 return false;
