@@ -3,6 +3,7 @@ require_once __DIR__ . "/../utils.php";
 require_once __DIR__ . "/../models/UserManager.php";
 require_once __DIR__ . "/../models/FileManager.php";
 require_once __DIR__ . "/../models/ProjectManager.php";
+require_once __DIR__ . "/../models/TaskManager.php";
 
 class admin extends Controller
 {
@@ -81,6 +82,7 @@ class admin extends Controller
         $userManager = UserManager::getInstance();
         $fileManager = FileManager::getInstance();
         $projectManager = ProjectManager::getInstance();
+        $taskManager = TaskManager::getInstance();
         if ($_SESSION["user"]["userType"] != "ADMIN") {
             header("Location: " . BASE_URL . "home/dashboard");
             die;
@@ -143,7 +145,7 @@ class admin extends Controller
                 die;
             }
             $user = $userManager->getUserDetails($username);
-            if ($user) {
+            if ($user && $user["userType"] !== "ADMIN") {
                 $db = DbConnectionManager::getConnection();
                 $db->beginTransaction();
 
@@ -160,6 +162,24 @@ class admin extends Controller
                                     $project["description"],
                                     $project["deadline"]
                                 );
+                            }
+                        }
+                    }
+
+                    // set task statuses to CREATED
+                    if ($user["userType"] == "EMPLOYEE") {
+                        $tasks = $taskManager->getTasksByUser($user["username"]);
+                        if ($tasks) {
+                            foreach ($tasks as $task) {
+                                $taskManager->updateTask(
+                                    $task["id"],
+                                    $task["title"],
+                                    $task["description"],
+                                    null,
+                                    $task["deadline"],
+                                    $task["effort"]
+                                );
+                                $taskManager->updateStatus($task["id"], "CREATED");
                             }
                         }
                     }
