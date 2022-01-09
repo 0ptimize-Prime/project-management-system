@@ -169,7 +169,7 @@ deleteModal.querySelector("#delete-item").addEventListener("click", () => {
     xhttp.send();
 });
 
-table.addEventListener("click", e => {
+table.querySelector("tbody").addEventListener("click", e => {
     const target = e.target;
     if (target.nodeName === "I" && (target.classList.contains("shift-up") || target.classList.contains("shift-down"))) {
         shiftRow(e);
