@@ -19,6 +19,7 @@ function statusBadgeColor(string $status): string
 <head>
     <title>Project</title>
     <?php include __DIR__ . "/../templates/head.php" ?>
+    <meta name="project_id" content="<?php echo htmlspecialchars($data['project']['id']) ?>">
     <style>
         .card-text {
             white-space: pre-wrap;
@@ -32,6 +33,10 @@ function statusBadgeColor(string $status): string
         .table th {
             background-color: dodgerblue;
             color: white;
+        }
+
+        .shift-up, .shift-down {
+            cursor: pointer;
         }
     </style>
 </head>
@@ -119,7 +124,7 @@ showNavbar($data);
     </div>
 </div>
 
-<table class="table mt-4">
+<table class="table mt-4" id="task-table">
     <thead>
     <tr>
         <th scope="col">Title</th>
@@ -127,6 +132,7 @@ showNavbar($data);
         <th scope="col">Deadline</th>
         <th scope="col">Status</th>
         <th scope="col">Effort</th>
+        <th scope="col"></th>
     </tr>
     </thead>
     <tbody>
@@ -135,7 +141,7 @@ showNavbar($data);
     function _showTaskRow($task)
     {
         ?>
-        <tr data-id="<?php echo htmlspecialchars($task['id']) ?>">
+        <tr data-id="<?php echo htmlspecialchars($task['id']) ?>" class="task-row">
             <td>
                 <a href="<?php echo htmlspecialchars(BASE_URL . 'task/view/' . $task['id']) ?>">
                     <?php echo htmlspecialchars($task['title']) ?>
@@ -149,6 +155,7 @@ showNavbar($data);
                 </span>
             </td>
             <td><?php echo htmlspecialchars($task['effort']) ?></td>
+            <td><i class="shift-up fas fa-chevron-up"></i> <i class="shift-down fas fa-chevron-down"></i></td>
         </tr>
         <?php
     }
@@ -156,7 +163,7 @@ showNavbar($data);
     function _showMilestoneRow($milestone)
     {
         ?>
-        <tr data-id="<?php echo htmlspecialchars($milestone['id']) ?>" class="table-info">
+        <tr data-id="<?php echo htmlspecialchars($milestone['id']) ?>" class="table-info milestone-row">
             <td><?php echo htmlspecialchars($milestone['title']) ?></td>
             <td></td>
             <td></td>
@@ -166,6 +173,7 @@ showNavbar($data);
                 </span>
             </td>
             <td></td>
+            <td><i class="shift-up fas fa-chevron-up"></i> <i class="shift-down fas fa-chevron-down"></i></td>
         </tr>
         <?php
     }
@@ -279,6 +287,8 @@ showNavbar($data);
         }
     });
 </script>
+
+<script src="<?php echo htmlspecialchars(BASE_URL . 'js/project-view.js') ?>"></script>
 
 </body>
 
