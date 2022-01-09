@@ -71,22 +71,48 @@ showSidebar($data);
     <table class="table">
         <thead>
         <tr>
-            <th scope="col">Title</th>
-            <th scope="col">Deadline</th>
-            <th scope="col">Status</th>
+            <?php if ($data["user"]["userType"] == "EMPLOYEE") { ?>
+                <th scope="col">Title</th>
+                <th scope="col">Project</th>
+                <th scope="col">Deadline</th>
+                <th scope="col">Status</th>
+            <?php } else { ?>
+                <th scope="col">Title</th>
+                <th scope="col">Deadline</th>
+                <th scope="col">Status</th>
+            <?php } ?>
         </tr>
         </thead>
         <tbody>
-        <?php foreach ($data['tasks'] as $task) { ?>
-            <tr>
-                <td>
-                    <a href="<?php echo htmlspecialchars(BASE_URL . 'task/view/' . $task['id']) ?>">
-                        <?php echo htmlspecialchars($task['title']) ?>
-                    </a>
-                </td>
-                <td><?php echo htmlspecialchars($task['deadline']) ?></td>
-                <td><?php echo htmlspecialchars($task['status']) ?></td>
-            </tr>
+        <?php if ($data["user"]["userType"] == "EMPLOYEE") { ?>
+            <?php foreach ($data['tasks'] as $task) { ?>
+                <tr>
+                    <td>
+                        <a href="<?php echo htmlspecialchars(BASE_URL . 'task/view/' . $task['id']) ?>">
+                            <?php echo htmlspecialchars($task['title']) ?>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="<?php echo htmlspecialchars(BASE_URL . 'project/view/' . $task['projectId']) ?>">
+                            <?php echo htmlspecialchars($task['projectName']) ?>
+                        </a>
+                    </td>
+                    <td><?php echo htmlspecialchars($task['deadline']) ?></td>
+                    <td><?php echo htmlspecialchars($task['status']) ?></td>
+                </tr>
+            <?php } ?>
+        <?php } else { ?>
+            <?php foreach ($data["projects"] as $project) { ?>
+                <tr>
+                    <td>
+                        <a href="<?php echo htmlspecialchars(BASE_URL . 'project/view/' . $project['id']) ?>">
+                            <?php echo htmlspecialchars($project["title"]) ?>
+                        </a>
+                    </td>
+                    <td><?php echo htmlspecialchars($project["deadline"]) ?></td>
+                    <td><?php echo htmlspecialchars($project["status"]) ?></td>
+                </tr>
+            <?php } ?>
         <?php } ?>
         </tbody>
     </table>
