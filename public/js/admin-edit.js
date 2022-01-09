@@ -51,7 +51,7 @@ searchForm.addEventListener("submit", e => {
                 userTypeTd.textContent = user.userType;
                 tr.appendChild(userTypeTd);
                 const editTd = document.createElement("td");
-                editTd.innerHTML = "<button type='button' class='btn btn-primary btn-sm'><i class='fas fa-edit'></i></button>"
+                editTd.innerHTML = "<button type='button' class='btn btn-warning btn-sm'><i class='fas fa-edit'></i></button>"
                 tr.appendChild(editTd);
                 tbody.appendChild(tr);
             });
