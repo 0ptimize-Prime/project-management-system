@@ -140,21 +140,29 @@ class admin extends Controller
                 http_response_code(400);
                 die;
             }
-            if (!$this->is_username_available($username)) {
-                $user = $userManager->getUserDetails($username);
-                $result = true;
-                if (!empty($user["profile_picture"]) && file_exists(__DIR__ . '/../../public/uploads/' . $user["profile_picture"])) {
-                    unlink(__DIR__ . '/../../public/uploads/' . $user["profile_picture"]);
-                    $result = $fileManager->deleteFile($user["profile_picture"]);
-                }
+            $user = $userManager->getUserDetails($username);
+            if ($user) {
+                $db = DbConnectionManager::getConnection();
+                $db->beginTransaction();
 
-                if ($result) {
+                try {
+                    // remove profile picture
+                    if (!empty($user["profile_picture"]) && file_exists(__DIR__ . '/../../public/uploads/' . $user["profile_picture"])) {
+                        unlink(__DIR__ . '/../../public/uploads/' . $user["profile_picture"]);
+                        $fileManager->deleteFile($user["profile_picture"]);
+                    }
                     $result = $userManager->removeUser($username);
-                    die;
-                } else {
+                    if (!$result) {
+                        http_response_code(400);
+                    }
+                } catch (Exception $e) {
+                    if ($db->inTransaction())
+                        $db->rollBack();
                     http_response_code(400);
+                    die;
                 }
-
+                $db->commit();
+                die;
             }
             http_response_code(400);
         }
