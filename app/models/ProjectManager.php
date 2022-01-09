@@ -38,6 +38,18 @@ class ProjectManager extends AbstractManager
         }
     }
 
+    public function getProjectsByManager(string $manager): array|false
+    {
+        $stmt = $this->db->prepare("SELECT * FROM project WHERE manager=?;");
+        $stmt->execute([$manager]);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            return $result;
+        }
+        return false;
+    }
+
     public function getProjectsBy($title = '', $manager = ''): array|false
     {
         $query = "

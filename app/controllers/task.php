@@ -84,6 +84,11 @@ class Task extends Controller
 
                 $taskManager = TaskManager::getInstance();
                 $task = $taskManager->getTask($taskId);
+                if ($data["user"]["username"] == $task["username"] &&
+                    $task["status"] == "ASSIGNED") {
+                    $taskManager->updateStatus($taskId, "IN_PROGRESS");
+                    $task = $taskManager->getTask($taskId);
+                }
                 $data["task"] = $task;
 
                 $projectManager = ProjectManager::getInstance();

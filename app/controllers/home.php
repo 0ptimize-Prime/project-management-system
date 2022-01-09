@@ -4,6 +4,7 @@ require_once __DIR__ . "/../utils.php";
 require_once __DIR__ . "/../models/UserManager.php";
 require_once __DIR__ . "/../models/TaskManager.php";
 require_once __DIR__ . "/../models/NotificationManager.php";
+require_once __DIR__ . "/../models/ProjectManager.php";
 require_once __DIR__ . "/../models/FileManager.php";
 
 class Home extends Controller
@@ -12,9 +13,10 @@ class Home extends Controller
     {
         $this->checkAuth("home/dashboard", function () {
             $TaskManager = TaskManager::getInstance();
+            $projectManager = ProjectManager::getInstance();
             $tasksGraph=[];
             $projectsGraph = [];
-            
+            $data = $this->getViewData();
             if ($_SESSION["user"]["userType"] != "EMPLOYEE") {
                 $taskStatuses = $TaskManager->getTasksByManager($_SESSION["user"]["username"]);
 
@@ -39,6 +41,9 @@ class Home extends Controller
                         }                
                     }
                 }
+
+                $projects = $projectManager->getProjectsByManager($_SESSION["user"]["username"]);
+                $data["projects"] = $projects;
             } else {
                 $taskStatuses = $TaskManager->getTaskStatusesByUser($_SESSION["user"]["username"]);
                 if ($taskStatuses) {
@@ -50,10 +55,11 @@ class Home extends Controller
                         }
                     }
                 }
+
+                $tasks = $TaskManager->getTasksByUser($_SESSION["user"]["username"]);
+                if ($tasks)
+                    $data["tasks"] = $tasks;
             }
-            $notificationManager = NotificationManager::getInstance();
-            $data = $this->getViewData();
-            $data["tasks"] = [];
             $data["tasksGraph"] = $tasksGraph;
             $data["projectsGraph"] = $projectsGraph;
             return $data;
