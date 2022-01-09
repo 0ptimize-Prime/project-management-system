@@ -102,15 +102,7 @@ document.querySelectorAll('th').forEach(th => th.addEventListener('click', e => 
         .forEach(tr => tbody.appendChild(tr));
 }));
 
-table.querySelector("tbody").addEventListener("click", e => {
-    let row;
-    if (e.target.nodeName === "I")
-        row = e.target.parentElement.parentElement.parentElement;
-    else if (e.target.nodeName === "BUTTON")
-        row = e.target.parentElement.parentElement;
-    else
-        return;
-
+const editTask = (row) => {
     resetUpdateForm();
     const {id, description, effort} = row.dataset;
     const [
@@ -146,6 +138,19 @@ table.querySelector("tbody").addEventListener("click", e => {
         status,
         effort
     };
+}
+
+const goToTask = (row) => {
+    const id = row.dataset.id;
+    window.location.assign(BASE_URL + "task/view/" + id);
+};
+
+table.querySelector("tbody").addEventListener("click", e => {
+    const row = e.target.closest("tr");
+    if (e.target.nodeName === "I" || e.target.nodeName === "BUTTON")
+        editTask(row);
+    else
+        goToTask(row);
 });
 
 updateForm.addEventListener("submit", e => {
