@@ -51,7 +51,12 @@ class milestone extends Controller
             die;
         }
 
-        $project = $projectManager->getProject($id);
+        $milestone = $milestoneManager->getMilestone($id);
+        if (!$milestone) {
+            http_response_code(400);
+            die;
+        }
+        $project = $projectManager->getProject($milestone["project_id"]);
         if (!$project || $project["manager"] !== $_SESSION["user"]["username"]) {
             http_response_code(400);
             die;
