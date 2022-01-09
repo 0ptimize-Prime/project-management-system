@@ -27,6 +27,7 @@ CREATE TABLE `task`
     `username`    varchar(20)             NULL     DEFAULT NULL,
     `created_at`  timestamp               NOT NULL DEFAULT (current_timestamp()),
     `deadline`    date                    NULL     DEFAULT NULL,
+    `completed_date`    date              NULL     DEFAULT NULL,
     `status`      ENUM (
         'CREATED',
         'ASSIGNED',
