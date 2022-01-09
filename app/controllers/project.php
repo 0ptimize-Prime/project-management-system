@@ -85,7 +85,7 @@ class project extends Controller
         }
     }
 
-    public function edit(...$args)
+    public function edit(string $id = null)
     {
         session_start();
         $userManager = UserManager::getInstance();
@@ -186,42 +186,52 @@ class project extends Controller
             $this->checkAuth("project/edit", function () {
                 return false;
             });
-            if ($_SESSION["user"]["userType"] === "ADMIN") {
-                $id = $args[0];
-                $result = true;
-                // delete file associated with project
-                $files = $fileManager->getFiles($id);
-                if ($files) {
-                    if (file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
-                        unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
-                    }
-                    $result = $fileManager->deleteFile($files[0]["id"]);
-                }
-
-                if (!$result) {
-                    http_response_code(400);
-                    die;
-                }
-
-                // delete files associated with tasks
-                $tasks = $taskManager->getTasks($id);
-                if ($tasks) {
-                    foreach ($tasks as $task) {
-                        $files = $fileManager->getFiles($task["id"]);
-                        if ($files) {
-                            if (file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
-                                unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
-                            }
-                            $result = $fileManager->deleteFile($files[0]["id"]);
-                        }
-                    }
-                }
-                if ($result)
-                    $result = $projectManager->deleteProject($id);
-                if (!$result)
-                    http_response_code(400);
+            if (empty($id) || $_SESSION["user"]["userType"] == "EMPLOYEE") {
+                http_response_code(400);
+                die;
             }
-        }
+
+            $project = $projectManager->getProject($id);
+            if (!$project ||
+                ($_SESSION["user"]["userType"] == "MANAGER" && $project["manager"] !== $_SESSION["user"]["username"])) {
+                http_response_code(400);
+                die;
+            }
+
+
+            $result = true;
+            // delete file associated with project
+            $files = $fileManager->getFiles($id);
+            if ($files) {
+                if (file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
+                    unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
+                }
+                $result = $fileManager->deleteFile($files[0]["id"]);
+            }
+
+            if (!$result) {
+                http_response_code(400);
+                die;
+            }
+
+            // delete files associated with tasks
+            $tasks = $taskManager->getTasks($id);
+            if ($tasks) {
+                foreach ($tasks as $task) {
+                    $files = $fileManager->getFiles($task["id"]);
+                    if ($files) {
+                        if (file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
+                            unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
+                        }
+                        $result = $fileManager->deleteFile($files[0]["id"]);
+                    }
+                }
+            }
+            if ($result)
+                $result = $projectManager->deleteProject($id);
+            if (!$result)
+                http_response_code(400);
+            }
     }
 
     public function search()

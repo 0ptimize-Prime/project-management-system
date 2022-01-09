@@ -113,7 +113,7 @@ class Task extends Controller
         }
     }
 
-    public function edit(...$args)
+    public function edit(string $id = null)
     {
         $userManager = UserManager::getInstance();
         $taskManager = TaskManager::getInstance();
@@ -171,11 +171,13 @@ class Task extends Controller
             } else
                 http_response_code(400);
         } else if ($_SERVER["REQUEST_METHOD"] == "DELETE") {
-            $this->checkAuth("task/edit", function () {
-                return false;
-            });
+            $this->checkAuth("task/edit", function () {});
 
-            $id = $args[0];
+            if (empty($id)) {
+                http_response_code(400);
+                die;
+            }
+
             $task = $taskManager->getTask($id);
             if ($task &&
                 $_SESSION["user"]["username"] === $projectManager->getProject($task["project_id"])["manager"]) {
