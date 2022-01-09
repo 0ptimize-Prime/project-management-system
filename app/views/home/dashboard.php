@@ -19,7 +19,7 @@ showSidebar($data);
     <div class="container py-4">
         <div class="row mb-5">
             <?php if ($data["user"]["userType"] != "EMPLOYEE") { ?>
-                <div class="col">
+                <div class="col offset-1">
                     <div class="card mb-3" style="width: 18rem;" id="project-statistics">
                         <?php if (isset($data['projectsGraph']) && count($data['projectsGraph']) > 0) { ?>
                             <canvas id="project-bar-chart" height="300"></canvas>
@@ -35,7 +35,7 @@ showSidebar($data);
                 </div>
             <?php } ?>
 
-            <div class="col">
+            <div class="col <?php echo htmlspecialchars($data['user']['userType'] == "EMPLOYEE" ? 'offset-4' : '') ?>">
                 <div class="card" style="width: 18rem;" id="user-statistics">
                     <?php if (isset($data['tasksGraph']) && count($data['tasksGraph']) > 0) { ?>
                         <canvas id="task-pie-chart"></canvas>
