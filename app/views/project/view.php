@@ -38,6 +38,11 @@ function statusBadgeColor(string $status): string
         .shift-up, .shift-down {
             cursor: pointer;
         }
+
+        #edit-button {
+            top: 15px;
+            right: 15px;
+        }
     </style>
 </head>
 
@@ -77,6 +82,8 @@ usort($graph, "compare_func");
     <div class="card mx-auto" style="width: 40rem;">
         <div class="card-body">
             <h5 class="card-title text-center">Project: <?php echo htmlspecialchars($data["project"]["title"]) ?></h5>
+            <a href="<?php echo htmlspecialchars(BASE_URL . 'project/edit/' . $data['project']['id']) ?>"
+               class="btn btn-warning position-absolute" id="edit-button"><i class="fas fa-edit"></i></a>
             <div class="px-3 pt-2">
                 <div class="row mb-3">
                     <div class="col-3">Description:</div>
