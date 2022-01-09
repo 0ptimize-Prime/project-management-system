@@ -74,7 +74,7 @@ class admin extends Controller
         }
     }
 
-    public function edit(...$args)
+    public function edit(string $username = null)
     {
         session_start();
         $userManager = UserManager::getInstance();
@@ -136,7 +136,10 @@ class admin extends Controller
             } else
                 http_response_code(400);
         } else if ($_SERVER["REQUEST_METHOD"] == "DELETE") {
-            $username = $args[0];
+            if (empty($username)) {
+                http_response_code(400);
+                die;
+            }
             if (!$this->is_username_available($username)) {
                 $user = $userManager->getUserDetails($username);
                 $result = true;
@@ -147,6 +150,7 @@ class admin extends Controller
 
                 if ($result) {
                     $result = $userManager->removeUser($username);
+                    die;
                 } else {
                     http_response_code(400);
                 }
