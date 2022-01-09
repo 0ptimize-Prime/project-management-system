@@ -48,23 +48,6 @@ showSidebar($data);
                     </div>
                 </div>
             </div>
-            <?php if ($data["user"]["userType"] != "EMPLOYEE") { ?>
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Projects</h5>
-                        </div>
-                        <div class="list-group list-group-flush overflow-auto" style="max-height: 200px;">
-                            <?php foreach ($data["projects"] ?? [] as $project) { ?>
-                                <a class="list-group-item list-group-item-action"
-                                   href="<?php echo htmlspecialchars(BASE_URL . 'project/view/' . $project['id']) ?>">
-                                    <?php echo htmlspecialchars($project['title']) ?>
-                                </a>
-                            <?php } ?>
-                        </div>
-                    </div>
-                </div>
-            <?php } ?>
         </div>
 
         <table class="table">
