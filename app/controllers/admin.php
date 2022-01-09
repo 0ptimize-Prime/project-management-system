@@ -2,6 +2,7 @@
 require_once __DIR__ . "/../utils.php";
 require_once __DIR__ . "/../models/UserManager.php";
 require_once __DIR__ . "/../models/FileManager.php";
+require_once __DIR__ . "/../models/ProjectManager.php";
 
 class admin extends Controller
 {
@@ -79,6 +80,7 @@ class admin extends Controller
         session_start();
         $userManager = UserManager::getInstance();
         $fileManager = FileManager::getInstance();
+        $projectManager = ProjectManager::getInstance();
         if ($_SESSION["user"]["userType"] != "ADMIN") {
             header("Location: " . BASE_URL . "home/dashboard");
             die;
@@ -146,6 +148,22 @@ class admin extends Controller
                 $db->beginTransaction();
 
                 try {
+                    // set manager of projects to null
+                    if ($user["userType"] == "MANAGER") {
+                        $projects = $projectManager->getProjectsByManager($user["username"]);
+                        if ($projects) {
+                            foreach ($projects as $project) {
+                                $projectManager->updateProject(
+                                    $project["id"],
+                                    null,
+                                    $project["title"],
+                                    $project["description"],
+                                    $project["deadline"]
+                                );
+                            }
+                        }
+                    }
+
                     // remove profile picture
                     if (!empty($user["profile_picture"]) && file_exists(__DIR__ . '/../../public/uploads/' . $user["profile_picture"])) {
                         unlink(__DIR__ . '/../../public/uploads/' . $user["profile_picture"]);
