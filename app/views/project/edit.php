@@ -57,6 +57,21 @@ showSidebar($data);
                     </tr>
                     </thead>
                     <tbody style="cursor: pointer;">
+                    <?php if ($data["project"]) { ?>
+                        <tr data-id="<?php echo htmlspecialchars($data['project']['id']) ?>"
+                            data-description="<?php echo htmlspecialchars($data['project']['description']) ?>">
+                            <td><?php echo htmlspecialchars($data['project']['title']) ?></td>
+                            <td data-username="<?php echo htmlspecialchars($data['project']['manager']) ?>">
+                                <?php echo htmlspecialchars($data['project']['managerName']) ?>
+                            </td>
+                            <td><?php echo htmlspecialchars($data['project']['created_at']) ?></td>
+                            <td><?php echo htmlspecialchars($data['project']['deadline']) ?></td>
+                            <td><?php echo htmlspecialchars($data['project']['status']) ?></td>
+                            <td>
+                                <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                            </td>
+                        </tr>
+                    <?php } ?>
                     </tbody>
                 </table>
             </div>
@@ -127,6 +142,14 @@ showSidebar($data);
 </main>
 
 <script src="<?php echo htmlspecialchars(BASE_URL . 'js/project-edit.js') ?>"></script>
+
+<?php if ($data["project"]) { ?>
+    <script>
+        const row = table.querySelector("tbody tr");
+        if (row)
+            editProject(row);
+    </script>
+<?php } ?>
 
 </body>
 
