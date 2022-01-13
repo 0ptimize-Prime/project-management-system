@@ -50,4 +50,10 @@ class CommentManager extends AbstractManager
             return false;
         }
     }
+
+    public function deleteCommentsByTaskId(string $taskId): bool
+    {
+        $stmt = $this->db->prepare("DELETE FROM comment WHERE task_id = ?;");
+        return $stmt->execute([$taskId]);
+    }
 }
