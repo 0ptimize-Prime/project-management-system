@@ -102,11 +102,22 @@ class project extends Controller
                 header("Location: " . BASE_URL . "home/dashboard");
                 die;
             }
-            $this->checkAuth("project/edit", function ($managers) {
+
+            $project = [];
+            if (!empty($id)) {
+                $project = $projectManager->getProject($id);
+                if (!$project) {
+                    http_response_code(400);
+                    die;
+                }
+            }
+
+            $this->checkAuth("project/edit", function ($managers, $project) {
                 $data = $this->getViewData();
                 $data["managers"] = $managers;
+                $data["project"] = $project;
                 return $data;
-            }, [$managers]);
+            }, [$managers, $project]);
         } else if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $this->checkAuth("project/edit", function () {
                 return false;
