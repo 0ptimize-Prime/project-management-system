@@ -10,7 +10,7 @@ CREATE TABLE `user`
 CREATE TABLE `project`
 (
     `id`          varchar(20) PRIMARY KEY                     NOT NULL,
-    `manager`     varchar(20)                                 NOT NULL,
+    `manager`     varchar(20)                                 NULL,
     `title`       varchar(50)                                 NOT NULL,
     `description` text                                                 DEFAULT NULL,
     `created_at`  timestamp                                   NOT NULL DEFAULT (current_timestamp()),
