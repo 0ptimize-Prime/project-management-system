@@ -55,8 +55,14 @@ class ProjectManager extends AbstractManager
         $query = "
             SELECT project.*, user.name as managerName FROM project
             LEFT JOIN user on project.manager = user.username
-            WHERE title LIKE ? AND manager LIKE ?;";
-        $params = ['%' . $title . '%', '%' . $manager . '%'];
+            WHERE title LIKE ?";
+        $params = ['%' . $title . '%'];
+
+        if (!empty($manager)) {
+            $query .= " AND manager LIKE ?;";
+            $params[] = '%' . $manager . '%';
+        }
+
 
         $stmt = $this->db->prepare($query);
         $stmt->execute($params);
