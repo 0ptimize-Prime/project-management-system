@@ -119,6 +119,7 @@ class Task extends Controller
         $taskManager = TaskManager::getInstance();
         $projectManager = ProjectManager::getInstance();
         $fileManager = FileManager::getInstance();
+        $commentManager = CommentManager::getInstance();
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $employees = $userManager->getUsersBy('', '', 'EMPLOYEE') ?? [];
             $this->checkAuth("task/edit", function ($employees) {
@@ -181,22 +182,36 @@ class Task extends Controller
             $task = $taskManager->getTask($id);
             if ($task &&
                 $_SESSION["user"]["username"] === $projectManager->getProject($task["project_id"])["manager"]) {
-                $result = true;
-                $files = $fileManager->getFiles($task["id"]);
-                if ($files) {
-                    if (file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
-                        unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
+                $db = DbConnectionManager::getConnection();
+                $db->beginTransaction();
+
+                try {
+                    // Delete file associated with the task
+                    $files = $fileManager->getFiles($task["id"]);
+                    if ($files) {
+                        if (file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
+                            unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
+                        }
+                        $result = $fileManager->deleteFile($files[0]["id"]);
                     }
-                    $result = $fileManager->deleteFile($files[0]["id"]);
-                }
 
-                if ($result)
+                    // Delete comments associated with the task
+                    $commentManager->deleteCommentsByTaskId($task["id"]);
+
+
                     $result = $taskManager->deleteTask($id);
-                if (!$result) {
-                    http_response_code(400);
-                }
-            }
-
+                    if (!$result) {
+                        http_response_code(400);
+                    }
+                    } catch (Exception $e) {
+                        if ($db->inTransaction())
+                            $db->rollBack();
+                        http_response_code(400);
+                        die;
+                    }
+                    $db->commit();
+            } else
+                http_response_code(400);
         }
 
     }
