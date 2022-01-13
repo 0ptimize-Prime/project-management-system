@@ -188,14 +188,22 @@ class Task extends Controller
                 try {
                     // Delete file associated with the task
                     $files = $fileManager->getFiles($task["id"]);
-                    if ($files) {
-                        if (file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
-                            unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
-                        }
-                        $result = $fileManager->deleteFile($files[0]["id"]);
+                    if ($files && file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
+                        unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
+                        $fileManager->deleteFile($files[0]["id"]);
                     }
 
                     // Delete comments associated with the task
+                    $comments = $commentManager->getComments($task["id"]);
+                    if ($comments) {
+                        foreach($comments as $comment) {
+                            $files = $fileManager->getFiles($comment["id"]);
+                            if ($files && file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
+                                unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
+                                $fileManager->deleteFile($files[0]["id"]);
+                            }
+                        }
+                    }
                     $commentManager->deleteCommentsByTaskId($task["id"]);
 
 
