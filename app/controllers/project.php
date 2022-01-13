@@ -230,7 +230,7 @@ class project extends Controller
                         // delete comments
                         $comments = $commentManager->getComments($task["id"]);
                         if ($comments) {
-                            foreach($comments as $comment) {
+                            foreach ($comments as $comment) {
                                 $files = $fileManager->getFiles($comment["id"]);
                                 if ($files) {
                                     if (file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
@@ -257,7 +257,7 @@ class project extends Controller
                 die;
             }
             $db->commit();
-            }
+        }
     }
 
     public function search()
@@ -292,10 +292,12 @@ class project extends Controller
         }
     }
 
-    public function reorder() {
+    public function reorder()
+    {
         $projectManager = ProjectManager::getInstance();
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $this->checkAuth("project/reorder", function (){});
+            $this->checkAuth("project/reorder", function () {
+            });
             if (!isset(
                 $_POST["id"],
                 $_POST["items"]

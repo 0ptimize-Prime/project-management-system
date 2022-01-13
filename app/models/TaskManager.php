@@ -8,8 +8,8 @@ class TaskManager extends AbstractManager
     public function addTask(string $projectId, string $title, string $description, string $username, string $deadline, int $effort): string|false
     {
         $id = bin2hex(random_bytes(10));
-        $deadlineTimestamp = strlen($deadline) < 1? null: date("Y-m-d", strtotime($deadline));
-        $username = strlen($username) < 1? null: $username;
+        $deadlineTimestamp = strlen($deadline) < 1 ? null : date("Y-m-d", strtotime($deadline));
+        $username = strlen($username) < 1 ? null : $username;
         $status = $username ? "ASSIGNED" : "CREATED";
         $ind = $this->getNextIndex($projectId);
         $stmt = $this->db->prepare(
@@ -108,7 +108,8 @@ class TaskManager extends AbstractManager
         return false;
     }
 
-    public function getTasksBy(string $manager, string $project = "", string $task = ""): array|false {
+    public function getTasksBy(string $manager, string $project = "", string $task = ""): array|false
+    {
         $query = "
             SELECT
                 task.*,
@@ -141,7 +142,7 @@ class TaskManager extends AbstractManager
         return $stmt->execute([$title, $description, $username, $deadline, $effort, $id]);
     }
 
-    public function updateStatus(string $id,string $status): bool
+    public function updateStatus(string $id, string $status): bool
     {
         $stmt = $this->db->prepare(
             "UPDATE task SET status=? WHERE id=?;"

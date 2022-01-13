@@ -172,7 +172,8 @@ class Task extends Controller
             } else
                 http_response_code(400);
         } else if ($_SERVER["REQUEST_METHOD"] == "DELETE") {
-            $this->checkAuth("task/edit", function () {});
+            $this->checkAuth("task/edit", function () {
+            });
 
             if (empty($id)) {
                 http_response_code(400);
@@ -198,7 +199,7 @@ class Task extends Controller
                     // Delete comments associated with the task
                     $comments = $commentManager->getComments($task["id"]);
                     if ($comments) {
-                        foreach($comments as $comment) {
+                        foreach ($comments as $comment) {
                             $files = $fileManager->getFiles($comment["id"]);
                             if ($files) {
                                 if (file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
@@ -215,13 +216,13 @@ class Task extends Controller
                     if (!$result) {
                         http_response_code(400);
                     }
-                    } catch (Exception $e) {
-                        if ($db->inTransaction())
-                            $db->rollBack();
-                        http_response_code(400);
-                        die;
-                    }
-                    $db->commit();
+                } catch (Exception $e) {
+                    if ($db->inTransaction())
+                        $db->rollBack();
+                    http_response_code(400);
+                    die;
+                }
+                $db->commit();
             } else
                 http_response_code(400);
         }
