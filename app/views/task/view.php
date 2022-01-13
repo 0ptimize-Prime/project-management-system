@@ -18,10 +18,12 @@ showNavbar($data);
 
 <h1 class="text-center">Task view</h1>
 
-<div class="d-flex">
+<div class="d-flex pt-3">
     <div class="card mx-auto" style="width: 40rem;">
         <div class="card-body" >
             <h5 class="card-title text-center">Task: <?php echo htmlspecialchars($data["task"]["title"]) ?></h5>
+            <a href="<?php echo htmlspecialchars(BASE_URL . 'task/edit/' . $data['task']['id']) ?>"
+               class="btn btn-warning position-absolute" id="edit-button"><i class="fas fa-edit"></i></a>
             <div class="px-3 pt-2">
                 <div class="row mb-3">
                     <div class="col-3">Description:</div>
@@ -95,8 +97,9 @@ showNavbar($data);
                     <div class="row mb-3">
                         <div class="col-3">Status:</div>
                         <div class="col-4"> <button type="submit" class="btn btn-primary">Submit for Approval</button></div>
-                    <?php } ?>
                     </div>
+                    <?php } ?>
+
                 </form>
         </div>
     </div>
@@ -110,8 +113,7 @@ showNavbar($data);
             <h5 class="card-header"><?php echo htmlspecialchars($comment["name"]) ?></h5>
             <div class="row g-0">
                 <div class="col-md-1">
-                    <?php if (!$comment['profile_picture']) $comment['profile_picture'] = "https://via.placeholder.com/100" ?>
-                    <img src="<?php echo htmlspecialchars($comment['profile_picture']) ?>"
+                    <img src="<?php echo htmlspecialchars($comment['profile_picture'] ? BASE_URL . "uploads/" . $comment["profile_picture"] : 'https://via.placeholder.com/40x40.png') ?>"
                          alt="<?php echo htmlspecialchars($comment['username']) ?>" class="img-fluid img-circle m-1">
                 </div>
                 <div class="col-md-11">
@@ -151,6 +153,10 @@ showNavbar($data);
     }
     form{
         display: inline;
+    }
+    #edit-button {
+        top: 15px;
+        right: 15px;
     }
 </style>
 

@@ -21,9 +21,8 @@ const addComment = (newComment) => {
 
     const colNode1 = document.createElement("div");
     colNode1.classList.add("col-md-1");
-    if (!newComment.profile_picture) newComment.profile_picture = "https://via.placeholder.com/100";
     const imgNode = document.createElement("img");
-    imgNode.src = newComment.profile_picture;
+    imgNode.src = newComment.profile_picture ? BASE_URL + "uploads/" + newComment.profile_picture : 'https://via.placeholder.com/40x40.png'
     imgNode.alt = newComment.username;
     imgNode.classList.add("img-fluid", "img-circle", "m-1")
     colNode1.appendChild(imgNode);
@@ -85,7 +84,7 @@ statusRequest.addEventListener("submit", (e) => {
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             location.reload();
-        } else if (this.status === 0){ console.log(this.status);}
+        }
     };
     var formData = new FormData();
     formData.set('status','PENDING');

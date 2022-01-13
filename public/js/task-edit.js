@@ -40,8 +40,11 @@ searchForm.addEventListener("submit", e => {
                 tr.dataset.description = task.description ?? '';
                 tr.dataset.effort = task.effort;
                 const projectTd = document.createElement("td");
-                projectTd.textContent = task.projectName;
                 projectTd.dataset.id = task.projectId;
+                const projectLink = document.createElement("a");
+                projectLink.textContent = task.projectName;
+                projectLink.href = BASE_URL + "project/view/" + task.projectId;
+                projectTd.appendChild(projectLink);
                 tr.appendChild(projectTd);
                 const titleTd = document.createElement("td");
                 titleTd.textContent = task.title;
@@ -102,15 +105,7 @@ document.querySelectorAll('th').forEach(th => th.addEventListener('click', e => 
         .forEach(tr => tbody.appendChild(tr));
 }));
 
-table.querySelector("tbody").addEventListener("click", e => {
-    let row;
-    if (e.target.nodeName === "I")
-        row = e.target.parentElement.parentElement.parentElement;
-    else if (e.target.nodeName === "BUTTON")
-        row = e.target.parentElement.parentElement;
-    else
-        return;
-
+const editTask = (row) => {
     resetUpdateForm();
     const {id, description, effort} = row.dataset;
     const [
@@ -146,6 +141,19 @@ table.querySelector("tbody").addEventListener("click", e => {
         status,
         effort
     };
+}
+
+const goToTask = (row) => {
+    const id = row.dataset.id;
+    window.location.assign(BASE_URL + "task/view/" + id);
+};
+
+table.querySelector("tbody").addEventListener("click", e => {
+    const row = e.target.closest("tr");
+    if (e.target.nodeName === "I" || e.target.nodeName === "BUTTON")
+        editTask(row);
+    else
+        goToTask(row);
 });
 
 updateForm.addEventListener("submit", e => {

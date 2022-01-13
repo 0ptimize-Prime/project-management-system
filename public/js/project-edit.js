@@ -112,15 +112,7 @@ document.querySelectorAll('th').forEach(th => th.addEventListener('click', e => 
         .forEach(tr => tbody.appendChild(tr));
 }));
 
-table.querySelector("tbody").addEventListener("click", e => {
-    let row;
-    if (e.target.nodeName === "I")
-        row = e.target.parentElement.parentElement.parentElement;
-    else if (e.target.nodeName === "BUTTON")
-        row = e.target.parentElement.parentElement;
-    else
-        return;
-
+const editProject = (row) => {
     resetUpdateForm();
     const {id, description} = row.dataset;
     const [
@@ -138,6 +130,19 @@ table.querySelector("tbody").addEventListener("click", e => {
     updateFormFields[4].value = deadline;
     goToButton.hidden = false;
     project = {id, title, manager, managerName, description, createdAt, deadline, status};
+};
+
+const goToProject = (row) => {
+    const id = row.dataset.id;
+    window.location.assign(BASE_URL + "project/view/" + id);
+};
+
+table.querySelector("tbody").addEventListener("click", e => {
+    const row = e.target.closest("tr");
+    if (e.target.nodeName === "I" || e.target.nodeName === "BUTTON")
+        editProject(row);
+    else
+        goToProject(row);
 });
 
 updateForm.addEventListener("submit", e => {

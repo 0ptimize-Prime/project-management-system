@@ -43,7 +43,7 @@ showSidebar($data);
             </form>
 
             <div class="row mb-4">
-                <table class="table" id="task-table">
+                <table class="table table-hover" id="task-table">
                     <thead>
                     <tr>
                         <th scope="col">Project <span><i class="fas fa-solid fa-sort"></i></span></th>
@@ -55,7 +55,7 @@ showSidebar($data);
                         <th scope="col"></th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody style="cursor: pointer;">
                     </tbody>
                 </table>
             </div>
