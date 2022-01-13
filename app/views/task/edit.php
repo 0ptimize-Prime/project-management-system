@@ -56,6 +56,27 @@ showSidebar($data);
                     </tr>
                     </thead>
                     <tbody style="cursor: pointer;">
+                    <?php if ($data["task"]) { ?>
+                        <tr data-id="<?php echo htmlspecialchars($data['task']['id']) ?>"
+                            data-description="<?php echo htmlspecialchars($data['task']['description']) ?>"
+                            data-effort="<?php echo htmlspecialchars($data['task']['effort']) ?>">
+                            <td data-id="<?php echo htmlspecialchars($data['task']['projectId']) ?>">
+                                <a href="<?php echo htmlspecialchars(BASE_URL . 'project/view/' . $data['task']['projectId']) ?>">
+                                    <?php echo htmlspecialchars($data["task"]["projectName"]) ?>
+                                </a>
+                            </td>
+                            <td><?php echo htmlspecialchars($data["task"]["title"]) ?></td>
+                            <td><?php echo htmlspecialchars($data["task"]["created_at"]) ?></td>
+                            <td><?php echo htmlspecialchars($data["task"]["deadline"]) ?></td>
+                            <td><?php echo htmlspecialchars($data["task"]["status"]) ?></td>
+                            <td data-username="<?php echo htmlspecialchars($data['task']['username']) ?>">
+                                <?php echo htmlspecialchars($data["task"]["employeeName"]) ?>
+                            </td>
+                            <td>
+                                <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                            </td>
+                        </tr>
+                    <?php } ?>
                     </tbody>
                 </table>
             </div>
@@ -164,6 +185,14 @@ showSidebar($data);
 </main>
 
 <script src="<?php echo htmlspecialchars(BASE_URL . 'js/task-edit.js') ?>"></script>
+
+<?php if ($data["task"]) { ?>
+    <script>
+        const row = table.querySelector("tbody tr");
+        if (row)
+            editTask(row);
+    </script>
+<?php } ?>
 
 </body>
 
