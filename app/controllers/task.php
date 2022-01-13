@@ -188,9 +188,11 @@ class Task extends Controller
                 try {
                     // Delete file associated with the task
                     $files = $fileManager->getFiles($task["id"]);
-                    if ($files && file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
-                        unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
-                        $fileManager->deleteFile($files[0]["id"]);
+                    if ($files) {
+                        if (file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
+                            unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
+                            $fileManager->deleteFile($files[0]["id"]);
+                        }
                     }
 
                     // Delete comments associated with the task
@@ -198,9 +200,11 @@ class Task extends Controller
                     if ($comments) {
                         foreach($comments as $comment) {
                             $files = $fileManager->getFiles($comment["id"]);
-                            if ($files && file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
-                                unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
-                                $fileManager->deleteFile($files[0]["id"]);
+                            if ($files) {
+                                if (file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
+                                    unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
+                                    $fileManager->deleteFile($files[0]["id"]);
+                                }
                             }
                         }
                     }
