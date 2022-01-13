@@ -96,7 +96,7 @@ class TaskManager extends AbstractManager
     public function getTasksByUser(string $username): array|false
     {
         $stmt = $this->db->prepare(
-            "SELECT *, project.title as projectName, project.id as projectId FROM task
+            "SELECT task.*, task.project_id as projectId, project.title as projectName FROM task
             LEFT JOIN project on task.project_id = project.id
             WHERE username = ?;");
         $stmt->execute([$username]);
