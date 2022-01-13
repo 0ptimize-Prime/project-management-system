@@ -6,6 +6,7 @@ require_once __DIR__ . "/../models/ProjectManager.php";
 require_once __DIR__ . "/../models/TaskManager.php";
 require_once __DIR__ . "/../models/MilestoneManager.php";
 require_once __DIR__ . "/../models/FileManager.php";
+require_once __DIR__ . "/../models/CommentManager.php";
 
 class project extends Controller
 {
@@ -92,6 +93,8 @@ class project extends Controller
         $projectManager = ProjectManager::getInstance();
         $fileManager = FileManager::getInstance();
         $taskManager = TaskManager::getInstance();
+        $commentManager = CommentManager::getInstance();
+        $milestoneManager = MilestoneManager::getInstance();
         $managers = $userManager->getUsersBy('', '', 'MANAGER') ?? [];
         $managers = array_merge($managers, $userManager->getUsersBy('', '', 'ADMIN') ?? []);
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
@@ -198,39 +201,62 @@ class project extends Controller
                 die;
             }
 
+            $db = DbConnectionManager::getConnection();
+            $db->beginTransaction();
 
-            $result = true;
-            // delete file associated with project
-            $files = $fileManager->getFiles($id);
-            if ($files) {
-                if (file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
-                    unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
+            try {
+                // delete file associated with project
+                $files = $fileManager->getFiles($id);
+                if ($files) {
+                    if (file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
+                        unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
+                    }
+                    $fileManager->deleteFile($files[0]["id"]);
                 }
-                $result = $fileManager->deleteFile($files[0]["id"]);
-            }
 
-            if (!$result) {
+                // delete tasks
+                $tasks = $taskManager->getTasks($id);
+                if ($tasks) {
+                    foreach ($tasks as $task) {
+                        // delete file
+                        $files = $fileManager->getFiles($task["id"]);
+                        if ($files) {
+                            if (file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
+                                unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
+                            }
+                            $fileManager->deleteFile($files[0]["id"]);
+                        }
+
+                        // delete comments
+                        $comments = $commentManager->getComments($task["id"]);
+                        if ($comments) {
+                            foreach($comments as $comment) {
+                                $files = $fileManager->getFiles($comment["id"]);
+                                if ($files) {
+                                    if (file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
+                                        unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
+                                        $fileManager->deleteFile($files[0]["id"]);
+                                    }
+                                }
+                            }
+                            $commentManager->deleteCommentsByTaskId($task["id"]);
+                        }
+                    }
+                }
+
+                // delete milestones
+                $milestoneManager->deleteMilestonesByProjectId($id);
+
+                $result = $projectManager->deleteProject($id);
+                if (!$result)
+                    http_response_code(400);
+            } catch (Exception $e) {
+                if ($db->inTransaction())
+                    $db->rollBack();
                 http_response_code(400);
                 die;
             }
-
-            // delete files associated with tasks
-            $tasks = $taskManager->getTasks($id);
-            if ($tasks) {
-                foreach ($tasks as $task) {
-                    $files = $fileManager->getFiles($task["id"]);
-                    if ($files) {
-                        if (file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
-                            unlink(__DIR__ . '/../../public/uploads/' . $files[0]["id"]);
-                        }
-                        $result = $fileManager->deleteFile($files[0]["id"]);
-                    }
-                }
-            }
-            if ($result)
-                $result = $projectManager->deleteProject($id);
-            if (!$result)
-                http_response_code(400);
+            $db->commit();
             }
     }
 
