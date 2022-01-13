@@ -122,11 +122,20 @@ class Task extends Controller
         $commentManager = CommentManager::getInstance();
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $employees = $userManager->getUsersBy('', '', 'EMPLOYEE') ?? [];
-            $this->checkAuth("task/edit", function ($employees) {
+            $task = [];
+            if (!empty($id)) {
+                $task = $taskManager->getTask($id);
+                if (!$task) {
+                    http_response_code(400);
+                    die;
+                }
+            }
+            $this->checkAuth("task/edit", function ($employees, $task) {
                 $data = $this->getViewData();
                 $data["employees"] = $employees;
+                $data["task"] = $task;
                 return $data;
-            }, [$employees]);
+            }, [$employees, $task]);
         } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $this->checkAuth("task/edit", function () {
             });
