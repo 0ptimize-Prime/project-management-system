@@ -43,7 +43,7 @@ class Home extends Controller
                 }
 
                 $projects = $projectManager->getProjectsByManager($_SESSION["user"]["username"]);
-                $data["projects"] = $projects;
+                $data["projects"] = $projects ?: [];
             } else {
                 $taskStatuses = $TaskManager->getTaskStatusesByUser($_SESSION["user"]["username"]);
                 if ($taskStatuses) {
