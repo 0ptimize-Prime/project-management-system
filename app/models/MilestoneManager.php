@@ -56,6 +56,12 @@ class MilestoneManager extends AbstractManager
         return $stmt->execute([$id]);
     }
 
+    public function deleteMilestonesByProjectId(string $projectId): bool
+    {
+        $stmt = $this->db->prepare("DELETE FROM milestone WHERE project_id = ?");
+        return $stmt->execute([$projectId]);
+    }
+
     public function getNextIndex(string $projectId): int
     {
         $stmt = $this->db->prepare("SELECT GetNextIndex(?);");
