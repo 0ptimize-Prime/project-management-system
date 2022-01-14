@@ -270,11 +270,20 @@ class Task extends Controller
         return $projectManager->getProject($projectId);
     }
 
-    private function validate_update_task_data($id, $title, $username, $description, $deadline, $status, $effort): bool
+    private function validate_update_task_data(
+        string $id,
+        string $title,
+        string $username,
+        string $description,
+        string $deadline,
+        string $status,
+        string $effort): bool
     {
         $userManager = UserManager::getInstance();
         $args = func_get_args();
         foreach ($args as $arg) {
+            if ($arg === $description || $arg === $deadline)
+                continue;
             if (strlen($arg) < 1)
                 return false;
         }
