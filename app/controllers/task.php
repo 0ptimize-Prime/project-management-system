@@ -143,7 +143,6 @@ class Task extends Controller
             if (!isset(
                 $_POST["id"],
                 $_POST["title"],
-                $_POST["username"],
                 $_POST["description"],
                 $_POST["deadline"],
                 $_POST["status"],
@@ -156,7 +155,7 @@ class Task extends Controller
             if (!$this->validate_update_task_data(
                 $_POST["id"],
                 $_POST["title"],
-                $_POST["username"],
+                $_POST["username"] ?? null,
                 $_POST["description"],
                 $_POST["deadline"],
                 $_POST["status"],
@@ -170,7 +169,7 @@ class Task extends Controller
                 $_POST["id"],
                 $_POST["title"],
                 $_POST["description"],
-                $_POST["username"],
+                $_POST["username"] ?? null,
                 $_POST["deadline"],
                 $_POST["effort"]
             );
@@ -273,7 +272,7 @@ class Task extends Controller
     private function validate_update_task_data(
         string $id,
         string $title,
-        string $username,
+        string|null $username,
         string $description,
         string $deadline,
         string $status,
@@ -282,7 +281,7 @@ class Task extends Controller
         $userManager = UserManager::getInstance();
         $args = func_get_args();
         foreach ($args as $arg) {
-            if ($arg === $description || $arg === $deadline)
+            if ($arg === $username || $arg === $description || $arg === $deadline)
                 continue;
             if (strlen($arg) < 1)
                 return false;
@@ -292,10 +291,15 @@ class Task extends Controller
         if (!$this->is_task_valid($id))
             return false;
 
-        // Check if the username is valid and is an employee
-        $user = $userManager->getUserDetails($username);
-        if (!$user || $user["userType"] !== "EMPLOYEE")
+        // If username is null, then status should be CREATED
+        if ($username === null && $status !== "CREATED")
             return false;
+        elseif ($username !== null) {
+            // Check if the username is valid and is an employee
+            $user = $userManager->getUserDetails($username);
+            if (!$user || $user["userType"] !== "EMPLOYEE")
+                return false;
+        }
 
         // Check if the status is valid
         if (!$this->is_valid_status($status))
