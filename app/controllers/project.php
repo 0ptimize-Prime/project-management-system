@@ -352,6 +352,8 @@ class project extends Controller
         // check if all the inputs are non-empty
         $args = func_get_args();
         foreach ($args as $arg) {
+            if ($arg == $manager || $arg == $description || $arg == $deadline)
+                continue;
             if (strlen($arg) < 1) {
                 return false;
             }
