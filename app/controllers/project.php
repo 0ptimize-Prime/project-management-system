@@ -127,7 +127,6 @@ class project extends Controller
                 if (!isset(
                     $_POST["id"],
                     $_POST["title"],
-                    $_POST["manager"],
                     $_POST["description"],
                     $_POST["deadline"]
                 )) {
@@ -137,7 +136,7 @@ class project extends Controller
 
                 if (!$this->validate_update_project(
                     $_POST["id"],
-                    $_POST["manager"],
+                    $_POST["manager"] ?? null,
                     $_POST["title"],
                     $_POST["description"],
                     $_POST["deadline"]
@@ -347,7 +346,7 @@ class project extends Controller
         return true;
     }
 
-    private function validate_update_project(string $id, string $manager, string $title, string $description, string $deadline): bool
+    private function validate_update_project(string $id, string|null $manager, string $title, string $description, string $deadline): bool
     {
         // check if all the inputs are non-empty
         $args = func_get_args();
@@ -364,7 +363,7 @@ class project extends Controller
             return false;
 
         // check if the manager is valid
-        if (!$this->is_manager_valid($manager))
+        if ($manager !== null && !$this->is_manager_valid($manager))
             return false;
 
         return true;
