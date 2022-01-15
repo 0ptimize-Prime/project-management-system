@@ -176,17 +176,16 @@ updateForm.addEventListener("submit", e => {
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             const response = JSON.parse(this.response);
-            table.querySelectorAll("tbody tr").forEach(row => {
-                if (row.dataset.id === response.id) {
-                    row.children[1].dataset.username = response.title;
-                    row.children[3].textContent = response.deadline;
-                    row.children[4].textContent = response.status;
-                    row.children[5].textContent = response.employeeName;
-                    row.children[5].dataset.username = response.username;
-                    row.dataset.description = response.description;
-                    row.dataset.effort = response.effort;
-                }
-            });
+            const row = Array.from(table.querySelectorAll("tbody tr")).find(row => row.dataset.id === response.id);
+            if (row) {
+                row.children[1].dataset.username = response.title;
+                row.children[3].textContent = response.deadline;
+                row.children[4].textContent = response.status;
+                row.children[5].textContent = response.employeeName;
+                row.children[5].dataset.username = response.username;
+                row.dataset.description = response.description;
+                row.dataset.effort = response.effort;
+            }
             resetUpdateForm();
         }
     };
@@ -204,11 +203,10 @@ removeButton.addEventListener("click", () => {
     xhttp.withCredentials = true;
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
-            table.querySelectorAll("tbody tr").forEach(row => {
-                if (row.dataset.id === task.id) {
-                    table.querySelector("tbody").removeChild(row);
-                }
-            });
+            const row = Array.from(table.querySelectorAll("tbody tr")).find(row => row.dataset.id === task.id);
+            if (row) {
+                row.remove();
+            }
             resetUpdateForm()
         }
     };
