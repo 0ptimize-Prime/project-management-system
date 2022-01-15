@@ -6,7 +6,8 @@ function handleException($e)
 {
     error_log($e);
     http_response_code(500);
-    if (filter_var(ini_get('display_errors'), FILTER_VALIDATE_BOOLEAN)) {
+    $displayErrors = ini_get('display_errors');
+    if (filter_var($displayErrors, FILTER_VALIDATE_BOOLEAN) || $displayErrors == "stdout") {
         echo $e;
     } else {
         ob_end_clean();
