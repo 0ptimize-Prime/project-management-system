@@ -150,13 +150,12 @@ updateForm.addEventListener("submit", e => {
         if (this.readyState === 4) {
             if (this.status === 200) {
                 const response = JSON.parse(this.response);
-                table.querySelectorAll("tbody tr").forEach(row => {
-                    if (row.children[0].textContent === response.username) {
-                        row.dataset.profilePicture = response.profile_picture;
-                        row.children[1].textContent = response.name;
-                        row.children[2].textContent = response.userType;
-                    }
-                });
+                const row = Array.from(table.querySelectorAll("tbody tr")).find(row => row.children[0].textContent === response.username);
+                if (row) {
+                    row.dataset.profilePicture = response.profile_picture;
+                    row.children[1].textContent = response.name;
+                    row.children[2].textContent = response.userType;
+                }
                 resetUpdateForm();
                 showAlert("User successfully updated", "success");
             } else {
@@ -180,11 +179,10 @@ removeButton.addEventListener("click", () => {
     xhttp.withCredentials = true;
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
-            table.querySelectorAll("tbody tr").forEach(row => {
-                if (row.children[0].textContent === updateFormFields[0].value) {
-                    table.querySelector("tbody").removeChild(row);
-                }
-            });
+            const row = Array.from(table.querySelectorAll("tbody tr")).find(row => row.children[0].textContent === updateFormFields[0].value);
+            if (row) {
+                row.remove();
+            }
             resetUpdateForm();
         }
     };
