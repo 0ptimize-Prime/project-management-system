@@ -105,3 +105,38 @@ BEGIN
     RETURN GREATEST(COALESCE(max_task_ind, 0), COALESCE(max_milestone_ind, 0)) + 1;
 END$$
 DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER `task_creation_notification`
+    AFTER INSERT
+    ON `task`
+    FOR EACH ROW IF (NEW.username IS NOT NULL) THEN
+    INSERT INTO notification (id, username, item_id, created_at, type, is_read)
+    VALUES (REPLACE(UUID(), "-", ""), NEW.username, NEW.id, DEFAULT, "TASK_ASSIGNMENT", 0);
+END IF $$
+
+CREATE TRIGGER `task_assignment_notification`
+    AFTER UPDATE
+    ON `task`
+    FOR EACH ROW IF (OLD.username IS NULL AND NEW.username IS NOT NULL) THEN
+    INSERT INTO notification (id, username, item_id, created_at, type, is_read)
+    VALUES (REPLACE(UUID(), "-", ""), NEW.username, NEW.id, DEFAULT, "TASK_ASSIGNMENT", 0);
+END IF $$
+
+CREATE TRIGGER `task_pending_notification`
+    AFTER UPDATE
+    ON `task`
+    FOR EACH ROW IF (OLD.status = "IN_PROGRESS" AND NEW.status = "PENDING") THEN
+    INSERT INTO notification (id, username, item_id, created_at, type, is_read)
+    SELECT REPLACE(UUID(), "-", ""), project.manager, NEW.id, CURRENT_TIMESTAMP(), "TASK_PENDING_APPROVAL", 0 FROM project
+    WHERE project.id = NEW.project_id;
+END IF $$
+
+CREATE TRIGGER `task_completed_notification`
+    AFTER UPDATE
+    ON `task`
+    FOR EACH ROW IF (OLD.status = "PENDING" AND NEW.status = "COMPLETE") THEN
+    INSERT INTO notification (id, username, item_id, created_at, type, is_read)
+    VALUES (REPLACE(UUID(), "-", ""), NEW.username, NEW.id, DEFAULT, "TASK_COMPLETED", 0);
+END IF $$
+DELIMITER ;
