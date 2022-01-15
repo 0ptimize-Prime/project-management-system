@@ -27,4 +27,6 @@ if (str_ends_with($original, ".php")) {
     die();
 }
 
+ob_start();
 $app = new App($url);
+ob_end_flush();

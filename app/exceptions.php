@@ -9,6 +9,7 @@ function handleException($e)
     if (filter_var(ini_get('display_errors'), FILTER_VALIDATE_BOOLEAN)) {
         echo $e;
     } else {
+        ob_end_clean();
         include __DIR__ . "/views/500.php";
     }
 }
