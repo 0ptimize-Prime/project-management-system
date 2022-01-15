@@ -91,6 +91,8 @@ ALTER TABLE `milestone`
     ADD FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `comment`
     ADD FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE NO ACTION ON UPDATE CASCADE;
+ALTER TABLE `comment`
+    ADD FOREIGN KEY (`task_id`) REFERENCES `task` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `notification`
     ADD FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -140,4 +142,12 @@ CREATE TRIGGER `task_completed_notification`
     INSERT INTO notification (id, username, item_id, created_at, type, is_read)
     VALUES (REPLACE(UUID(), '-', ''), NEW.username, NEW.id, DEFAULT, 'TASK_COMPLETED', 0);
 END IF $$
+
+CREATE TRIGGER `user_deleted`
+    AFTER DELETE
+    ON `user`
+    FOR EACH ROW
+    UPDATE task SET status = 'CREATED'
+    WHERE task.username = OLD.username;
+$$
 DELIMITER ;
