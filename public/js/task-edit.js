@@ -135,7 +135,7 @@ const editTask = (row) => {
     ] = row.children;
 
     updateFormFields[0].value = id;
-    updateFormFields[1].value = projectTitle;
+    updateFormFields[1].value = projectTitle.trim();
     updateFormFields[2].value = title;
     updateFormFields[3].value = username;
     updateFormFields[4].value = description;
@@ -148,10 +148,10 @@ const editTask = (row) => {
     task = {
         id,
         projectId,
-        projectTitle,
+        projectTitle: projectTitle.trim(),
         title,
         username,
-        employeeName,
+        employeeName: employeeName.trim(),
         description,
         createdAt,
         deadline,

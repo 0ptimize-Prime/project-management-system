@@ -129,7 +129,7 @@ const editProject = (row) => {
     updateFormFields[3].value = description;
     updateFormFields[4].value = deadline;
     goToButton.hidden = false;
-    project = {id, title, manager, managerName, description, createdAt, deadline, status};
+    project = {id, title, manager, managerName: managerName.trim(), description, createdAt, deadline, status};
 };
 
 const goToProject = (row) => {
