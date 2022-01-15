@@ -20,23 +20,23 @@ CREATE TABLE `project`
 
 CREATE TABLE `task`
 (
-    `id`          varchar(20) PRIMARY KEY NOT NULL,
-    `project_id`  varchar(20)             NOT NULL,
-    `title`       varchar(50)             NOT NULL,
-    `description` text                    NULL     DEFAULT NULL,
-    `username`    varchar(20)             NULL     DEFAULT NULL,
-    `created_at`  timestamp               NOT NULL DEFAULT (current_timestamp()),
-    `deadline`    date                    NULL     DEFAULT NULL,
-    `completed_date`    date              NULL     DEFAULT NULL,
-    `status`      ENUM (
+    `id`             varchar(20) PRIMARY KEY NOT NULL,
+    `project_id`     varchar(20)             NOT NULL,
+    `title`          varchar(50)             NOT NULL,
+    `description`    text                    NULL     DEFAULT NULL,
+    `username`       varchar(20)             NULL     DEFAULT NULL,
+    `created_at`     timestamp               NOT NULL DEFAULT (current_timestamp()),
+    `deadline`       date                    NULL     DEFAULT NULL,
+    `completed_date` date                    NULL     DEFAULT NULL,
+    `status`         ENUM (
         'CREATED',
         'ASSIGNED',
         'IN_PROGRESS',
         'PENDING',
         'COMPLETE'
-        )                                 NOT NULL DEFAULT 'CREATED',
-    `effort`      int(11)                 NULL     DEFAULT NULL,
-    `ind`         int(11)                 NOT NULL
+        )                                    NOT NULL DEFAULT 'CREATED',
+    `effort`         int(11)                 NULL     DEFAULT NULL,
+    `ind`            int(11)                 NOT NULL
 );
 
 CREATE TABLE `milestone`
@@ -112,7 +112,7 @@ CREATE TRIGGER `task_creation_notification`
     ON `task`
     FOR EACH ROW IF (NEW.username IS NOT NULL) THEN
     INSERT INTO notification (id, username, item_id, created_at, type, is_read)
-    VALUES (REPLACE(UUID(), "-", ""), NEW.username, NEW.id, DEFAULT, "TASK_ASSIGNMENT", 0);
+    VALUES (REPLACE(UUID(), '-', ''), NEW.username, NEW.id, DEFAULT, 'TASK_ASSIGNMENT', 0);
 END IF $$
 
 CREATE TRIGGER `task_assignment_notification`
@@ -120,23 +120,24 @@ CREATE TRIGGER `task_assignment_notification`
     ON `task`
     FOR EACH ROW IF (OLD.username IS NULL AND NEW.username IS NOT NULL) THEN
     INSERT INTO notification (id, username, item_id, created_at, type, is_read)
-    VALUES (REPLACE(UUID(), "-", ""), NEW.username, NEW.id, DEFAULT, "TASK_ASSIGNMENT", 0);
+    VALUES (REPLACE(UUID(), '-', ''), NEW.username, NEW.id, DEFAULT, 'TASK_ASSIGNMENT', 0);
 END IF $$
 
 CREATE TRIGGER `task_pending_notification`
     AFTER UPDATE
     ON `task`
-    FOR EACH ROW IF (OLD.status = "IN_PROGRESS" AND NEW.status = "PENDING") THEN
+    FOR EACH ROW IF (OLD.status = 'IN_PROGRESS' AND NEW.status = 'PENDING') THEN
     INSERT INTO notification (id, username, item_id, created_at, type, is_read)
-    SELECT REPLACE(UUID(), "-", ""), project.manager, NEW.id, CURRENT_TIMESTAMP(), "TASK_PENDING_APPROVAL", 0 FROM project
+    SELECT REPLACE(UUID(), '-', ''), project.manager, NEW.id, CURRENT_TIMESTAMP(), 'TASK_PENDING_APPROVAL', 0
+    FROM project
     WHERE project.id = NEW.project_id;
 END IF $$
 
 CREATE TRIGGER `task_completed_notification`
     AFTER UPDATE
     ON `task`
-    FOR EACH ROW IF (OLD.status = "PENDING" AND NEW.status = "COMPLETE") THEN
+    FOR EACH ROW IF (OLD.status = 'PENDING' AND NEW.status = 'COMPLETE') THEN
     INSERT INTO notification (id, username, item_id, created_at, type, is_read)
-    VALUES (REPLACE(UUID(), "-", ""), NEW.username, NEW.id, DEFAULT, "TASK_COMPLETED", 0);
+    VALUES (REPLACE(UUID(), '-', ''), NEW.username, NEW.id, DEFAULT, 'TASK_COMPLETED', 0);
 END IF $$
 DELIMITER ;
