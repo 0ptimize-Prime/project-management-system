@@ -164,16 +164,15 @@ updateForm.addEventListener("submit", e => {
         if (this.readyState === 4) {
             if (this.status === 200) {
                 const response = JSON.parse(this.response);
-                table.querySelectorAll("tbody tr").forEach(row => {
-                    if (row.dataset.id === response.id) {
-                        row.children[0].textContent = response.title;
-                        row.children[1].textContent = response.managerName;
-                        row.children[1].dataset.username = response.manager;
-                        row.children[3].textContent = response.deadline;
-                        row.children[4].textContent = response.status;
-                        row.dataset.description = response.description;
-                    }
-                });
+                const row = Array.from(table.querySelectorAll("tbody tr")).find(row => row.dataset.id === response.id);
+                if (row) {
+                    row.children[0].textContent = response.title;
+                    row.children[1].textContent = response.managerName;
+                    row.children[1].dataset.username = response.manager;
+                    row.children[3].textContent = response.deadline;
+                    row.children[4].textContent = response.status;
+                    row.dataset.description = response.description;
+                }
                 resetUpdateForm();
                 showAlert("Project successfully updated", "success");
             } else {
