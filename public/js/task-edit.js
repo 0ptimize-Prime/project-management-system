@@ -1,3 +1,5 @@
+const heading = document.querySelector("main h1");
+
 const searchForm = document.getElementById("search-form");
 const searchFormFields = searchForm.querySelectorAll("input");
 
@@ -17,6 +19,21 @@ const resetUpdateForm = () => {
     task = null;
     goToProjectButton.hidden = true;
     goToTaskButton.hidden = true;
+}
+
+const showAlert = (message, style) => {
+    const div = document.createElement("div");
+    div.classList.add("alert", "alert-" + style);
+    div.textContent = message;
+    div.id = "update-task-message";
+    heading.after(div);
+    setTimeout(deleteAlert, 3000);
+}
+
+const deleteAlert = () => {
+    const alertDiv = document.getElementById("update-task-message");
+    if (alertDiv)
+        alertDiv.remove();
 }
 
 searchForm.addEventListener("submit", e => {
@@ -174,19 +191,24 @@ updateForm.addEventListener("submit", e => {
     const xhttp = new XMLHttpRequest();
     xhttp.withCredentials = true;
     xhttp.onreadystatechange = function () {
-        if (this.readyState === 4 && this.status === 200) {
-            const response = JSON.parse(this.response);
-            const row = Array.from(table.querySelectorAll("tbody tr")).find(row => row.dataset.id === response.id);
-            if (row) {
-                row.children[1].dataset.username = response.title;
-                row.children[3].textContent = response.deadline;
-                row.children[4].textContent = response.status;
-                row.children[5].textContent = response.employeeName;
-                row.children[5].dataset.username = response.username;
-                row.dataset.description = response.description;
-                row.dataset.effort = response.effort;
+        if (this.readyState === 4) {
+            if (this.status === 200) {
+                const response = JSON.parse(this.response);
+                const row = Array.from(table.querySelectorAll("tbody tr")).find(row => row.dataset.id === response.id);
+                if (row) {
+                    row.children[1].dataset.username = response.title;
+                    row.children[3].textContent = response.deadline;
+                    row.children[4].textContent = response.status;
+                    row.children[5].textContent = response.employeeName;
+                    row.children[5].dataset.username = response.username;
+                    row.dataset.description = response.description;
+                    row.dataset.effort = response.effort;
+                }
+                resetUpdateForm();
+                showAlert("Task successfully updated", "success");
+            } else {
+                showAlert("Task update failed", "danger");
             }
-            resetUpdateForm();
         }
     };
     xhttp.open("POST", BASE_URL + "task/edit", true);
