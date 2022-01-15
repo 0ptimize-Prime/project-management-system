@@ -20,7 +20,7 @@ showNavbar($data);
 
 <div class="d-flex pt-3">
     <div class="card mx-auto" style="width: 40rem;">
-        <div class="card-body" >
+        <div class="card-body">
             <h5 class="card-title text-center">Task: <?php echo htmlspecialchars($data["task"]["title"]) ?></h5>
             <a href="<?php echo htmlspecialchars(BASE_URL . 'task/edit/' . $data['task']['id']) ?>"
                class="btn btn-warning position-absolute" id="edit-button"><i class="fas fa-edit"></i></a>
@@ -37,7 +37,11 @@ showNavbar($data);
                 </div>
                 <div class="row mb-3">
                     <div class="col-3">Project:</div>
-                    <div class="col-4"><a href="<?php echo htmlspecialchars(BASE_URL . 'project/view/' .$data["project"]["id"])  ?>"><?php echo htmlspecialchars($data["project"]["title"]) ?></a></div>
+                    <div class="col-4">
+                        <a href="<?php echo htmlspecialchars(BASE_URL . 'project/view/' . $data["project"]["id"]) ?>">
+                            <?php echo htmlspecialchars($data["project"]["title"]) ?>
+                        </a>
+                    </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-3">Created at:</div>
@@ -99,7 +103,7 @@ showNavbar($data);
 </div>
 
 <div class="container overflow-scroll" id="comments">
-    <div class="header"> <h1>Comments</h1></div>
+    <div class="header"><h1>Comments</h1></div>
     <?php foreach ($data["comments"] as $comment) { ?>
         <div class="card my-3" id="comment-<?php echo htmlspecialchars($comment['id']) ?>">
             <h5 class="card-header"><?php echo htmlspecialchars($comment["name"]) ?></h5>
@@ -143,9 +147,11 @@ showNavbar($data);
     .img-circle {
         border-radius: 50%;
     }
-    form{
+
+    form {
         display: inline;
     }
+
     #edit-button {
         top: 15px;
         right: 15px;
