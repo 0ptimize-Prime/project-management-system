@@ -1,3 +1,5 @@
+const heading = document.querySelector("main h1");
+
 const searchForm = document.getElementById("search-form");
 const searchFormFields = searchForm.querySelectorAll("input,select");
 
@@ -21,6 +23,21 @@ const resetUpdateForm = () => {
     updateForm.reset();
     user = null;
     preview.src = placeholderImage;
+}
+
+const showAlert = (message, style) => {
+    const div = document.createElement("div");
+    div.classList.add("alert", "alert-" + style);
+    div.textContent = message;
+    div.id = "update-user-message";
+    heading.after(div);
+    setTimeout(deleteAlert, 3000);
+}
+
+const deleteAlert = () => {
+    const alertDiv = document.getElementById("update-user-message");
+    if (alertDiv)
+        alertDiv.remove();
 }
 
 searchForm.addEventListener("submit", e => {
@@ -130,16 +147,21 @@ updateForm.addEventListener("submit", e => {
     const xhttp = new XMLHttpRequest();
     xhttp.withCredentials = true;
     xhttp.onreadystatechange = function () {
-        if (this.readyState === 4 && this.status === 200) {
-            const response = JSON.parse(this.response);
-            table.querySelectorAll("tbody tr").forEach(row => {
-                if (row.children[0].textContent === response.username) {
-                    row.dataset.profilePicture = response.profile_picture;
-                    row.children[1].textContent = response.name;
-                    row.children[2].textContent = response.userType;
-                }
-            });
-            resetUpdateForm();
+        if (this.readyState === 4) {
+            if (this.status === 200) {
+                const response = JSON.parse(this.response);
+                table.querySelectorAll("tbody tr").forEach(row => {
+                    if (row.children[0].textContent === response.username) {
+                        row.dataset.profilePicture = response.profile_picture;
+                        row.children[1].textContent = response.name;
+                        row.children[2].textContent = response.userType;
+                    }
+                });
+                resetUpdateForm();
+                showAlert("User successfully updated", "success");
+            } else {
+                showAlert("User update failed", "danger");
+            }
         }
     };
     xhttp.open("POST", BASE_URL + "admin/edit", true);
