@@ -1,6 +1,6 @@
-const statusRequest=document.getElementById("status-request");
-const statusAccept=document.getElementById("status-accept");
-const statusDecline=document.getElementById("status-decline");
+const statusRequest = document.getElementById("status-request");
+const statusAccept = document.getElementById("status-accept");
+const statusDecline = document.getElementById("status-decline");
 const form = document.getElementById("comment-form");
 const commentsDiv = document.getElementById("comments");
 
@@ -73,12 +73,8 @@ form.addEventListener("submit", (e) => {
     xhttp.send(new FormData(form));
 });
 
-statusRequest.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    console.log("event listener added");
+statusRequest?.addEventListener("click", () => {
     const xhttp = new XMLHttpRequest();
-    console.log("XHTML req created");
 
     xhttp.withCredentials = true;
     xhttp.onreadystatechange = function () {
@@ -87,13 +83,12 @@ statusRequest.addEventListener("submit", (e) => {
         }
     };
     var formData = new FormData();
-    formData.set('status','PENDING');
+    formData.set('status', 'PENDING');
     xhttp.open("POST", BASE_URL + "task/status/" + taskId, true);
     xhttp.send(formData);
 });
-statusAccept.addEventListener("submit", (e) => {
-    e.preventDefault();
 
+statusAccept?.addEventListener("click", () => {
     const xhttp = new XMLHttpRequest();
     xhttp.withCredentials = true;
     xhttp.onreadystatechange = function () {
@@ -103,13 +98,12 @@ statusAccept.addEventListener("submit", (e) => {
 
     };
     var formData = new FormData();
-    formData.set('status','COMPLETE');
+    formData.set('status', 'COMPLETE');
     xhttp.open("POST", BASE_URL + "task/status/" + taskId, true);
     xhttp.send(formData);
 });
-statusDecline.addEventListener("submit", (e) => {
-    e.preventDefault();
 
+statusDecline?.addEventListener("click", () => {
     const xhttp = new XMLHttpRequest();
     xhttp.withCredentials = true;
     xhttp.onreadystatechange = function () {
@@ -119,7 +113,7 @@ statusDecline.addEventListener("submit", (e) => {
 
     };
     var formData = new FormData();
-    formData.set('status','IN_PROGRESS');
+    formData.set('status', 'IN_PROGRESS');
     xhttp.open("POST", BASE_URL + "task/status/" + taskId, true);
     xhttp.send(formData);
 });
