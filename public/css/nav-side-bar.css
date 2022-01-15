@@ -13,8 +13,9 @@ body {
 }
 
 nav img {
+    object-fit: cover;
     height: 40px !important;
-    width: 40px;
+    width: 40px !important;
 }
 
 #mark-as-read i {
