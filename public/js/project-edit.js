@@ -194,11 +194,10 @@ removeButton.addEventListener("click", () => {
     xhttp.withCredentials = true;
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
-            table.querySelectorAll("tbody tr").forEach(row => {
-                if (row.dataset.id === project.id) {
-                    table.querySelector("tbody").removeChild(row);
-                }
-            });
+            const row = Array.from(table.querySelectorAll("tbody tr")).find(row => row.dataset.id === project.id);
+            if (row) {
+                row.remove();
+            }
             resetUpdateForm()
         }
     };
