@@ -217,8 +217,6 @@ class Task extends Controller
                             }
                         }
                     }
-                    $commentManager->deleteCommentsByTaskId($task["id"]);
-
 
                     $result = $taskManager->deleteTask($id);
                     if (!$result) {

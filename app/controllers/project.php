@@ -228,7 +228,7 @@ class project extends Controller
                 $tasks = $taskManager->getTasks($id);
                 if ($tasks) {
                     foreach ($tasks as $task) {
-                        // delete file
+                        // delete task file
                         $files = $fileManager->getFiles($task["id"]);
                         if ($files) {
                             if (file_exists(__DIR__ . '/../../public/uploads/' . $files[0]["id"])) {
@@ -237,7 +237,7 @@ class project extends Controller
                             $fileManager->deleteFile($files[0]["id"]);
                         }
 
-                        // delete comments
+                        // delete comment files
                         $comments = $commentManager->getComments($task["id"]);
                         if ($comments) {
                             foreach ($comments as $comment) {
@@ -249,13 +249,9 @@ class project extends Controller
                                     }
                                 }
                             }
-                            $commentManager->deleteCommentsByTaskId($task["id"]);
                         }
                     }
                 }
-
-                // delete milestones
-                $milestoneManager->deleteMilestonesByProjectId($id);
 
                 $result = $projectManager->deleteProject($id);
                 if (!$result)

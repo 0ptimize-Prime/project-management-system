@@ -152,44 +152,6 @@ class admin extends Controller
                 $db->beginTransaction();
 
                 try {
-                    // set manager of projects to null
-                    if ($user["userType"] == "MANAGER") {
-                        $projects = $projectManager->getProjectsByManager($user["username"]);
-                        if ($projects) {
-                            foreach ($projects as $project) {
-                                $projectManager->updateProject(
-                                    $project["id"],
-                                    null,
-                                    $project["title"],
-                                    $project["description"],
-                                    $project["deadline"]
-                                );
-                            }
-                        }
-                    }
-
-                    // set task statuses to CREATED
-                    if ($user["userType"] == "EMPLOYEE") {
-                        $tasks = $taskManager->getTasksByUser($user["username"]);
-                        if ($tasks) {
-                            foreach ($tasks as $task) {
-                                $taskManager->updateTask(
-                                    $task["id"],
-                                    $task["title"],
-                                    $task["description"],
-                                    null,
-                                    $task["deadline"],
-                                    $task["effort"]
-                                );
-                                $taskManager->updateStatus($task["id"], "CREATED");
-                            }
-                        }
-                    }
-
-                    // delete notifications of the user
-                    $notificationManager->deleteNotifications($user["username"]);
-
-
                     // remove profile picture
                     if (!empty($user["profile_picture"]) && file_exists(__DIR__ . '/../../public/uploads/' . $user["profile_picture"])) {
                         unlink(__DIR__ . '/../../public/uploads/' . $user["profile_picture"]);
