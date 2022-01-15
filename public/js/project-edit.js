@@ -17,7 +17,6 @@ const resetUpdateForm = () => {
     updateForm.reset();
     project = null;
     goToButton.hidden = true;
-    deleteAlert();
 }
 
 const showAlert = (message, style) => {
@@ -26,6 +25,7 @@ const showAlert = (message, style) => {
     div.textContent = message;
     div.id = "update-project-message";
     heading.after(div);
+    setTimeout(deleteAlert, 3000);
 }
 
 const deleteAlert = () => {
