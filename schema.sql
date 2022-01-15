@@ -82,7 +82,7 @@ CREATE TABLE `notification`
 
 
 ALTER TABLE `project`
-    ADD FOREIGN KEY (`manager`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD FOREIGN KEY (`manager`) REFERENCES `user` (`username`) ON DELETE SET NULL ON UPDATE CASCADE;
 ALTER TABLE `task`
     ADD FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `task`
