@@ -70,40 +70,32 @@ showNavbar($data);
                         <?php } ?>
                     </ul>
                 </div>
-                <div>
-                        <form class="updateStatus" id="status-accept" style="display: inline-block">
-                            <?php if ($data["user"]["userType"] != "EMPLOYEE" && $data['task']['status']!="COMPLETE") { ?>
-                                <label for="up-status">Status:</label>
-                                    <button type="submit" class="btn btn-success">Accept</button>
+                <?php if ($data["user"]["userType"] != "EMPLOYEE") { ?>
+                    <?php if ($data["task"]["status"] != "COMPLETE") { ?>
+                        <div class="row mb-3">
+                            <div class="col-3">Status:</div>
+                            <div class="col-2">
+                                <button type="button" class="btn btn-success" id="status-accept">Accept</button>
+                            </div>
+                            <?php if ($data["task"]["status"] == "PENDING") { ?>
+                                <div class="col-2">
+                                    <button type="button" class="btn btn-danger" id="status-decline">Decline</button>
+                                </div>
                             <?php } ?>
-                        </form>
-                        <form class="updateStatus" id="status-decline" style="display: inline-block">
-                            <?php if ($data["user"]["userType"] != "EMPLOYEE") { ?>
-
-                                <?php if ($data["task"]["status"]!="COMPLETE"){ ?>
-                                    <label for="up-status"></label>
-                                <?php }
-                                else { ?>
-                                    <label for="up-status">Status:</label>
-
-                                <?php } ?>
-                                <button type="submit" class="btn btn-danger">Decline</button>
-
-                            <?php } ?>
-                        </form>
-                </div>
-                <form class="updateStatus" id="status-request">
-                    <?php if ($data["user"]["userType"] == "EMPLOYEE") { ?>
+                        </div>
+                    <?php } ?>
+                <?php } else if ($data["task"]["status"] == "IN_PROGRESS") { ?>
                     <div class="row mb-3">
                         <div class="col-3">Status:</div>
-                        <div class="col-4"> <button type="submit" class="btn btn-primary">Submit for Approval</button></div>
+                        <div class="col-4">
+                            <button type="button" class="btn btn-primary" id="status-request">Submit for Approval
+                            </button>
+                        </div>
                     </div>
-                    <?php } ?>
-
-                </form>
+                <?php } ?>
+            </div>
         </div>
     </div>
-</div>
 </div>
 
 <div class="container overflow-scroll" id="comments">

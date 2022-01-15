@@ -73,12 +73,8 @@ form.addEventListener("submit", (e) => {
     xhttp.send(new FormData(form));
 });
 
-statusRequest.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    console.log("event listener added");
+statusRequest?.addEventListener("click", () => {
     const xhttp = new XMLHttpRequest();
-    console.log("XHTML req created");
 
     xhttp.withCredentials = true;
     xhttp.onreadystatechange = function () {
@@ -91,9 +87,8 @@ statusRequest.addEventListener("submit", (e) => {
     xhttp.open("POST", BASE_URL + "task/status/" + taskId, true);
     xhttp.send(formData);
 });
-statusAccept.addEventListener("submit", (e) => {
-    e.preventDefault();
 
+statusAccept?.addEventListener("click", () => {
     const xhttp = new XMLHttpRequest();
     xhttp.withCredentials = true;
     xhttp.onreadystatechange = function () {
@@ -107,9 +102,8 @@ statusAccept.addEventListener("submit", (e) => {
     xhttp.open("POST", BASE_URL + "task/status/" + taskId, true);
     xhttp.send(formData);
 });
-statusDecline.addEventListener("submit", (e) => {
-    e.preventDefault();
 
+statusDecline?.addEventListener("click", () => {
     const xhttp = new XMLHttpRequest();
     xhttp.withCredentials = true;
     xhttp.onreadystatechange = function () {
