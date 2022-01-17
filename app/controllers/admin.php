@@ -13,17 +13,21 @@ class admin extends Controller
         session_start();
         $userManager = UserManager::getInstance();
         $fileManager = FileManager::getInstance();
-        if ($_SESSION["user"]["userType"] != "ADMIN") {
-            header("Location: " . BASE_URL . "home/dashboard");
-            die;
-        }
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $this->checkAuth("admin/create", function () {
+                if ($_SESSION["user"]["userType"] != "ADMIN") {
+                    header("Location: " . BASE_URL . "home/dashboard");
+                    die;
+                }
                 $data = $this->getViewData();
                 return $data;
             });
         } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
             $this->checkAuth("admin/create", function () {
+                if ($_SESSION["user"]["userType"] != "ADMIN") {
+                    header("Location: " . BASE_URL . "home/dashboard");
+                    die;
+                }
             });
             if (
                 !isset(
@@ -85,18 +89,22 @@ class admin extends Controller
         $projectManager = ProjectManager::getInstance();
         $taskManager = TaskManager::getInstance();
         $notificationManager = NotificationManager::getInstance();
-        if ($_SESSION["user"]["userType"] != "ADMIN") {
-            header("Location: " . BASE_URL . "home/dashboard");
-            die;
-        }
 
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $this->checkAuth("admin/edit", function () {
+                if ($_SESSION["user"]["userType"] != "ADMIN") {
+                    header("Location: " . BASE_URL . "home/dashboard");
+                    die;
+                }
                 $data = $this->getViewData();
                 return $data;
             });
         } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $this->checkAuth("admin/edit", function () {
+                if ($_SESSION["user"]["userType"] != "ADMIN") {
+                    header("Location: " . BASE_URL . "home/dashboard");
+                    die;
+                }
             });
 
             if (!isset(
@@ -142,6 +150,13 @@ class admin extends Controller
             } else
                 http_response_code(400);
         } else if ($_SERVER["REQUEST_METHOD"] == "DELETE") {
+            $this->checkAuth("admin/edit", function() {
+                if ($_SESSION["user"]["userType"] != "ADMIN") {
+                    header("Location: " . BASE_URL . "home/dashboard");
+                    die;
+                }
+            });
+
             if (empty($username)) {
                 http_response_code(400);
                 die;
@@ -179,13 +194,12 @@ class admin extends Controller
         $userManager = UserManager::getInstance();
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $this->checkAuth("admin/search", function () {
+                if ($_SESSION["user"]["userType"] != "ADMIN") {
+                    header("Location: " . BASE_URL . "home/dashboard");
+                    die;
+                }
                 return false;
             });
-
-            if ($_SESSION["user"]["userType"] !== "ADMIN") {
-                header("Location: " . BASE_URL . "home/dashboard");
-                die;
-            }
 
             if (!isset(
                 $_GET["username"],

@@ -15,17 +15,22 @@ class project extends Controller
         session_start();
         $ProjectManager = ProjectManager::getInstance();
         $FileManager = FileManager::getInstance();
-        if ($_SESSION["user"]["userType"] != "ADMIN" and $_SESSION["user"]["userType"] != "MANAGER") {
-            header("Location: " . BASE_URL . "home/dashboard");
-            die;
-        }
+
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $this->checkAuth("project/create", function () {
+                if ($_SESSION["user"]["userType"] != "ADMIN" and $_SESSION["user"]["userType"] != "MANAGER") {
+                    header("Location: " . BASE_URL . "home/dashboard");
+                    die;
+                }
                 $data = $this->getViewData();
                 return $data;
             });
         } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
             $this->checkAuth("project/create", function () {
+                if ($_SESSION["user"]["userType"] != "ADMIN" and $_SESSION["user"]["userType"] != "MANAGER") {
+                    header("Location: " . BASE_URL . "home/dashboard");
+                    die;
+                }
             });
 
             if (isset($_POST['submit'])) {
@@ -98,10 +103,6 @@ class project extends Controller
         $managers = $userManager->getUsersBy('', '', 'MANAGER') ?? [];
         $managers = array_merge($managers, $userManager->getUsersBy('', '', 'ADMIN') ?? []);
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
-            if ($_SESSION["user"]["userType"] === "EMPLOYEE") {
-                header("Location: " . BASE_URL . "home/dashboard");
-                die;
-            }
 
             $project = [];
             if (!empty($id)) {
@@ -113,6 +114,10 @@ class project extends Controller
             }
 
             $this->checkAuth("project/edit", function ($managers, $project) {
+                if ($_SESSION["user"]["userType"] === "EMPLOYEE") {
+                    header("Location: " . BASE_URL . "home/dashboard");
+                    die;
+                }
                 $data = $this->getViewData();
                 $data["managers"] = $managers;
                 $data["project"] = $project;
