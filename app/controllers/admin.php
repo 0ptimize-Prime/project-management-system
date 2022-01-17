@@ -181,6 +181,12 @@ class admin extends Controller
             $this->checkAuth("admin/search", function () {
                 return false;
             });
+
+            if ($_SESSION["user"]["userType"] !== "ADMIN") {
+                header("Location: " . BASE_URL . "home/dashboard");
+                die;
+            }
+
             if (!isset(
                 $_GET["username"],
                 $_GET["name"],
@@ -194,8 +200,16 @@ class admin extends Controller
                 $_GET["name"],
                 $_GET["userType"]
             );
-            if ($result)
+            if ($result) {
+                // remove the current user
+                foreach ($result as $key => $val) {
+                    if ($val["username"] == $_SESSION["user"]["username"]) {
+                        unset($result[$key]);
+                    }
+                }
+                $result = array_values($result);
                 echo json_encode($result);
+            }
         }
     }
 
