@@ -60,8 +60,8 @@ class Auth extends Controller
         if (isset($_SESSION["next"])) {
             $next = $_SESSION["next"];
             if (!empty($next)) {
-                if (str_ends_with($next, "search")) {
-                    str_replace($next, "edit");
+                if (str_contains($next, "search")) {
+                    str_replace("search", "edit",  $next);
                 }
                 $route .= "?next=" . $next;
             }
