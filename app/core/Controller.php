@@ -30,6 +30,7 @@ abstract class Controller
                 }
             }
         } else {
+            $_SESSION["next"] = $view;
             header("Location: " . BASE_URL . "auth/logout");
             die;
         }

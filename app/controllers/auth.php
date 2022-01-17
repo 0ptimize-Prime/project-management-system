@@ -12,6 +12,8 @@ class Auth extends Controller
             if (isset($_SESSION["user"]) && isset($_SESSION["last_activity"])) {
                 header("Location: " . BASE_URL . "home/dashboard");
             } else {
+                if (isset($_GET["next"]))
+                    $_SESSION["next"] = $_GET["next"];
                 $this->showView("auth/login");
             }
             die;
@@ -32,6 +34,10 @@ class Auth extends Controller
                 } else {
                     $_SESSION["user"] = $userManager->getUserDetails($_POST["username"]);
                     $_SESSION["last_activity"] = time();
+                    if (isset($_SESSION["next"])) {
+                        header("Location: " . BASE_URL . $_SESSION["next"]);
+                        die;
+                    }
                     header("Location: " . BASE_URL . "home/dashboard");
                     die;
                 }
@@ -50,7 +56,17 @@ class Auth extends Controller
     public function logout()
     {
         session_start();
+        $route = "auth/login";
+        if (isset($_SESSION["next"])) {
+            $next = $_SESSION["next"];
+            if (!empty($next)) {
+                if (str_ends_with($next, "search")) {
+                    str_replace($next, "edit");
+                }
+                $route .= "?next=" . $next;
+            }
+        }
         session_destroy();
-        header("Location: " . BASE_URL . "auth/login");
+        header("Location: " . BASE_URL . $route);
     }
 }
