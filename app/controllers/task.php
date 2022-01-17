@@ -105,7 +105,7 @@ class Task extends Controller
                 $data["files"] = $files;
 
                 $commentManager = CommentManager::getInstance();
-                $comments = $commentManager->getComments($taskId);
+                $comments = $commentManager->getCommentsWithFiles($taskId);
                 $data["comments"] = $comments;
 
                 return $data;
