@@ -52,6 +52,8 @@ class Comment extends Controller
                             move_uploaded_file($file_loc, $folder . $final_file);
                     }
                 }
+                header("Location: " . BASE_URL . "task/view/$taskId");
+                die;
             }
         }
     }
