@@ -32,7 +32,7 @@ showNavbar($data);
                 <div class="row mb-3">
                     <?php if ($data["task"]["username"]) { ?>
                         <div class="col-3">Assigned To:</div>
-                        <div class="col-4"><?php echo htmlspecialchars($data["task"]["username"]) ?></div>
+                        <div class="col-4"><?php echo htmlspecialchars($data["task"]["employeeName"]) ?></div>
                     <?php } ?>
                 </div>
                 <div class="row mb-3">
