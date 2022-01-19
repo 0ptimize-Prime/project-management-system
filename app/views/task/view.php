@@ -18,6 +18,12 @@
             position: absolute;
             right: 1px;
         }
+
+        #comments img {
+            object-fit: cover;
+            height: 80px !important;
+            width: 80px !important;
+        }
     </style>
 </head>
 
