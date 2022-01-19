@@ -8,13 +8,13 @@
     <?php include __DIR__ . "/../templates/head.php" ?>
     <meta name="taskId" content="<?php echo htmlspecialchars($data['task']['id']) ?>">
     <style>
-        .container{
+        .container {
             padding-top: 10px;
             margin-top: 20px;
             width: 1000px;
         }
 
-        .col-md-11 .card-subtitle{
+        .col-md-11 .card-subtitle {
             position: absolute;
             right: 1px;
         }

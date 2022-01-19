@@ -14,31 +14,31 @@ class Home extends Controller
         $this->checkAuth("home/dashboard", function () {
             $TaskManager = TaskManager::getInstance();
             $projectManager = ProjectManager::getInstance();
-            $tasksGraph=[];
+            $tasksGraph = [];
             $projectsGraph = [];
             $data = $this->getViewData();
             if ($_SESSION["user"]["userType"] != "EMPLOYEE") {
                 $taskStatuses = $TaskManager->getTasksByManager($_SESSION["user"]["username"]);
 
                 if ($taskStatuses) {
-                    foreach ($taskStatuses as $key=>$taskStatus) {
+                    foreach ($taskStatuses as $key => $taskStatus) {
                         if (array_key_exists($taskStatus["status"], $tasksGraph)) {
                             $tasksGraph[$taskStatus["status"]]++;
                         } else {
-                            $tasksGraph[$taskStatus["status"]]=1;
+                            $tasksGraph[$taskStatus["status"]] = 1;
                         }
 
                         if (array_key_exists($taskStatus["project_id"], $projectsGraph)) {
-                            $taskStatus["status"]=="COMPLETE"?$projectsGraph[$taskStatus["project_id"]][1]++: 0;
+                            $taskStatus["status"] == "COMPLETE" ? $projectsGraph[$taskStatus["project_id"]][1]++ : 0;
                             $projectsGraph[$taskStatus["project_id"]][2]++;
                         } else {
                             // project_id => (title, non complete task count, total task count)
-                            $projectsGraph[$taskStatus["project_id"]]=array(
-                                $taskStatus["title"], 
-                                $taskStatus["status"]=="COMPLETE"?1: 0, 
+                            $projectsGraph[$taskStatus["project_id"]] = array(
+                                $taskStatus["title"],
+                                $taskStatus["status"] == "COMPLETE" ? 1 : 0,
                                 1
                             );
-                        }                
+                        }
                     }
                 }
 
@@ -47,11 +47,11 @@ class Home extends Controller
             } else {
                 $taskStatuses = $TaskManager->getTaskStatusesByUser($_SESSION["user"]["username"]);
                 if ($taskStatuses) {
-                    foreach ($taskStatuses as $key=>$taskStatus) {
+                    foreach ($taskStatuses as $key => $taskStatus) {
                         if (array_key_exists($taskStatus["status"], $tasksGraph)) {
                             $tasksGraph[$taskStatus["status"]]++;
                         } else {
-                            $tasksGraph[$taskStatus["status"]]=1;
+                            $tasksGraph[$taskStatus["status"]] = 1;
                         }
                     }
                 }
