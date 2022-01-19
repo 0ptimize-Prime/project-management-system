@@ -24,31 +24,20 @@ class Comment extends Controller
             $project = $projectManager->getProject($task["project_id"]);
             if ($user["username"] != $project["manager"]
                 && !$taskManager->isEmployeeInProject($user["username"], $project["id"])) {
-                header("Location: " . BASE_URL . "home/dashboard");
+                http_response_code(403);
                 die;
             }
 
             if (!isset($_POST["body"])) {
-                FlashMessage::create_flash_message(
-                    "create-comment",
-                    "Invalid request",
-                    new ErrorFlashMessage()
-                );
+                http_response_code(400);
             } else if (strlen($_POST["body"]) < 1) {
-                FlashMessage::create_flash_message(
-                    "create-comment",
-                    "Body cannot be empty.",
-                    new ErrorFlashMessage()
-                );
+                http_response_code(400);
             } else {
                 $commentManager = CommentManager::getInstance();
                 $id = $commentManager->addComment($taskId, $user["username"], $_POST["body"]);
                 $comment = $commentManager->getComment($id);
                 echo json_encode($comment);
-                die;
             }
-            header("Location: " . BASE_URL . "task/view/$taskId");
-            die;
         }
     }
 }
