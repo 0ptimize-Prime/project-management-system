@@ -7,7 +7,18 @@
     <title>Task</title>
     <?php include __DIR__ . "/../templates/head.php" ?>
     <meta name="taskId" content="<?php echo htmlspecialchars($data['task']['id']) ?>">
-    <link rel="stylesheet" href="<?php echo BASE_URL ?>css/task-view.css?<?php echo time(); ?> "/>
+    <style>
+        .container{
+            padding-top: 10px;
+            margin-top: 20px;
+            width: 1000px;
+        }
+
+        .col-md-11 .card-subtitle{
+            position: absolute;
+            right: 1px;
+        }
+    </style>
 </head>
 
 <body>
