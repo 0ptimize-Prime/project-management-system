@@ -340,31 +340,13 @@ class Task extends Controller
 
             if ($check_user) {
                 $taskManager = TaskManager::getInstance();
-                $result = $taskManager->updateStatus(
-                    $taskID, $_POST["status"]
-                );
-                if ($result) {
-                    FlashMessage::create_flash_message(
-                        "update-status",
-                        "Status `" . $_POST["status"] . "` updated successfully.",
-                        new SuccessFlashMessage()
-                    );
-                } else {
-                    FlashMessage::create_flash_message(
-                        "update-status",
-                        "Something went wrong, couldn't update status.",
-                        new ErrorFlashMessage()
-                    );
+                $result = $taskManager->updateStatus($taskID, $_POST["status"]);
+                if (!$result) {
+                    http_response_code(500);
                 }
-
             } else {
-                FlashMessage::create_flash_message(
-                    "update-status",
-                    "Invalid request to update task.",
-                    new ErrorFlashMessage()
-                );
+                http_response_code(401);
             }
-            die;
         }
     }
 
