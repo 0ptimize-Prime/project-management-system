@@ -6,7 +6,7 @@ class NotificationManager extends AbstractManager
 {
     public function getNotifications(string $username): array|false
     {
-        $stmt = $this->db->prepare("SELECT * FROM notification WHERE username=?;");
+        $stmt = $this->db->prepare("SELECT * FROM notification WHERE username=? AND is_read=0;");
         $stmt->execute([$username]);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
