@@ -56,9 +56,7 @@ class Home extends Controller
                     }
                 }
 
-                $tasks = $TaskManager->getTasksByUser($_SESSION["user"]["username"]);
-                if ($tasks)
-                    $data["tasks"] = $tasks;
+                $data["tasks"] = $TaskManager->getTasksByUser($_SESSION["user"]["username"]) ?? [];
             }
             $data["tasksGraph"] = $tasksGraph;
             $data["projectsGraph"] = $projectsGraph;
