@@ -19,6 +19,10 @@ class Comment extends Controller
 
             $taskManager = TaskManager::getInstance();
             $task = $taskManager->getTask($taskId);
+            if (!$task) {
+                http_response_code(404);
+                die;
+            }
 
             $projectManager = ProjectManager::getInstance();
             $project = $projectManager->getProject($task["project_id"]);

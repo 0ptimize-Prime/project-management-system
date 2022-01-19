@@ -84,6 +84,10 @@ class Task extends Controller
 
                 $taskManager = TaskManager::getInstance();
                 $task = $taskManager->getTask($taskId);
+                if (!$task) {
+                    header("Location: " . BASE_URL . "home/dashboard");
+                    die;
+                }
                 if ($data["user"]["username"] == $task["username"] &&
                     $task["status"] == "ASSIGNED") {
                     $taskManager->updateStatus($taskId, "IN_PROGRESS");

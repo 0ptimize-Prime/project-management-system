@@ -69,6 +69,10 @@ class project extends Controller
                 $taskManager = TaskManager::getInstance();
 
                 $project = $projectManager->getProject($projectId);
+                if (!$project) {
+                    header('Location: ' . BASE_URL . 'home/dashboard');
+                    die;
+                }
                 $data["project"] = $project;
                 if ($data["user"]["username"] != $project["manager"]
                     && !$taskManager->isEmployeeInProject($data["user"]["username"], $project["id"])) {
