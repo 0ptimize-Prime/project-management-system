@@ -2,7 +2,6 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <title>Project</title>
     <?php include __DIR__ . "/../templates/head.php" ?>
@@ -29,6 +28,11 @@
         #edit-button {
             top: 15px;
             right: 15px;
+        }
+
+        .placeholder-img {
+            text-anchor: middle;
+            user-select: none;
         }
     </style>
 </head>
@@ -301,9 +305,12 @@ usort($graph, "compare_func");
             <?php if (isset($graph) && count($graph) > 0) { ?>
                 <canvas id="project-progress-chart" style="width:100%;"></canvas>
             <?php } else { ?>
-                <img src="https://via.placeholder.com/800x500.png?text=Project+Progress+Graph"
-                     class="card-img-top"
-                     alt="...">
+                <svg class="card-img-top placeholder-img" width="100%" height="180" role="img" focusable="false"
+                     aria-label="Placeholder: No completed tasks yet" preserveAspectRatio="xMidYMid slice">
+                    <title>Placeholder</title>
+                    <rect width="100%" height="100%" fill="#868e96"></rect>
+                    <text x="50%" y="50%" fill="#dee2e6" dy=".3em">No completed tasks yet</text>
+                </svg>
             <?php } ?>
             <div class="card-body text-center">
                 <h5 class="card-title">Project Progress</h5>
