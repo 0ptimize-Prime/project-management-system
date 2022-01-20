@@ -172,11 +172,6 @@ showNavbar($data);
 </style>
 
 <script src="<?php echo htmlspecialchars(BASE_URL . 'js/task-view.js') ?>"></script>
-<script>
-    document.querySelector("#submit-comment").addEventListener("click", function (){
-        setInterval(function() { location.reload(); }, 1000)
-})
-</script>
 
 </body>
 
