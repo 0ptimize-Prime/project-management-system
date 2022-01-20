@@ -357,7 +357,7 @@ $isEmployee = $data["user"]["userType"] == "EMPLOYEE";
                         echo "'$effortScale',";
                     } ?>
                 ],
-                label:  <?php echo "'$projectTitle'"; ?>,
+                label: <?php echo safeJsonEncode($projectTitle); ?>,
                 borderColor: "#7900FF",
                 backgroundColor: "#548CFF",
                 fill: false
