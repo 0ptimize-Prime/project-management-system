@@ -60,8 +60,10 @@ showNavbar($data);
     <div class="card mx-auto" style="width: 40rem;">
         <div class="card-body">
             <h5 class="card-title text-center">Task: <?php echo htmlspecialchars($data["task"]["title"]) ?></h5>
-            <a href="<?php echo htmlspecialchars(BASE_URL . 'task/edit/' . $data['task']['id']) ?>"
-               class="btn btn-warning position-absolute" id="edit-button"><i class="fas fa-edit"></i></a>
+            <?php if ($data["user"]["userType"] != "EMPLOYEE") { ?>
+                <a href="<?php echo htmlspecialchars(BASE_URL . 'task/edit/' . $data['task']['id']) ?>"
+                   class="btn btn-warning position-absolute" id="edit-button"><i class="fas fa-edit"></i></a>
+            <?php } ?>
             <div class="px-3 pt-2">
                 <div class="row mb-3">
                     <div class="col-3">Description:</div>
