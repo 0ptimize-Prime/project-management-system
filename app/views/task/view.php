@@ -24,6 +24,27 @@
             height: 80px !important;
             width: 80px !important;
         }
+
+        #comments {
+            max-height: 80vh;
+        }
+
+        .card-text {
+            white-space: pre-wrap;
+        }
+
+        .img-circle {
+            border-radius: 50%;
+        }
+
+        form {
+            display: inline;
+        }
+
+        #edit-button {
+            top: 15px;
+            right: 15px;
+        }
     </style>
 </head>
 
@@ -39,8 +60,10 @@ showNavbar($data);
     <div class="card mx-auto" style="width: 40rem;">
         <div class="card-body">
             <h5 class="card-title text-center">Task: <?php echo htmlspecialchars($data["task"]["title"]) ?></h5>
-            <a href="<?php echo htmlspecialchars(BASE_URL . 'task/edit/' . $data['task']['id']) ?>"
-               class="btn btn-warning position-absolute" id="edit-button"><i class="fas fa-edit"></i></a>
+            <?php if ($data["user"]["userType"] != "EMPLOYEE") { ?>
+                <a href="<?php echo htmlspecialchars(BASE_URL . 'task/edit/' . $data['task']['id']) ?>"
+                   class="btn btn-warning position-absolute" id="edit-button"><i class="fas fa-edit"></i></a>
+            <?php } ?>
             <div class="px-3 pt-2">
                 <div class="row mb-3">
                     <div class="col-3">Description:</div>
@@ -120,7 +143,7 @@ showNavbar($data);
 </div>
 
 <div class="container overflow-scroll" id="comments">
-    <div class="header"><h1>Comments</h1></div>
+    <h1>Comments</h1>
     <?php foreach ($data["comments"] as $comment) { ?>
         <div class="card my-3" id="comment-<?php echo htmlspecialchars($comment['id']) ?>">
             <h5 class="card-header"><?php echo htmlspecialchars($comment["name"]) ?></h5>
@@ -132,7 +155,7 @@ showNavbar($data);
                 <div class="col-md-11">
                     <div class="card-body">
                         <p class="card-text"><?php echo htmlspecialchars($comment["body"]) ?></p>
-                        <?php if(isset($comment["file_id"]) && strlen($comment["file_id"])>0) { ?>
+                        <?php if (isset($comment["file_id"]) && strlen($comment["file_id"]) > 0) { ?>
                             <a href="<?php echo htmlspecialchars(BASE_URL . 'uploads/' . $comment["file_id"]) ?>">
                                 <?php echo htmlspecialchars($comment["file_name"]) ?>
                             </a>
@@ -148,43 +171,22 @@ showNavbar($data);
     <?php } ?>
 </div>
 
-<div class="container">
+<div class="container mb-5">
     <form action="../../comment/task/<?php echo htmlspecialchars($data['task']['id']) ?>" id="comment-form">
-        <div class="mb-3">
+        <div class="row mb-3">
             <textarea name="body" id="body" cols="30" rows="3" class="form-control" required></textarea>
         </div>
         <div class="form-group row mb-3">
-            <label class="col-sm-3 col-form-label" for="file">File</label>
-            <div class="col-sm-9">
+            <label class="col-sm-2 col-form-label" for="file">Attachment:</label>
+            <div class="col-sm-4">
                 <input type="file" name="file" class="form-control">
             </div>
+            <div class="col-sm-1 offset-sm-4">
+                <button id="submit-comment" type="submit" class="btn btn-primary">Comment</button>
+            </div>
         </div>
-        <button id="submit-comment" type="submit" class="btn btn-primary">Comment</button>
     </form>
 </div>
-
-<style>
-    #comments {
-        max-height: 80%;
-    }
-
-    .card-text {
-        white-space: pre-wrap;
-    }
-
-    .img-circle {
-        border-radius: 50%;
-    }
-
-    form {
-        display: inline;
-    }
-
-    #edit-button {
-        top: 15px;
-        right: 15px;
-    }
-</style>
 
 <script src="<?php echo htmlspecialchars(BASE_URL . 'js/task-view.js') ?>"></script>
 
