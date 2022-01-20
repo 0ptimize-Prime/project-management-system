@@ -65,6 +65,8 @@ function compare_func($a, $b)
 }
 
 usort($graph, "compare_func");
+
+$isEmployee = $data["user"]["userType"] == "EMPLOYEE";
 ?>
 
 <h1 class="text-center">Project view</h1>
@@ -73,8 +75,10 @@ usort($graph, "compare_func");
     <div class="card mx-auto" style="width: 40rem;">
         <div class="card-body">
             <h5 class="card-title text-center">Project: <?php echo htmlspecialchars($data["project"]["title"]) ?></h5>
-            <a href="<?php echo htmlspecialchars(BASE_URL . 'project/edit/' . $data['project']['id']) ?>"
-               class="btn btn-warning position-absolute" id="edit-button"><i class="fas fa-edit"></i></a>
+            <?php if (!$isEmployee) { ?>
+                <a href="<?php echo htmlspecialchars(BASE_URL . 'project/edit/' . $data['project']['id']) ?>"
+                   class="btn btn-warning position-absolute" id="edit-button"><i class="fas fa-edit"></i></a>
+            <?php } ?>
             <div class="px-3 pt-2">
                 <div class="row mb-3">
                     <div class="col-3">Description:</div>
@@ -130,15 +134,17 @@ usort($graph, "compare_func");
         <th scope="col">Deadline</th>
         <th scope="col">Status</th>
         <th scope="col">Effort</th>
-        <th scope="col"></th>
-        <th scope="col"></th>
-        <th scope="col"></th>
+        <?php if (!$isEmployee) { ?>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        <?php } ?>
     </tr>
     </thead>
     <tbody>
     <?php
 
-    function _showTaskRow($task)
+    function _showTaskRow(array $task, bool $isEmployee)
     {
         ?>
         <tr data-id="<?php echo htmlspecialchars($task['id']) ?>" class="task-row">
@@ -155,21 +161,23 @@ usort($graph, "compare_func");
                 </span>
             </td>
             <td><?php echo htmlspecialchars($task['effort']) ?></td>
-            <td><i class="shift-up fas fa-chevron-up"></i> <i class="shift-down fas fa-chevron-down"></i></td>
-            <td>
-                <a class="btn btn-warning btn-sm"
-                   href="<?php echo htmlspecialchars(BASE_URL . 'task/edit/' . $task['id']) ?>">
-                    <i class="fas fa-edit"></i>
-                </a>
-            </td>
-            <td>
-                <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-            </td>
+            <?php if (!$isEmployee) { ?>
+                <td><i class="shift-up fas fa-chevron-up"></i> <i class="shift-down fas fa-chevron-down"></i></td>
+                <td>
+                    <a class="btn btn-warning btn-sm"
+                       href="<?php echo htmlspecialchars(BASE_URL . 'task/edit/' . $task['id']) ?>">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                </td>
+                <td>
+                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                </td>
+            <?php } ?>
         </tr>
         <?php
     }
 
-    function _showMilestoneRow($milestone)
+    function _showMilestoneRow(array $milestone, bool $isEmployee)
     {
         ?>
         <tr data-id="<?php echo htmlspecialchars($milestone['id']) ?>" class="table-info milestone-row">
@@ -182,13 +190,15 @@ usort($graph, "compare_func");
                 </span>
             </td>
             <td></td>
-            <td><i class="shift-up fas fa-chevron-up"></i> <i class="shift-down fas fa-chevron-down"></i></td>
-            <td>
-                <a href="#" role="button" class="btn btn-warning btn-sm edit-milestone"><i class="fas fa-edit"></i></a>
-            </td>
-            <td>
-                <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-            </td>
+            <?php if (!$isEmployee) { ?>
+                <td><i class="shift-up fas fa-chevron-up"></i> <i class="shift-down fas fa-chevron-down"></i></td>
+                <td>
+                    <a href="#" role="button" class="btn btn-warning btn-sm edit-milestone"><i class="fas fa-edit"></i></a>
+                </td>
+                <td>
+                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                </td>
+            <?php } ?>
         </tr>
         <?php
     }
@@ -197,107 +207,110 @@ usort($graph, "compare_func");
     $milestoneInd = 0;
     while (count($data["tasks"]) > $taskInd && count($data["milestones"]) > $milestoneInd) {
         if ((int)$data["tasks"][$taskInd]["ind"] < (int)$data["milestones"][$milestoneInd]["ind"]) {
-            _showTaskRow($data["tasks"][$taskInd++]);
+            _showTaskRow($data["tasks"][$taskInd++], $isEmployee);
         } else {
-            _showMilestoneRow($data["milestones"][$milestoneInd++]);
+            _showMilestoneRow($data["milestones"][$milestoneInd++], $isEmployee);
         }
     }
     while (count($data["tasks"]) > $taskInd)
-        _showTaskRow($data["tasks"][$taskInd++]);
+        _showTaskRow($data["tasks"][$taskInd++], $isEmployee);
     while (count($data["milestones"]) > $milestoneInd)
-        _showMilestoneRow($data["milestones"][$milestoneInd++]);
+        _showMilestoneRow($data["milestones"][$milestoneInd++], $isEmployee);
     ?>
     </tbody>
 </table>
 
-<div class="row mt-3">
-    <div class="col-1 offset-4">
-        <a href="<?php echo htmlspecialchars(BASE_URL . 'task/create/' . $data['project']['id']) ?>"
-           class="btn btn-primary">Add Task</a>
+<?php if (!$isEmployee) { ?>
+    <div class="row mt-3">
+        <div class="col-1 offset-4">
+            <a href="<?php echo htmlspecialchars(BASE_URL . 'task/create/' . $data['project']['id']) ?>"
+               class="btn btn-primary">Add Task</a>
+        </div>
+        <div class="col-2 offset-2">
+            <a href="#" class="btn btn-primary" role="button" data-bs-toggle="modal"
+               data-bs-target="#newMilestoneModal">
+                Add Milestone
+            </a>
+        </div>
     </div>
-    <div class="col-2 offset-2">
-        <a href="#" class="btn btn-primary" role="button" data-bs-toggle="modal" data-bs-target="#newMilestoneModal">
-            Add Milestone
-        </a>
-    </div>
-</div>
 
-<div class="modal fade" id="newMilestoneModal" tabindex="-1" aria-labelledby="newMilestoneModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="newMilestoneModalLabel">New milestone</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="container-fluid">
-                    <div class="row justify-content-center">
-                        <label for="title" class="col-2 col-form-label">Title</label>
-                        <div class="col-6">
-                            <input type="text" class="form-control" name="title" id="title">
+    <div class="modal fade" id="newMilestoneModal" tabindex="-1" aria-labelledby="newMilestoneModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newMilestoneModalLabel">New milestone</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row justify-content-center">
+                            <label for="title" class="col-2 col-form-label">Title</label>
+                            <div class="col-6">
+                                <input type="text" class="form-control" name="title" id="title">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="submit-new-milestone" data-bs-dismiss="modal">
-                    Submit
-                </button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="submit-new-milestone" data-bs-dismiss="modal">
+                        Submit
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="modal fade" id="editMilestoneModal" tabindex="-1" aria-labelledby="editMilestoneModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editMilestoneModalLabel">Edit milestone</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="container-fluid">
-                    <div class="row justify-content-center">
-                        <input type="text" name="id" id="id" hidden>
-                        <label for="title" class="col-2 col-form-label">Title</label>
-                        <div class="col-6">
-                            <input type="text" class="form-control" name="title" id="title">
+    <div class="modal fade" id="editMilestoneModal" tabindex="-1" aria-labelledby="editMilestoneModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editMilestoneModalLabel">Edit milestone</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row justify-content-center">
+                            <input type="text" name="id" id="id" hidden>
+                            <label for="title" class="col-2 col-form-label">Title</label>
+                            <div class="col-6">
+                                <input type="text" class="form-control" name="title" id="title">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="update-milestone" data-bs-dismiss="modal">
-                    Update
-                </button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="update-milestone" data-bs-dismiss="modal">
+                        Update
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Delete</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <input type="text" name="type" id="type" hidden>
-            <input type="text" name="id" id="id" hidden>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" id="delete-item" data-bs-dismiss="modal">
-                    Delete
-                </button>
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <input type="text" name="type" id="type" hidden>
+                <input type="text" name="id" id="id" hidden>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="delete-item" data-bs-dismiss="modal">
+                        Delete
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+<?php } ?>
 
 <div class="container py-5">
     <div class="row justify-content-center">
@@ -377,7 +390,9 @@ usort($graph, "compare_func");
     });
 </script>
 
-<script src="<?php echo htmlspecialchars(BASE_URL . 'js/project-view.js') ?>"></script>
+<?php if (!$isEmployee) { ?>
+    <script src="<?php echo htmlspecialchars(BASE_URL . 'js/project-view.js') ?>"></script>
+<?php } ?>
 
 </body>
 
