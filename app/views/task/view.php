@@ -169,18 +169,20 @@ showNavbar($data);
     <?php } ?>
 </div>
 
-<div class="container">
+<div class="container mb-5">
     <form action="../../comment/task/<?php echo htmlspecialchars($data['task']['id']) ?>" id="comment-form">
-        <div class="mb-3">
+        <div class="row mb-3">
             <textarea name="body" id="body" cols="30" rows="3" class="form-control" required></textarea>
         </div>
         <div class="form-group row mb-3">
-            <label class="col-sm-3 col-form-label" for="file">File</label>
-            <div class="col-sm-9">
+            <label class="col-sm-2 col-form-label" for="file">Attachment:</label>
+            <div class="col-sm-4">
                 <input type="file" name="file" class="form-control">
             </div>
+            <div class="col-sm-1 offset-sm-4">
+                <button id="submit-comment" type="submit" class="btn btn-primary">Comment</button>
+            </div>
         </div>
-        <button id="submit-comment" type="submit" class="btn btn-primary">Comment</button>
     </form>
 </div>
 
