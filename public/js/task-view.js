@@ -39,6 +39,13 @@ const addComment = (newComment) => {
     textNode.textContent = newComment.body;
     bodyNode.appendChild(textNode);
 
+    if (newComment.file_id) {
+        const fileNode = document.createElement("a");
+        fileNode.href = BASE_URL + "uploads/" + newComment.file_id;
+        fileNode.textContent = newComment.file_name;
+        bodyNode.appendChild(fileNode);
+    }
+
     const dateTimeNode = document.createElement("h6");
     dateTimeNode.classList.add("card-subtitle", "mb-2", "initialism", "text-muted");
 
