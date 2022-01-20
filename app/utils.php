@@ -31,6 +31,12 @@ function statusBadgeColor(string $status): string
     };
 }
 
+function safeJsonEncode($obj): string
+{
+    $encoded = json_encode($obj, JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS);
+    return $encoded ?: 'null';
+}
+
 function convertDateToTimestamp(string $date): int
 {
     $dateObj = DateTime::createFromFormat("Y-m-d", $date);
