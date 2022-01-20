@@ -132,6 +132,11 @@ showNavbar($data);
                 <div class="col-md-11">
                     <div class="card-body">
                         <p class="card-text"><?php echo htmlspecialchars($comment["body"]) ?></p>
+                        <?php if(isset($comment["file_id"]) && strlen($comment["file_id"])>0) { ?>
+                            <a href="<?php echo htmlspecialchars(BASE_URL . 'uploads/' . $comment["file_id"]) ?>">
+                                <?php echo htmlspecialchars($comment["file_name"]) ?>
+                            </a>
+                        <?php } ?>
                         <h6 class="card-subtitle mb-2 text-muted initialism">
                             <i class="fas fa-clock"></i>
                             <span><?php echo htmlspecialchars($comment["created_at"]) ?></span>
@@ -148,7 +153,13 @@ showNavbar($data);
         <div class="mb-3">
             <textarea name="body" id="body" cols="30" rows="3" class="form-control" required></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Comment</button>
+        <div class="form-group row mb-3">
+            <label class="col-sm-3 col-form-label" for="file">File</label>
+            <div class="col-sm-9">
+                <input type="file" name="file" class="form-control">
+            </div>
+        </div>
+        <button id="submit-comment" type="submit" class="btn btn-primary">Comment</button>
     </form>
 </div>
 
