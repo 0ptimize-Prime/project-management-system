@@ -6,7 +6,13 @@
 <head>
     <title>Login</title>
     <?php include __DIR__ . "/../templates/head.php" ?>
-    <link rel="stylesheet" href="<?php echo BASE_URL ?>css/login.css "/>
+    <style>
+        .login-form form {
+            background: #f7f7f7;
+            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+        }
+    </style>
 </head>
 
 <body>
@@ -15,10 +21,10 @@
 showNavbar($data, false);
 ?>
 
-<?php FlashMessage::display_flash_message("login") ?>
-<div class="login-form">
+<div class="login-form d-flex justify-content-center" style="margin-top: 63px;">
     <form action="login" method="post">
-        <h2 class="text-center">Login</h2>
+        <h2 class="text-center mb-3">Login</h2>
+        <?php FlashMessage::display_flash_message("login") ?>
         <div class="form-floating mb-3">
             <input type="text" class="form-control" name="username" id="username" placeholder="Username"
                    required="required">
@@ -30,7 +36,7 @@ showNavbar($data, false);
             <label for="password">Password</label>
         </div>
         <div class="form-group d-grid m-2">
-            <button type="submit" class="btn btn-primary">Log in</button>
+            <button type="submit" class="btn btn-primary fw-bold">Log in</button>
         </div>
     </form>
 </div>
