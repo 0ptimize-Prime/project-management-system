@@ -143,6 +143,13 @@ CREATE TRIGGER `task_completed_notification`
     VALUES (REPLACE(UUID(), '-', ''), NEW.username, NEW.id, DEFAULT, 'TASK_COMPLETED', 0);
 END IF $$
 
+CREATE TRIGGER `task_completed`
+    BEFORE UPDATE
+    ON `task`
+    FOR EACH ROW IF (OLD.status = 'PENDING' AND NEW.status = 'COMPLETE') THEN
+    SET NEW.completed_date = CURRENT_DATE();
+END IF $$
+
 CREATE TRIGGER `user_deleted`
     AFTER DELETE
     ON `user`
