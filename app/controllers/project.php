@@ -112,7 +112,7 @@ class project extends Controller
             if (!empty($id)) {
                 $project = $projectManager->getProject($id);
                 if (!$project) {
-                    http_response_code(400);
+                    header("Location: " . BASE_URL . "project/edit");
                     die;
                 }
             }
@@ -393,6 +393,3 @@ class project extends Controller
         return true;
     }
 }
-
-
-
