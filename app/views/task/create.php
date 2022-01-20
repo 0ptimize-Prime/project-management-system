@@ -40,7 +40,14 @@ showSidebar($data);
             <div class="form-group row mb-3">
                 <label for="username" class="col-sm-3 col-form-label">Assignee</label>
                 <div class="col-sm-6">
-                    <input class="form-control" id="username" name="username">
+                    <select name="username" id="username" class="form-select">
+                        <option value=""></option>
+                        <?php foreach ($data['employees'] as $employee) { ?>
+                            <option value="<?php echo htmlspecialchars($employee['username']) ?>">
+                                <?php echo htmlspecialchars($employee['name']) ?>
+                            </option>
+                        <?php } ?>
+                    </select>
                 </div>
             </div>
             <div class="form-group row mb-3">

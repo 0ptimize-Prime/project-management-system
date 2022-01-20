@@ -21,9 +21,12 @@ class Task extends Controller
         }
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $this->checkAuth("task/create", function (string $projectId, string $projectTitle) {
+                $userManager = UserManager::getInstance();
+                $employees = $userManager->getUsersBy('', '', 'EMPLOYEE') ?? [];
                 $data = $this->getViewData();
                 $data["projectId"] = $projectId;
                 $data["projectTitle"] = $projectTitle;
+                $data["employees"] = $employees;
                 return $data;
             }, [$projectId, $project["title"]]);
         } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
