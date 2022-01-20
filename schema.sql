@@ -150,6 +150,16 @@ CREATE TRIGGER `task_completed`
     SET NEW.completed_date = CURRENT_DATE();
 END IF $$
 
+CREATE TRIGGER `task_completed_all`
+    AFTER UPDATE
+    ON `task`
+    FOR EACH ROW IF (OLD.status = 'PENDING' AND NEW.status = 'COMPLETE' AND (SELECT COUNT(*)
+                                                                             FROM task
+                                                                             WHERE task.project_id = NEW.project_id
+                                                                               AND status <> 'COMPLETE') = 0) THEN
+    UPDATE project SET status = 'COMPLETE' WHERE id = NEW.project_id;
+END IF $$
+
 CREATE TRIGGER `user_deleted`
     AFTER DELETE
     ON `user`
