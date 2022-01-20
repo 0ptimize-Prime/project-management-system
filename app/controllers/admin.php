@@ -13,17 +13,21 @@ class admin extends Controller
         session_start();
         $userManager = UserManager::getInstance();
         $fileManager = FileManager::getInstance();
-        if ($_SESSION["user"]["userType"] != "ADMIN") {
-            header("Location: " . BASE_URL . "home/dashboard");
-            die;
-        }
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $this->checkAuth("admin/create", function () {
+                if ($_SESSION["user"]["userType"] != "ADMIN") {
+                    header("Location: " . BASE_URL . "home/dashboard");
+                    die;
+                }
                 $data = $this->getViewData();
                 return $data;
             });
         } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
             $this->checkAuth("admin/create", function () {
+                if ($_SESSION["user"]["userType"] != "ADMIN") {
+                    header("Location: " . BASE_URL . "home/dashboard");
+                    die;
+                }
             });
             if (
                 !isset(
@@ -85,18 +89,22 @@ class admin extends Controller
         $projectManager = ProjectManager::getInstance();
         $taskManager = TaskManager::getInstance();
         $notificationManager = NotificationManager::getInstance();
-        if ($_SESSION["user"]["userType"] != "ADMIN") {
-            header("Location: " . BASE_URL . "home/dashboard");
-            die;
-        }
 
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $this->checkAuth("admin/edit", function () {
+                if ($_SESSION["user"]["userType"] != "ADMIN") {
+                    header("Location: " . BASE_URL . "home/dashboard");
+                    die;
+                }
                 $data = $this->getViewData();
                 return $data;
             });
         } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $this->checkAuth("admin/edit", function () {
+                if ($_SESSION["user"]["userType"] != "ADMIN") {
+                    header("Location: " . BASE_URL . "home/dashboard");
+                    die;
+                }
             });
 
             if (!isset(
@@ -142,6 +150,13 @@ class admin extends Controller
             } else
                 http_response_code(400);
         } else if ($_SERVER["REQUEST_METHOD"] == "DELETE") {
+            $this->checkAuth("admin/edit", function() {
+                if ($_SESSION["user"]["userType"] != "ADMIN") {
+                    header("Location: " . BASE_URL . "home/dashboard");
+                    die;
+                }
+            });
+
             if (empty($username)) {
                 http_response_code(400);
                 die;
@@ -152,44 +167,6 @@ class admin extends Controller
                 $db->beginTransaction();
 
                 try {
-                    // set manager of projects to null
-                    if ($user["userType"] == "MANAGER") {
-                        $projects = $projectManager->getProjectsByManager($user["username"]);
-                        if ($projects) {
-                            foreach ($projects as $project) {
-                                $projectManager->updateProject(
-                                    $project["id"],
-                                    null,
-                                    $project["title"],
-                                    $project["description"],
-                                    $project["deadline"]
-                                );
-                            }
-                        }
-                    }
-
-                    // set task statuses to CREATED
-                    if ($user["userType"] == "EMPLOYEE") {
-                        $tasks = $taskManager->getTasksByUser($user["username"]);
-                        if ($tasks) {
-                            foreach ($tasks as $task) {
-                                $taskManager->updateTask(
-                                    $task["id"],
-                                    $task["title"],
-                                    $task["description"],
-                                    null,
-                                    $task["deadline"],
-                                    $task["effort"]
-                                );
-                                $taskManager->updateStatus($task["id"], "CREATED");
-                            }
-                        }
-                    }
-
-                    // delete notifications of the user
-                    $notificationManager->deleteNotifications($user["username"]);
-
-
                     // remove profile picture
                     if (!empty($user["profile_picture"]) && file_exists(__DIR__ . '/../../public/uploads/' . $user["profile_picture"])) {
                         unlink(__DIR__ . '/../../public/uploads/' . $user["profile_picture"]);
@@ -217,8 +194,13 @@ class admin extends Controller
         $userManager = UserManager::getInstance();
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $this->checkAuth("admin/search", function () {
+                if ($_SESSION["user"]["userType"] != "ADMIN") {
+                    header("Location: " . BASE_URL . "home/dashboard");
+                    die;
+                }
                 return false;
             });
+
             if (!isset(
                 $_GET["username"],
                 $_GET["name"],
@@ -232,8 +214,16 @@ class admin extends Controller
                 $_GET["name"],
                 $_GET["userType"]
             );
-            if ($result)
+            if ($result) {
+                // remove the current user
+                foreach ($result as $key => $val) {
+                    if ($val["username"] == $_SESSION["user"]["username"]) {
+                        unset($result[$key]);
+                    }
+                }
+                $result = array_values($result);
                 echo json_encode($result);
+            }
         }
     }
 

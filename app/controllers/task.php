@@ -4,6 +4,7 @@ require_once __DIR__ . "/../utils.php";
 require_once __DIR__ . "/../models/UserManager.php";
 require_once __DIR__ . "/../models/ProjectManager.php";
 require_once __DIR__ . "/../models/TaskManager.php";
+require_once __DIR__ . "/../models/MilestoneManager.php";
 require_once __DIR__ . "/../models/FileManager.php";
 require_once __DIR__ . "/../models/CommentManager.php";
 
@@ -84,6 +85,10 @@ class Task extends Controller
 
                 $taskManager = TaskManager::getInstance();
                 $task = $taskManager->getTask($taskId);
+                if (!$task) {
+                    header("Location: " . BASE_URL . "home/dashboard");
+                    die;
+                }
                 if ($data["user"]["username"] == $task["username"] &&
                     $task["status"] == "ASSIGNED") {
                     $taskManager->updateStatus($taskId, "IN_PROGRESS");
@@ -217,8 +222,6 @@ class Task extends Controller
                             }
                         }
                     }
-                    $commentManager->deleteCommentsByTaskId($task["id"]);
-
 
                     $result = $taskManager->deleteTask($id);
                     if (!$result) {
@@ -338,33 +341,44 @@ class Task extends Controller
 
             if ($check_user) {
                 $taskManager = TaskManager::getInstance();
-                $result = $taskManager->updateStatus(
-                    $taskID, $_POST["status"]
-                );
-                if ($result) {
-                    FlashMessage::create_flash_message(
-                        "update-status",
-                        "Status `" . $_POST["status"] . "` updated successfully.",
-                        new SuccessFlashMessage()
-                    );
-                } else {
-                    FlashMessage::create_flash_message(
-                        "update-status",
-                        "Something went wrong, couldn't update status.",
-                        new ErrorFlashMessage()
-                    );
+                $result = $taskManager->updateStatus($taskID, $_POST["status"]);
+                if (!$result) {
+                    http_response_code(500);
+                    die;
                 }
 
+                if ($_POST["status"] == "COMPLETE") {
+                    $task = $taskManager->getTask($taskID);
+                    $this->updateMilestoneStatuses($task["projectId"]);
+                }
             } else {
-                FlashMessage::create_flash_message(
-                    "update-status",
-                    "Invalid request to update task.",
-                    new ErrorFlashMessage()
-                );
+                http_response_code(401);
             }
-            die;
         }
     }
 
-
+    private function updateMilestoneStatuses(string $projectId): void
+    {
+        $taskManager = TaskManager::getInstance();
+        $tasks = $taskManager->getTasks($projectId);
+        $milestoneManager = MilestoneManager::getInstance();
+        $milestones = $milestoneManager->getMilestones($projectId);
+        $taskInd = 0;
+        $milestoneInd = 0;
+        while (count($tasks) > $taskInd && count($milestones) > $milestoneInd) {
+            if ((int)$tasks[$taskInd]["ind"] < (int)$milestones[$milestoneInd]["ind"]) {
+                if ($tasks[$taskInd++]["status"] != "COMPLETE")
+                    return;
+            } else {
+                $milestoneManager->updateStatus($milestones[$milestoneInd++]["id"], "COMPLETE");
+            }
+        }
+        while (count($tasks) > $taskInd) {
+            if ($tasks[$taskInd++]["status"] != "COMPLETE")
+                return;
+        }
+        while (count($milestones) > $milestoneInd) {
+            $milestoneManager->updateStatus($milestones[$milestoneInd++]["id"], "COMPLETE");
+        }
+    }
 }

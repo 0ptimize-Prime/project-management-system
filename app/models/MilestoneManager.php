@@ -50,6 +50,12 @@ class MilestoneManager extends AbstractManager
         return $stmt->execute([$title, $id]);
     }
 
+    public function updateStatus(string $id, string $status): bool
+    {
+        $stmt = $this->db->prepare("UPDATE milestone SET status=? WHERE id=?;");
+        return $stmt->execute([$status, $id]);
+    }
+
     public function deleteMilestone(string $id): bool
     {
         $stmt = $this->db->prepare("DELETE FROM milestone WHERE id = ?;");

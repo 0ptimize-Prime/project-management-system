@@ -17,7 +17,6 @@ const resetUpdateForm = () => {
     updateForm.reset();
     project = null;
     goToButton.hidden = true;
-    deleteAlert();
 }
 
 const showAlert = (message, style) => {
@@ -26,6 +25,7 @@ const showAlert = (message, style) => {
     div.textContent = message;
     div.id = "update-project-message";
     heading.after(div);
+    setTimeout(deleteAlert, 3000);
 }
 
 const deleteAlert = () => {
@@ -129,7 +129,7 @@ const editProject = (row) => {
     updateFormFields[3].value = description;
     updateFormFields[4].value = deadline;
     goToButton.hidden = false;
-    project = {id, title, manager, managerName, description, createdAt, deadline, status};
+    project = {id, title, manager, managerName: managerName.trim(), description, createdAt, deadline, status};
 };
 
 const goToProject = (row) => {
@@ -164,16 +164,15 @@ updateForm.addEventListener("submit", e => {
         if (this.readyState === 4) {
             if (this.status === 200) {
                 const response = JSON.parse(this.response);
-                table.querySelectorAll("tbody tr").forEach(row => {
-                    if (row.dataset.id === response.id) {
-                        row.children[0].textContent = response.title;
-                        row.children[1].textContent = response.managerName;
-                        row.children[1].dataset.username = response.manager;
-                        row.children[3].textContent = response.deadline;
-                        row.children[4].textContent = response.status;
-                        row.dataset.description = response.description;
-                    }
-                });
+                const row = Array.from(table.querySelectorAll("tbody tr")).find(row => row.dataset.id === response.id);
+                if (row) {
+                    row.children[0].textContent = response.title;
+                    row.children[1].textContent = response.managerName;
+                    row.children[1].dataset.username = response.manager;
+                    row.children[3].textContent = response.deadline;
+                    row.children[4].textContent = response.status;
+                    row.dataset.description = response.description;
+                }
                 resetUpdateForm();
                 showAlert("Project successfully updated", "success");
             } else {
@@ -195,11 +194,10 @@ removeButton.addEventListener("click", () => {
     xhttp.withCredentials = true;
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
-            table.querySelectorAll("tbody tr").forEach(row => {
-                if (row.dataset.id === project.id) {
-                    table.querySelector("tbody").removeChild(row);
-                }
-            });
+            const row = Array.from(table.querySelectorAll("tbody tr")).find(row => row.dataset.id === project.id);
+            if (row) {
+                row.remove();
+            }
             resetUpdateForm()
         }
     };

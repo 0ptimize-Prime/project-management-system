@@ -1,3 +1,5 @@
+const heading = document.querySelector("main h1");
+
 const searchForm = document.getElementById("search-form");
 const searchFormFields = searchForm.querySelectorAll("input");
 
@@ -17,6 +19,21 @@ const resetUpdateForm = () => {
     task = null;
     goToProjectButton.hidden = true;
     goToTaskButton.hidden = true;
+}
+
+const showAlert = (message, style) => {
+    const div = document.createElement("div");
+    div.classList.add("alert", "alert-" + style);
+    div.textContent = message;
+    div.id = "update-task-message";
+    heading.after(div);
+    setTimeout(deleteAlert, 3000);
+}
+
+const deleteAlert = () => {
+    const alertDiv = document.getElementById("update-task-message");
+    if (alertDiv)
+        alertDiv.remove();
 }
 
 searchForm.addEventListener("submit", e => {
@@ -118,7 +135,7 @@ const editTask = (row) => {
     ] = row.children;
 
     updateFormFields[0].value = id;
-    updateFormFields[1].value = projectTitle;
+    updateFormFields[1].value = projectTitle.trim();
     updateFormFields[2].value = title;
     updateFormFields[3].value = username;
     updateFormFields[4].value = description;
@@ -131,10 +148,10 @@ const editTask = (row) => {
     task = {
         id,
         projectId,
-        projectTitle,
+        projectTitle: projectTitle.trim(),
         title,
         username,
-        employeeName,
+        employeeName: employeeName.trim(),
         description,
         createdAt,
         deadline,
@@ -174,10 +191,11 @@ updateForm.addEventListener("submit", e => {
     const xhttp = new XMLHttpRequest();
     xhttp.withCredentials = true;
     xhttp.onreadystatechange = function () {
-        if (this.readyState === 4 && this.status === 200) {
-            const response = JSON.parse(this.response);
-            table.querySelectorAll("tbody tr").forEach(row => {
-                if (row.dataset.id === response.id) {
+        if (this.readyState === 4) {
+            if (this.status === 200) {
+                const response = JSON.parse(this.response);
+                const row = Array.from(table.querySelectorAll("tbody tr")).find(row => row.dataset.id === response.id);
+                if (row) {
                     row.children[1].dataset.username = response.title;
                     row.children[3].textContent = response.deadline;
                     row.children[4].textContent = response.status;
@@ -186,8 +204,11 @@ updateForm.addEventListener("submit", e => {
                     row.dataset.description = response.description;
                     row.dataset.effort = response.effort;
                 }
-            });
-            resetUpdateForm();
+                resetUpdateForm();
+                showAlert("Task successfully updated", "success");
+            } else {
+                showAlert("Task update failed", "danger");
+            }
         }
     };
     xhttp.open("POST", BASE_URL + "task/edit", true);
@@ -204,11 +225,10 @@ removeButton.addEventListener("click", () => {
     xhttp.withCredentials = true;
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
-            table.querySelectorAll("tbody tr").forEach(row => {
-                if (row.dataset.id === task.id) {
-                    table.querySelector("tbody").removeChild(row);
-                }
-            });
+            const row = Array.from(table.querySelectorAll("tbody tr")).find(row => row.dataset.id === task.id);
+            if (row) {
+                row.remove();
+            }
             resetUpdateForm()
         }
     };

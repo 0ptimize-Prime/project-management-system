@@ -6,6 +6,12 @@
 <head>
     <title>Dashboard</title>
     <?php include __DIR__ . "/../templates/head.php" ?>
+    <style>
+        .placeholder-img {
+            text-anchor: middle;
+            user-select: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -24,9 +30,13 @@ showSidebar($data);
                         <?php if (isset($data['projectsGraph']) && count($data['projectsGraph']) > 0) { ?>
                             <canvas id="project-bar-chart" height="300"></canvas>
                         <?php } else { ?>
-                            <img src="https://via.placeholder.com/800x500.png?text=Project+Statistics+Graph"
-                                 class="card-img-top"
-                                 alt="...">
+                            <svg class="card-img-top placeholder-img" width="100%" height="180" role="img"
+                                 aria-label="Placeholder: No projects yet" preserveAspectRatio="xMidYMid slice"
+                                 focusable="false">
+                                <title>Placeholder</title>
+                                <rect width="100%" height="100%" fill="#868e96"></rect>
+                                <text x="50%" y="50%" fill="#dee2e6" dy=".3em">No projects yet</text>
+                            </svg>
                         <?php } ?>
                         <div class="card-body text-center">
                             <h5 class="card-title">Project Statistics</h5>
@@ -40,8 +50,13 @@ showSidebar($data);
                     <?php if (isset($data['tasksGraph']) && count($data['tasksGraph']) > 0) { ?>
                         <canvas id="task-pie-chart"></canvas>
                     <?php } else { ?>
-                        <img src="https://via.placeholder.com/800x500.png?text=Task+Statistics" class="card-img-top"
-                             alt="...">
+                        <svg class="card-img-top placeholder-img" width="100%" height="180" role="img"
+                             aria-label="Placeholder: No tasks yet" preserveAspectRatio="xMidYMid slice"
+                             focusable="false">
+                            <title>Placeholder</title>
+                            <rect width="100%" height="100%" fill="#868e96"></rect>
+                            <text x="50%" y="50%" fill="#dee2e6" dy=".3em">No tasks yet</text>
+                        </svg>
                     <?php } ?>
                     <div class="card-body text-center">
                         <h5 class="card-title">Task Statistics</h5>

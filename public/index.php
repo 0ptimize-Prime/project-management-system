@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . "/../vendor/autoload.php";
+require_once __DIR__ . "/../app/exceptions.php";
 
 try {
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/..");
@@ -26,4 +27,6 @@ if (str_ends_with($original, ".php")) {
     die();
 }
 
+ob_start();
 $app = new App($url);
+ob_end_flush();

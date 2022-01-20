@@ -16,28 +16,24 @@ class Comment extends Controller
 
             $taskManager = TaskManager::getInstance();
             $task = $taskManager->getTask($taskId);
+            if (!$task) {
+                http_response_code(404);
+                die;
+            }
 
             $projectManager = ProjectManager::getInstance();
             $project = $projectManager->getProject($task["project_id"]);
             if ($user["username"] != $project["manager"]
                 && !$taskManager->isEmployeeInProject($user["username"], $project["id"])) {
-                header("Location: " . BASE_URL . "home/dashboard");
+                http_response_code(403);
                 die;
             }
 
             if (!isset($_POST["body"])) {
-                FlashMessage::create_flash_message(
-                    "create-comment",
-                    "Invalid request",
-                    new ErrorFlashMessage()
-                );
+                http_response_code(400);
             } else if (strlen($_POST["body"]) < 1) {
-                FlashMessage::create_flash_message(
-                    "create-comment",
-                    "Body cannot be empty.",
-                    new ErrorFlashMessage()
-                );
-            } else {  
+                http_response_code(400);
+            } else {
                 $commentManager = CommentManager::getInstance();
                 $id = $commentManager->addComment($taskId, $user["username"], $_POST["body"]);
 
@@ -54,7 +50,6 @@ class Comment extends Controller
                 }
                 $comment = $commentManager->getCommentWithFile($id);
                 echo json_encode($comment);
-                die;
             }
         }
     }
