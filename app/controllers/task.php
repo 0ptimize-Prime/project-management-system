@@ -136,6 +136,10 @@ class Task extends Controller
                 }
             }
             $this->checkAuth("task/edit", function ($employees, $task) {
+                if ($_SESSION["user"]["userType"] == "EMPLOYEE") {
+                    header("Location: " . BASE_URL . "home/dashboard");
+                    die;
+                }
                 $data = $this->getViewData();
                 $data["employees"] = $employees;
                 $data["task"] = $task;
