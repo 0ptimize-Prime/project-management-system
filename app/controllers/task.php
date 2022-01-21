@@ -280,13 +280,13 @@ class Task extends Controller
     }
 
     private function validate_update_task_data(
-        string $id,
-        string $title,
+        string      $id,
+        string      $title,
         string|null $username,
-        string $description,
-        string $deadline,
-        string $status,
-        string $effort): bool
+        string      $description,
+        string      $deadline,
+        string      $status,
+        string      $effort): bool
     {
         $userManager = UserManager::getInstance();
         $args = func_get_args();

@@ -164,7 +164,8 @@ CREATE TRIGGER `user_deleted`
     AFTER DELETE
     ON `user`
     FOR EACH ROW
-    UPDATE task SET status = 'CREATED'
+    UPDATE task
+    SET status = 'CREATED'
     WHERE task.username = OLD.username;
 $$
 DELIMITER ;
