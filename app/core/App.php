@@ -39,6 +39,7 @@ class App
                 $this->methodName = $url[1];
                 unset($url[1]);
             } else {
+                http_response_code(404);
                 echo "Method doesn't exist: " . $url[1] . '<br />';
                 die();
             }
