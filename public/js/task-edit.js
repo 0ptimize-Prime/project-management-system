@@ -23,7 +23,7 @@ const resetUpdateForm = () => {
 
 const showAlert = (message, style) => {
     const div = document.createElement("div");
-    div.classList.add("alert", "alert-" + style);
+    div.classList.add("alert", "alert-" + style, "mx-4");
     div.textContent = message;
     div.id = "update-task-message";
     heading.after(div);

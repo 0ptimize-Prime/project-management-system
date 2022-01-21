@@ -96,7 +96,7 @@ class SuccessFlashMessage implements FlashMessageType
 {
     public function display(string $message): void
     {
-        $output = "<div class=\"alert alert-success flash-message\" style='top: 55px' role=\"alert\">%s</div>";
+        $output = "<div class=\"alert alert-success flash-message mx-4\" role=\"alert\">%s</div>";
         echo sprintf($output, htmlspecialchars($message));
     }
 }
@@ -105,7 +105,7 @@ class ErrorFlashMessage implements FlashMessageType
 {
     public function display(string $message): void
     {
-        $output = "<div class=\"alert alert-danger flash-message\" style='top: 55px' role=\"alert\">%s</div>";
+        $output = "<div class=\"alert alert-danger flash-message mx-4\" role=\"alert\">%s</div>";
         echo sprintf($output, htmlspecialchars($message));
     }
 }
