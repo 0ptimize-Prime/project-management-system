@@ -9,12 +9,13 @@ class milestone extends Controller
         $milestoneManager = MilestoneManager::getInstance();
         $projectManager = ProjectManager::getInstance();
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $this->checkAuth("milestone/create", function (){});
+            $this->checkAuth("milestone/create", function () {
+            });
         }
 
         if (!isset(
-            $_POST["id"],
-            $_POST["title"]
+                $_POST["id"],
+                $_POST["title"]
             ) ||
             empty($_POST["id"]) ||
             empty($_POST["title"])
@@ -71,11 +72,11 @@ class milestone extends Controller
         $milestoneManager = MilestoneManager::getInstance();
         $projectManager = ProjectManager::getInstance();
         if ($_SERVER["REQUEST_METHOD"] == "DELETE") {
-            $this->checkAuth("milestone/remove", function (){});
+            $this->checkAuth("milestone/remove", function () {
+            });
         }
 
-        if (empty($id))
-        {
+        if (empty($id)) {
             http_response_code(400);
             die;
         }
